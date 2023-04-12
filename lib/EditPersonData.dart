@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'EditPetData1.dart';
 
 class EditPersonDataPage extends StatefulWidget {
   const EditPersonDataPage({super.key, required this.title});
@@ -48,7 +49,7 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
       style: TextButton.styleFrom(
         textStyle: const TextStyle(fontSize: 30.0),
       ),
-      child: const Text('下一步'),
+      child: NextPageButton(),
     );
   }
 
@@ -97,12 +98,6 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
         body: Padding(
             //上下左右各添加16像素补白
@@ -123,5 +118,63 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
                 )
               ],
             )));
+  }
+}
+class NextPageButton extends StatelessWidget {
+  const NextPageButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      height: 60,
+      width: 250,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(255, 143, 158, 1),
+            Color.fromRGBO(255, 188, 143, 1),
+          ],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(25.0),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.pink.withOpacity(0.2),
+            spreadRadius: 4,
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          )
+        ]
+      ),
+      child: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditPetDataPage1(title: "Hello world!")
+              )
+            );
+          },
+          child: Text(
+            '下一步',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontFamily: "Netflix",
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              letterSpacing: 0.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
