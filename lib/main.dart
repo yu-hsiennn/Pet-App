@@ -68,12 +68,15 @@ class _WelcomePageState extends State<WelcomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: LoginButton(),
                     flex: 1,
+                    child: CustomButton(
+                      label: 'Login',
+                      onPressed: () {},
+                    ),
                   ),
                   Expanded(
-                    child: RegisterButton(),
                     flex: 1,
+                    child: RegisterButton(),
                   )
                 ],
               ),
@@ -166,9 +169,6 @@ class _RegisterPage extends State<RegisterPage> {
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 300,
             ),
           ],
         ),
@@ -304,35 +304,35 @@ class RegisterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5),
-      height: 60,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(255, 143, 158, 1),
-              Color.fromRGBO(255, 188, 143, 1),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(25.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.pink.withOpacity(0.2),
-              spreadRadius: 4,
-              blurRadius: 10,
-              offset: Offset(0, 3),
-            )
-          ]),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => RegisterPage()));
-          },
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => RegisterPage()));
+      },
+      child: Container(
+        margin: EdgeInsets.all(5),
+        height: 60,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(255, 143, 158, 1),
+                Color.fromRGBO(255, 188, 143, 1),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(25.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.pink.withOpacity(0.2),
+                spreadRadius: 4,
+                blurRadius: 10,
+                offset: Offset(0, 3),
+              )
+            ]),
+        child: Center(
           child: Text(
             'Create Account',
             textAlign: TextAlign.center,
@@ -357,35 +357,122 @@ class LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5), // padding edge
-      height: 60,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(255, 143, 158, 1),
-              Color.fromRGBO(255, 188, 143, 1),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(25.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.pink.withOpacity(0.2),
-              spreadRadius: 4,
-              blurRadius: 10,
-              offset: Offset(0, 3),
-            )
-          ]),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {},
+    return GestureDetector(
+      onTap: () {},
+      onTapDown: (details) {},
+      child: Container(
+        margin: EdgeInsets.all(5), // padding edge
+        height: 60,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(255, 143, 158, 1),
+                Color.fromRGBO(255, 188, 143, 1),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(25.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.pink.withOpacity(0.2),
+                spreadRadius: 4,
+                blurRadius: 10,
+                offset: Offset(0, 3),
+              )
+            ]),
+        child: Center(
           child: Text(
             'Login',
             textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: "Netflix",
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              letterSpacing: 0.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomButton extends StatefulWidget {
+  final String label;
+  final VoidCallback onPressed;
+  final double? height;
+  final double? width;
+
+  const CustomButton({
+    Key? key,
+    required this.label,
+    required this.onPressed,
+    this.height = 60,
+    this.width,
+  }) : super(key: key);
+
+  @override
+  State<CustomButton> createState() => _CustomButtonState();
+}
+
+class _CustomButtonState extends State<CustomButton> {
+  bool _isTappedDown = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() {
+          _isTappedDown = true;
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          _isTappedDown = false;
+        });
+        widget.onPressed();
+      },
+      onTapCancel: () {
+        setState(() {
+          _isTappedDown = false;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: _isTappedDown
+                  ? [
+                      Color.fromRGBO(159, 89, 99, 1),
+                      Color.fromRGBO(168, 124, 94, 1),
+                    ]
+                  : [
+                      Color.fromRGBO(255, 143, 158, 1),
+                      Color.fromRGBO(255, 188, 143, 1),
+                    ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(25.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.pink.withOpacity(0.2),
+                spreadRadius: 4,
+                blurRadius: 10,
+                offset: Offset(0, 3),
+              )
+            ]),
+        padding: EdgeInsets.all(5),
+        height: widget.height,
+        width: widget.width,
+        child: Center(
+          child: Text(
+            widget.label,
             style: TextStyle(
               fontFamily: "Netflix",
               fontWeight: FontWeight.w600,
