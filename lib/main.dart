@@ -68,12 +68,23 @@ class _WelcomePageState extends State<WelcomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: LoginButton(),
                     flex: 1,
+                    child: CustomButton(
+                      label: 'Login',
+                      onPressed: () {},
+                    ),
                   ),
                   Expanded(
-                    child: RegisterButton(),
                     flex: 1,
+                    child: CustomButton(
+                      label: 'Register',
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPage()));
+                      },
+                    ),
                   )
                 ],
               ),
@@ -200,9 +211,6 @@ class _RegisterPage extends State<RegisterPage> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 300,
-            ),
           ],
         ),
         SizedBox(
@@ -210,8 +218,34 @@ class _RegisterPage extends State<RegisterPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CancelButton(),
-              RegisterConfirmButton(),
+              CustomButton(
+                label: 'Cancel',
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                regularColors: [
+                  Color.fromRGBO(143, 201, 255, 1),
+                  Color.fromRGBO(234, 255, 143, 1),
+                ],
+                tappedDownColors: [
+                  Color.fromRGBO(105, 148, 188, 1),
+                  Color.fromRGBO(164, 178, 101, 1),
+                ],
+                height: 60,
+                width: 250,
+              ),
+              CustomButton(
+                label: 'Confirm',
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              EditPersonDataPage(title: "Hello world!")));
+                },
+                height: 60,
+                width: 250,
+              ),
             ],
           ),
         )
@@ -220,205 +254,81 @@ class _RegisterPage extends State<RegisterPage> {
   }
 }
 
-class RegisterConfirmButton extends StatelessWidget {
-  const RegisterConfirmButton({
-    super.key,
-  });
+class CustomButton extends StatefulWidget {
+  final String label;
+  final VoidCallback onPressed;
+  final double? height;
+  final double? width;
+  final List<Color> tappedDownColors;
+  final List<Color> regularColors;
+  const CustomButton({
+    Key? key,
+    required this.label,
+    required this.onPressed,
+    this.tappedDownColors = const [
+      Color.fromRGBO(159, 89, 99, 1),
+      Color.fromRGBO(168, 124, 94, 1),
+    ],
+    this.regularColors = const [
+      Color.fromRGBO(255, 143, 158, 1),
+      Color.fromRGBO(255, 188, 143, 1),
+    ],
+    this.height = 60,
+    this.width,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5),
-      height: 60,
-      width: 250,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(255, 143, 158, 1),
-              Color.fromRGBO(255, 188, 143, 1),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(25.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.pink.withOpacity(0.2),
-              spreadRadius: 4,
-              blurRadius: 10,
-              offset: Offset(0, 3),
-            )
-          ]),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        EditPersonDataPage(title: "Hello world!")));
-          },
-          child: Text(
-            '確認',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-              letterSpacing: 0.0,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  State<CustomButton> createState() => _CustomButtonState();
 }
 
-class CancelButton extends StatelessWidget {
-  const CancelButton({
-    super.key,
-  });
+class _CustomButtonState extends State<CustomButton> {
+  bool _isTappedDown = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5),
-      height: 60,
-      width: 250,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(143, 201, 255, 1),
-              Color.fromRGBO(234, 255, 143, 1),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(25.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromARGB(255, 33, 96, 243).withOpacity(0.2),
-              spreadRadius: 4,
-              blurRadius: 10,
-              offset: Offset(0, 3),
-            )
-          ]),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Text(
-            '取消',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-              letterSpacing: 0.0,
-              color: Colors.white,
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() {
+          _isTappedDown = true;
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          _isTappedDown = false;
+        });
+        widget.onPressed();
+      },
+      onTapCancel: () {
+        setState(() {
+          _isTappedDown = false;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: _isTappedDown
+                  ? widget.tappedDownColors
+                  : widget.regularColors,
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class RegisterButton extends StatelessWidget {
-  const RegisterButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5),
-      height: 60,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(255, 143, 158, 1),
-              Color.fromRGBO(255, 188, 143, 1),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(25.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.pink.withOpacity(0.2),
-              spreadRadius: 4,
-              blurRadius: 10,
-              offset: Offset(0, 3),
-            )
-          ]),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => RegisterPage()));
-          },
-          child: Text(
-            'Create Account',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-              letterSpacing: 0.0,
-              color: Colors.white,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(25.0),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LoginButton extends StatelessWidget {
-  const LoginButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(5), // padding edge
-      height: 60,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(255, 143, 158, 1),
-              Color.fromRGBO(255, 188, 143, 1),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(25.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.pink.withOpacity(0.2),
-              spreadRadius: 4,
-              blurRadius: 10,
-              offset: Offset(0, 3),
-            )
-          ]),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {},
+            boxShadow: [
+              BoxShadow(
+                color: Colors.pink.withOpacity(0.2),
+                spreadRadius: 4,
+                blurRadius: 10,
+                offset: Offset(0, 3),
+              )
+            ]),
+        margin: EdgeInsets.all(5),
+        height: widget.height,
+        width: widget.width,
+        child: Center(
           child: Text(
-            'Login',
-            textAlign: TextAlign.center,
+            widget.label,
             style: TextStyle(
               fontFamily: "Netflix",
               fontWeight: FontWeight.w600,
