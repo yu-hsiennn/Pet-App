@@ -149,7 +149,40 @@ class _RegisterPage extends State<RegisterPage> {
                   border: OutlineInputBorder(),
                   hintText: "password",
                   labelText: 'password',
-                  helperText: 'Helper text',
+                  helperText: '請設定英文加數字至少6位數',
+                  // errorText: 'Error message',
+                  // suffixIcon: Icon(
+                  //   Icons.error,
+                  // ),
+                  suffixIcon: IconButton(
+                    icon: hidePassword
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: TextFormField(
+                cursorColor: Theme.of(context).hintColor,
+                initialValue: '',
+                maxLength: 20,
+                obscureText: hidePassword,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.lock),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF6200EE)),
+                  ),
+                  border: OutlineInputBorder(),
+                  hintText: "enter password again",
+                  labelText: 'enter password again',
+                  // helperText: '請設定英文加數字至少6位數',
                   // errorText: 'Error message',
                   // suffixIcon: Icon(
                   //   Icons.error,

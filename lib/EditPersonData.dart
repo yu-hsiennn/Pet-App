@@ -11,36 +11,38 @@ class EditPersonDataPage extends StatefulWidget {
 }
 
 class _EditPersonDataPageState extends State<EditPersonDataPage> {
-  String? gender;
-  Widget buildTitle() {
-    return const Padding(
-      padding: EdgeInsets.all(8),
+  String? gender = "unknown";
+  String? type = "Dog";
+  Widget buildTitle(String title) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
       child: Text(
-        '編輯個人資料',
-        style: TextStyle(fontSize: 42),
+        title,
+        style: TextStyle(fontSize: 16),
       ),
     );
   }
 
-  Widget buildNameTextField() {
-    return const TextField(
-      autofocus: true,
-      decoration: InputDecoration(
-          border: OutlineInputBorder(borderSide: BorderSide(width: 3)),
-          hintText: "ex:黃大元",
-          prefixIcon: Icon(Icons.person)),
-    );
-  }
+  // Widget buildNameTextField() {
+  //   return const TextField(
+  //     autofocus: true,
+  //     decoration: InputDecoration(
+  //         border: OutlineInputBorder(borderSide: BorderSide(width: 3)),
+  //         hintText: "ex:黃大元",
+  //         prefixIcon: Icon(Icons.person)),
+  //   );
+  // }
 
-  Widget buildIntroTextField() {
-    return const TextField(
-        keyboardType: TextInputType.multiline,
-        minLines: 10,
-        maxLines: null,
-        autofocus: true,
-        decoration: InputDecoration(
-            border: OutlineInputBorder(borderSide: BorderSide(width: 3)),
-            hintText: "請輸入您的簡介"));
+  Widget buildIntroTextField(String hints) {
+    return TextField(
+      decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: 3),
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        hintText: hints,
+      )
+    );
   }
 
   Widget buildNextStepButton() {
@@ -96,28 +98,111 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
     );
   }
 
+  Widget buildPetType() {
+    return DropdownButtonFormField(
+      decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: 3),
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: 3),
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+      ),
+      isExpanded: true,
+      items: <DropdownMenuItem<String>>[
+        DropdownMenuItem(
+          value: "Dog",
+          child: Text(
+            "狗",
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: type == "Dog" ? Colors.black : Colors.grey),
+          ),
+        ),
+        DropdownMenuItem(
+          value: "Cat",
+          child: Text(
+            "貓",
+            style: TextStyle(color: type == "Cat" ? Colors.black : Colors.grey),
+          ),
+        ),
+        DropdownMenuItem(
+          value: "Dolphin",
+          child: Text(
+            "海豚",
+            style: TextStyle(
+                color: type == "Dolphin" ? Colors.black : Colors.grey),
+          ),
+        ),
+        DropdownMenuItem(
+          value: "Dinosaur",
+          child: Text(
+            "恐龍",
+            style: TextStyle(
+                color: type == "Dinosaur" ? Colors.black : Colors.grey),
+          ),
+        ),
+        DropdownMenuItem(
+          value: "Others",
+          child: Text(
+            "其他",
+            style: TextStyle(
+                color: type == "Others" ? Colors.black : Colors.grey),
+          ),
+        ),
+      ],
+      hint: const Text("動物種類"), // 當沒有初始值時顯示
+      onChanged: (selectValue) {
+        //選中後的回撥
+        setState(() {
+          type = selectValue;
+        });
+      },
+      value: type, // 設定初始值，要與列表中的value是相同的
+      iconSize: 30, //設定三角標icon的大小
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-            //上下左右各添加16像素补白
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: kToolbarHeight),
-                buildTitle(),
-                const Text('您的名子'),
-                buildNameTextField(),
-                buildSexRadioButton(),
-                const Text('您的簡介'),
-                buildIntroTextField(),
-                const Text('50字為上限'),
-                Center(
-                  child: buildNextStepButton(),
-                )
-              ],
-            )));
+      appBar: AppBar(
+        title: const Text("建立您的資料"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Bottom Overflow!!
+            Flexible(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildTitle('您的名子'),
+                  buildIntroTextField("ex: 黃曉明"),
+                  buildSexRadioButton(),
+                  buildTitle('飼養的動物種類'),
+                  buildPetType(),
+                  buildTitle('寵物品種'),
+                  buildIntroTextField("柯基"),
+                  buildTitle('寵物的名子'),
+                  buildIntroTextField("小黑"),
+                ],
+              ),
+              flex: 3,
+            ),
+            Flexible(child: Center(
+              child: buildNextStepButton(),
+              ),
+              flex: 2,
+            )
+          ],
+        )
+      )
+    );
   }
 }
 class NextPageButton extends StatelessWidget {
@@ -128,53 +213,53 @@ class NextPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(5),
-      height: 60,
-      width: 250,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color.fromRGBO(255, 143, 158, 1),
-            Color.fromRGBO(255, 188, 143, 1),
-          ],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+        margin: EdgeInsets.all(5),
+        height: 60,
+        width: 250,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(255, 143, 158, 1),
+              Color.fromRGBO(255, 188, 143, 1),
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(25.0),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.pink.withOpacity(0.2),
+              spreadRadius: 4,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            )
+          ]
         ),
-        borderRadius: const BorderRadius.all(
-          Radius.circular(25.0),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.pink.withOpacity(0.2),
-            spreadRadius: 4,
-            blurRadius: 10,
-            offset: Offset(0, 3),
-          )
-        ]
-      ),
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditPetDataPage1(title: "Hello world!")
-              )
-            );
-          },
-          child: Text(
-            '下一步',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-              letterSpacing: 0.0,
-              color: Colors.white,
+        child: Center(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditPetDataPage1(title: "Hello world!")
+                )
+              );
+            },
+            child: Text(
+              '完成',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontFamily: "Netflix",
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                letterSpacing: 0.0,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-      ),
     );
   }
 }
