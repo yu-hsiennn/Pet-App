@@ -24,16 +24,6 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
     );
   }
 
-  // Widget buildNameTextField() {
-  //   return const TextField(
-  //     autofocus: true,
-  //     decoration: InputDecoration(
-  //         border: OutlineInputBorder(borderSide: BorderSide(width: 3)),
-  //         hintText: "ex:黃大元",
-  //         prefixIcon: Icon(Icons.person)),
-  //   );
-  // }
-
   Widget buildIntroTextField(String hints) {
     return TextField(
       decoration: InputDecoration(
@@ -168,6 +158,8 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Avoid button OverFlow 
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("建立您的資料"),
       ),
@@ -193,7 +185,7 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
                   buildIntroTextField("小黑"),
                 ],
               ),
-              flex: 3,
+              flex: 6,
             ),
             Flexible(child: Center(
               child: buildNextStepButton(),

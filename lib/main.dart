@@ -210,14 +210,12 @@ class _RegisterPage extends State<RegisterPage> {
                 ),
               ),
             ),
-          ],
-        ),
-        SizedBox(
-          width: 550, // set this
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomButton(
+          Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 1,
+              child: CustomButton(
                 label: 'Cancel',
                 onPressed: () {
                   Navigator.pop(context);
@@ -231,23 +229,26 @@ class _RegisterPage extends State<RegisterPage> {
                   Color.fromRGBO(164, 178, 101, 1),
                 ],
                 height: 60,
-                width: 250,
               ),
-              CustomButton(
+            ),
+            Expanded(
+              flex: 1,
+              child: CustomButton(
                 label: 'Confirm',
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              EditPersonDataPage(title: "Hello world!")));
-                },
-                height: 60,
-                width: 250,
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            EditPersonDataPage(title: "Hello world!")));
+              },
+              height: 60,
               ),
-            ],
-          ),
-        )
+            ),
+          ],
+        ),
+          ],
+        ),
       ],
     ));
   }
