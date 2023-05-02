@@ -119,6 +119,14 @@ class _EditPetDataPage1State extends State<EditPetDataPage1> {
                 color: type == "Dinosaur" ? Colors.black : Colors.grey),
           ),
         ),
+        DropdownMenuItem(
+          value: "Dinosaur",
+          child: Text(
+            "其他",
+            style: TextStyle(
+                color: type == "Dinosaur" ? Colors.black : Colors.grey),
+          ),
+        ),
       ],
       hint: const Text("動物種類"), // 當沒有初始值時顯示
       onChanged: (selectValue) {

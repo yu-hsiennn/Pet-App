@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'EditPetData1.dart';
+import 'Profile.dart';
 
 class EditPersonDataPage extends StatefulWidget {
   const EditPersonDataPage({super.key, required this.title});
@@ -13,6 +13,7 @@ class EditPersonDataPage extends StatefulWidget {
 class _EditPersonDataPageState extends State<EditPersonDataPage> {
   String? gender = "unknown";
   String? type = "Dog";
+
   Widget buildTitle(String title) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
@@ -206,6 +207,10 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
   }
 }
 class NextPageButton extends StatelessWidget {
+  static PetDetail pt1 = new PetDetail("Luchi", "Gold", "Male", 3, ["123", "456", "789"], "assets/image/dog1.jpg");
+  static PetDetail pt2 = new PetDetail("Lushi", "Gold", "Female", 2, ["321", "987"], "assets/image/dog2.jpeg");
+  static UserDetail p1 = new UserDetail("peach", 116, 0, "I'm priness", 2, "assets/image/peach.jpg", ["assets/image/dog2.jpeg", "assets/image/dog3.jpg"], [pt1, pt2]);
+
   const NextPageButton({
     super.key,
   });
@@ -243,7 +248,7 @@ class NextPageButton extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditPetDataPage1(title: "Hello world!")
+                  builder: (context) => ProfilePage(person: p1)
                 )
               );
             },
@@ -261,5 +266,45 @@ class NextPageButton extends StatelessWidget {
           ),
         ),
     );
+  }
+}
+
+class UserDetail {
+  String name = "Oreo";
+  int follower = 0;
+  int posts_count = 0;
+  String intro = "";
+  int pet_count = 1;
+  String photo = "123.jpg";
+  List<String> posts = ["123.jpg", "456.jpg"];
+  List<PetDetail> petdatas = [];
+
+  UserDetail(String _name, int _follower, int _posts_count, String _intro, int _pet_count, String _photo, List<String> _posts, List<PetDetail> _petdatas) {
+    name = _name;
+    follower = _follower;
+    posts = _posts;
+    intro = _intro;
+    pet_count = _pet_count;
+    photo = _photo;
+    posts_count = _posts_count;
+    petdatas = _petdatas;
+  }
+}
+
+class PetDetail {
+  String name = "thing";
+  String breed = "Gold";
+  String gender = "Male";
+  int age = 3;
+  List<String> personality_lable = ["Smart", "annoying", "cute"];
+  String photo = "789.jpg";
+
+  PetDetail(String _name, String _breed, String _gender, int _age, List<String> _personality_label, String _photo) {
+    name = _name;
+    breed = _breed;
+    gender = _gender;
+    age = _age;
+    personality_lable = _personality_label;
+    photo = _photo;
   }
 }
