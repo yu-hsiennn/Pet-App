@@ -26,14 +26,13 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
 
   Widget buildIntroTextField(String hints) {
     return TextField(
-      decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 3),
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        hintText: hints,
-      )
-    );
+        decoration: InputDecoration(
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(width: 3),
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      hintText: hints,
+    ));
   }
 
   Widget buildNextStepButton() {
@@ -138,8 +137,8 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
           value: "Others",
           child: Text(
             "其他",
-            style: TextStyle(
-                color: type == "Others" ? Colors.black : Colors.grey),
+            style:
+                TextStyle(color: type == "Others" ? Colors.black : Colors.grey),
           ),
         ),
       ],
@@ -158,50 +157,62 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Avoid button OverFlow 
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text("建立您的資料"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Bottom Overflow!!
-            Flexible(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildTitle('您的名子'),
-                  buildIntroTextField("ex: 黃曉明"),
-                  buildSexRadioButton(),
-                  buildTitle('飼養的動物種類'),
-                  buildPetType(),
-                  buildTitle('寵物品種'),
-                  buildIntroTextField("柯基"),
-                  buildTitle('寵物的名子'),
-                  buildIntroTextField("小黑"),
-                ],
-              ),
-              flex: 6,
-            ),
-            Flexible(child: Center(
-              child: buildNextStepButton(),
-              ),
-              flex: 2,
-            )
-          ],
-        )
-      )
-    );
+        // Avoid button OverFlow
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text("建立您的資料"),
+          titleTextStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+        ),
+        body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Bottom Overflow!!
+                Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildTitle('您的名子'),
+                      buildIntroTextField("ex: 黃曉明"),
+                      buildSexRadioButton(),
+                      buildTitle('飼養的動物種類'),
+                      buildPetType(),
+                      buildTitle('寵物品種'),
+                      buildIntroTextField("柯基"),
+                      buildTitle('寵物的名子'),
+                      buildIntroTextField("小黑"),
+                    ],
+                  ),
+                  flex: 6,
+                ),
+                Flexible(
+                  child: Center(
+                    child: buildNextStepButton(),
+                  ),
+                  flex: 2,
+                )
+              ],
+            )));
   }
 }
+
 class NextPageButton extends StatelessWidget {
-  static PetDetail pt1 = new PetDetail("Luchi", "Gold", "Male", 3, ["123", "456", "789"], "assets/image/dog1.jpg");
-  static PetDetail pt2 = new PetDetail("Lushi", "Gold", "Female", 2, ["321", "987"], "assets/image/dog2.jpeg");
-  static UserDetail p1 = new UserDetail("peach", 116, 0, "I'm priness", 2, "assets/image/peach.jpg", ["assets/image/dog2.jpeg", "assets/image/dog3.jpg"], [pt1, pt2]);
+  static PetDetail pt1 = new PetDetail("Luchi", "Gold", "Male", 3,
+      ["123", "456", "789"], "assets/image/dog1.jpg");
+  static PetDetail pt2 = new PetDetail(
+      "Lushi", "Gold", "Female", 2, ["321", "987"], "assets/image/dog2.jpeg");
+  static UserDetail p1 = new UserDetail(
+      "peach",
+      116,
+      0,
+      "I'm priness",
+      2,
+      "assets/image/peach.jpg",
+      ["assets/image/dog2.jpeg", "assets/image/dog3.jpg"],
+      [pt1, pt2]);
 
   const NextPageButton({
     super.key,
@@ -210,10 +221,10 @@ class NextPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(5),
-        height: 60,
-        width: 250,
-        decoration: BoxDecoration(
+      margin: EdgeInsets.all(5),
+      height: 60,
+      width: 250,
+      decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Color.fromRGBO(255, 143, 158, 1),
@@ -232,31 +243,28 @@ class NextPageButton extends StatelessWidget {
               blurRadius: 10,
               offset: Offset(0, 3),
             )
-          ]
-        ),
-        child: Center(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
+          ]),
+      child: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(person: p1)
-                )
-              );
-            },
-            child: Text(
-              '完成',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontFamily: "Netflix",
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                letterSpacing: 0.0,
-                color: Colors.white,
-              ),
+                    builder: (context) => ProfilePage(person: p1)));
+          },
+          child: Text(
+            '完成',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontFamily: "Netflix",
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              letterSpacing: 0.0,
+              color: Colors.white,
             ),
           ),
         ),
+      ),
     );
   }
 }
@@ -271,7 +279,15 @@ class UserDetail {
   List<String> posts = ["123.jpg", "456.jpg"];
   List<PetDetail> petdatas = [];
 
-  UserDetail(String _name, int _follower, int _posts_count, String _intro, int _pet_count, String _photo, List<String> _posts, List<PetDetail> _petdatas) {
+  UserDetail(
+      String _name,
+      int _follower,
+      int _posts_count,
+      String _intro,
+      int _pet_count,
+      String _photo,
+      List<String> _posts,
+      List<PetDetail> _petdatas) {
     name = _name;
     follower = _follower;
     posts = _posts;
@@ -291,7 +307,8 @@ class PetDetail {
   List<String> personality_lable = ["Smart", "annoying", "cute"];
   String photo = "789.jpg";
 
-  PetDetail(String _name, String _breed, String _gender, int _age, List<String> _personality_label, String _photo) {
+  PetDetail(String _name, String _breed, String _gender, int _age,
+      List<String> _personality_label, String _photo) {
     name = _name;
     breed = _breed;
     gender = _gender;

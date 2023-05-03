@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Pet Match',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
       home: const WelcomePage(title: 'Pet Match Welcome Page'),
     );
@@ -60,6 +60,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ],
           )),
           Container(
+            constraints: BoxConstraints(maxWidth: 500),
             margin: EdgeInsets.all(10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
