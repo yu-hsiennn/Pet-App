@@ -18,15 +18,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.person.name,
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(20.0),

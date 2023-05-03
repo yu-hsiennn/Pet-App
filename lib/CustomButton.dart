@@ -32,55 +32,58 @@ class _CustomButtonState extends State<CustomButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) {
-        setState(() {
-          _isTappedDown = true;
-        });
-      },
-      onTapUp: (_) {
-        setState(() {
-          _isTappedDown = false;
-        });
-        widget.onPressed();
-      },
-      onTapCancel: () {
-        setState(() {
-          _isTappedDown = false;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: _isTappedDown
-                  ? widget.tappedDownColors
-                  : widget.regularColors,
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(25.0),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.pink.withOpacity(0.2),
-                spreadRadius: 4,
-                blurRadius: 10,
-                offset: Offset(0, 3),
-              )
-            ]),
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        height: widget.height,
-        width: widget.width,
-        child: Center(
-          child: Text(
-            widget.label,
-            style: TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w600,
-              fontSize: 18,
-              letterSpacing: 0.0,
-              color: Colors.white,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTapDown: (_) {
+          setState(() {
+            _isTappedDown = true;
+          });
+        },
+        onTapUp: (_) {
+          setState(() {
+            _isTappedDown = false;
+          });
+          widget.onPressed();
+        },
+        onTapCancel: () {
+          setState(() {
+            _isTappedDown = false;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: _isTappedDown
+                    ? widget.tappedDownColors
+                    : widget.regularColors,
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(25.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.pink.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
+                )
+              ]),
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          height: widget.height,
+          width: widget.width,
+          child: Center(
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                fontFamily: "Netflix",
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                letterSpacing: 0.0,
+                color: Colors.white,
+              ),
             ),
           ),
         ),

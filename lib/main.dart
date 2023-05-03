@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'CustomButton.dart';
 import 'RegisterPage.dart';
+import 'OverviewPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,7 +62,7 @@ class _WelcomePageState extends State<WelcomePage> {
           )),
           Container(
             constraints: BoxConstraints(maxWidth: 500),
-            margin: EdgeInsets.all(10),
+            margin: EdgeInsets.only(bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -69,7 +70,12 @@ class _WelcomePageState extends State<WelcomePage> {
                   flex: 1,
                   child: CustomButton(
                     label: '登入',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OverviewPage()));
+                    },
                   ),
                 ),
                 Expanded(
