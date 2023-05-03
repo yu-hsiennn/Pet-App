@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'CustomButton.dart';
-import 'EditPersonData.dart';
+import 'EditPersonDataPage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});

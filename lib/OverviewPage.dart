@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pet_app/Profile.dart';
-import 'RegisterPage.dart';
-import 'EditPersonData.dart';
+
+import 'EditPersonDataPage.dart';
+import 'ProfilePage.dart';
 
 //demo user with two pets
 PetDetail demoPet1 = PetDetail(
