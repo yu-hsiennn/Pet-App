@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'CustomWidget.dart';
 import 'EditPersonData.dart';
-import 'main.dart';
+import 'CustomButton.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.person});
@@ -34,9 +34,11 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              profile_info(widget.person.photo, widget.person.posts_count, widget.person.follower, true),
+              profile_info(widget.person.photo, widget.person.posts_count,
+                  widget.person.follower, true),
               Text_title("飼主簡介"),
-              Text_info("tttttttttttttttteeeeeeeeeeeeeeeeeeeesssssssssssssssssttttttttttttttt"),
+              Text_info(
+                  "tttttttttttttttteeeeeeeeeeeeeeeeeeeesssssssssssssssssttttttttttttttt"),
               Text_title("寵物資料"),
               Pets_photo(widget.person.petdatas),
               Text_title("寵物相簿"),
@@ -47,8 +49,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget profile_info(String file_name, int posts_count, int followers, bool is_user) {
-    if (is_user){
+  Widget profile_info(
+      String file_name, int posts_count, int followers, bool is_user) {
+    if (is_user) {
       return Container(
         padding: EdgeInsets.all(20.0),
         child: Row(
@@ -140,14 +143,13 @@ class _ProfilePageState extends State<ProfilePage> {
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.black,
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
-        )
-      ),
+          border: Border.all(
+            color: Colors.black,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          )),
       child: Text(
         info,
         style: TextStyle(
@@ -157,14 +159,14 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget Pets_photo(List<PetDetail> pets_list){
+  Widget Pets_photo(List<PetDetail> pets_list) {
     return Container(
       padding: EdgeInsets.all(25.0),
       child: Row(
-        children: pets_list.map((pet) => cw.Profile_photo(35, file_name: pet.photo)).toList(),
+        children: pets_list
+            .map((pet) => cw.Profile_photo(35, file_name: pet.photo))
+            .toList(),
       ),
     );
   }
-
 }
-

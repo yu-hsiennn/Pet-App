@@ -35,61 +35,58 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-                child: ListView(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(10),
-                  alignment: Alignment.topCenter,
-                  child: Text('PET MATCH',
-                      style: TextStyle(
-                        fontSize: 50,
-                      )),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  alignment: Alignment.topCenter,
-                  child: Text('Welcome Page',
-                      style: TextStyle(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                      )),
-                ),
-              ],
-            )),
-            Container(
-              alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: CustomButton(
-                      label: 'Login',
-                      onPressed: () {},
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: CustomButton(
-                      label: 'Register',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RegisterPage()));
-                      },
-                    ),
-                  )
-                ],
+      body: Column(
+        children: <Widget>[
+          Expanded(
+              child: ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                alignment: Alignment.topLeft,
+                child: Text('PET MATCH',
+                    style: TextStyle(
+                      fontSize: 50,
+                    )),
               ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+                alignment: Alignment.topLeft,
+                child: Text('Welcome \nPage',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
+            ],
+          )),
+          Container(
+            margin: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: CustomButton(
+                    label: '登入',
+                    onPressed: () {},
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: CustomButton(
+                    label: '注冊',
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterPage()));
+                    },
+                  ),
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

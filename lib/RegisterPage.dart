@@ -18,20 +18,20 @@ class _RegisterPage extends State<RegisterPage> {
         body: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Expanded(
+            child: ListView(
           children: [
             Container(
-              margin: EdgeInsets.all(10),
+              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Text(
                 "註冊",
                 style: TextStyle(
-                  fontSize: 45,
+                  fontSize: 50,
                 ),
               ),
             ),
             Container(
-              margin: EdgeInsets.all(10),
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
               child: TextFormField(
                 cursorColor: Theme.of(context).primaryColor,
                 initialValue: '',
@@ -42,9 +42,8 @@ class _RegisterPage extends State<RegisterPage> {
                     borderSide: BorderSide(color: Color(0xFF6200EE)),
                   ),
                   border: OutlineInputBorder(),
-                  hintText: "email",
-                  labelText: 'email',
-                  helperText: 'xxx@gmail.com',
+                  hintText: "電郵",
+                  labelText: '電郵',
                   suffixIcon: Icon(
                     Icons.check_circle,
                   ),
@@ -52,7 +51,7 @@ class _RegisterPage extends State<RegisterPage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.all(10),
+              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: TextFormField(
                 cursorColor: Theme.of(context).hintColor,
                 initialValue: '',
@@ -64,8 +63,8 @@ class _RegisterPage extends State<RegisterPage> {
                     borderSide: BorderSide(color: Color(0xFF6200EE)),
                   ),
                   border: OutlineInputBorder(),
-                  hintText: "password",
-                  labelText: 'password',
+                  hintText: "密碼",
+                  labelText: '密碼',
                   helperText: '請設定英文加數字至少6位數',
                   // errorText: 'Error message',
                   // suffixIcon: Icon(
@@ -85,7 +84,7 @@ class _RegisterPage extends State<RegisterPage> {
               ),
             ),
             Container(
-              margin: EdgeInsets.all(10),
+              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: TextFormField(
                 cursorColor: Theme.of(context).hintColor,
                 initialValue: '',
@@ -97,8 +96,8 @@ class _RegisterPage extends State<RegisterPage> {
                     borderSide: BorderSide(color: Color(0xFF6200EE)),
                   ),
                   border: OutlineInputBorder(),
-                  hintText: "enter password again",
-                  labelText: 'enter password again',
+                  hintText: "重複輸入密碼",
+                  labelText: '重複輸入密碼',
                   // helperText: '請設定英文加數字至少6位數',
                   // errorText: 'Error message',
                   // suffixIcon: Icon(
@@ -117,44 +116,47 @@ class _RegisterPage extends State<RegisterPage> {
                 ),
               ),
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: CustomButton(
-                    label: 'Cancel',
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    regularColors: [
-                      Color.fromRGBO(143, 201, 255, 1),
-                      Color.fromRGBO(234, 255, 143, 1),
-                    ],
-                    tappedDownColors: [
-                      Color.fromRGBO(105, 148, 188, 1),
-                      Color.fromRGBO(164, 178, 101, 1),
-                    ],
-                    height: 60,
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: CustomButton(
-                    label: 'Confirm',
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  EditPersonDataPage(title: "Hello world!")));
-                    },
-                    height: 60,
-                  ),
-                ),
-              ],
-            ),
           ],
+        )),
+        Container(
+          margin: EdgeInsets.all(10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: CustomButton(
+                  label: '取消',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  regularColors: [
+                    Color.fromRGBO(143, 201, 255, 1),
+                    Color.fromRGBO(234, 255, 143, 1),
+                  ],
+                  tappedDownColors: [
+                    Color.fromRGBO(105, 148, 188, 1),
+                    Color.fromRGBO(164, 178, 101, 1),
+                  ],
+                  height: 60,
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: CustomButton(
+                  label: '確認',
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                EditPersonDataPage(title: "Hello world!")));
+                  },
+                  height: 60,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     ));
