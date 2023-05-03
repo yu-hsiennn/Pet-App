@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'EditPersonDataPage.dart';
+import 'UserData.dart';
 import 'ProfilePage.dart';
 
 //demo user with two pets
@@ -19,12 +18,12 @@ UserDetail demoUser1 = UserDetail(
     ["assets/image/dog2.jpeg", "assets/image/dog3.jpg"],
     [demoPet1, demoPet2]);
 
-class OverviewPage extends StatefulWidget {
+class MainPage extends StatefulWidget {
   @override
-  State<OverviewPage> createState() => _OverviewPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _OverviewPageState extends State<OverviewPage> {
+class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     PlaceholderWidget(Colors.blue),

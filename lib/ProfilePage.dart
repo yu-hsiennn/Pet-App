@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'CustomWidget.dart';
-import 'EditPersonDataPage.dart';
+import 'UserData.dart';
 import 'CustomButton.dart';
 
 class ProfilePage extends StatefulWidget {

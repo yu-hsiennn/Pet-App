@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'CustomButton.dart';
 import 'RegisterPage.dart';
-import 'OverviewPage.dart';
+import 'MainPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -71,10 +71,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   child: CustomButton(
                     label: '登入',
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OverviewPage()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MainPage()));
                     },
                   ),
                 ),

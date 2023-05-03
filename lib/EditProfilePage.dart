@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/CustomButton.dart';
-import 'ProfilePage.dart';
-import 'OverviewPage.dart';
+import 'MainPage.dart';
 
-class EditPersonDataPage extends StatefulWidget {
-  const EditPersonDataPage({super.key, required this.title});
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<EditPersonDataPage> createState() => _EditPersonDataPageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _EditPersonDataPageState extends State<EditPersonDataPage> {
+class _EditProfilePageState extends State<EditProfilePage> {
   String? gender = "unknown";
   String? type = "Dog";
 
@@ -50,7 +49,7 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
         label: '完成',
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => OverviewPage()));
+              context, MaterialPageRoute(builder: (context) => MainPage()));
         },
       ),
     );
@@ -202,54 +201,5 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
             )
           ],
         ));
-  }
-}
-
-class UserDetail {
-  String name = "Oreo";
-  int follower = 0;
-  int posts_count = 0;
-  String intro = "";
-  int pet_count = 1;
-  String photo = "123.jpg";
-  List<String> posts = ["123.jpg", "456.jpg"];
-  List<PetDetail> petdatas = [];
-
-  UserDetail(
-      String _name,
-      int _follower,
-      int _posts_count,
-      String _intro,
-      int _pet_count,
-      String _photo,
-      List<String> _posts,
-      List<PetDetail> _petdatas) {
-    name = _name;
-    follower = _follower;
-    posts = _posts;
-    intro = _intro;
-    pet_count = _pet_count;
-    photo = _photo;
-    posts_count = _posts_count;
-    petdatas = _petdatas;
-  }
-}
-
-class PetDetail {
-  String name = "thing";
-  String breed = "Gold";
-  String gender = "Male";
-  int age = 3;
-  List<String> personality_lable = ["Smart", "annoying", "cute"];
-  String photo = "789.jpg";
-
-  PetDetail(String _name, String _breed, String _gender, int _age,
-      List<String> _personality_label, String _photo) {
-    name = _name;
-    breed = _breed;
-    gender = _gender;
-    age = _age;
-    personality_lable = _personality_label;
-    photo = _photo;
   }
 }

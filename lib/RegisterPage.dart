@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'CustomButton.dart';
-import 'EditPersonDataPage.dart';
+import 'EditProfilePage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -148,7 +148,7 @@ class _RegisterPage extends State<RegisterPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    EditPersonDataPage(title: "Hello world!")));
+                                    EditProfilePage(title: "Hello world!")));
                       },
                       height: 60,
                     ),
