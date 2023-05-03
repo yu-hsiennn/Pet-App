@@ -20,26 +20,33 @@ class _RegisterPage extends State<RegisterPage> {
           title: const Text(
             '注冊',
           ),
-          titleTextStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          titleTextStyle: TextStyle(
+            fontSize: 40,
+          ),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
                 child: ListView(
+              padding: EdgeInsets.all(20),
               children: [
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                  margin: EdgeInsets.symmetric(vertical: 20),
                   child: TextFormField(
-                    cursorColor: Theme.of(context).primaryColor,
+                    cursorColor: Colors.black,
                     initialValue: '',
                     maxLength: 20,
                     decoration: InputDecoration(
                       icon: Icon(Icons.account_circle),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF6200EE)),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
-                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 3),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
                       hintText: "電郵",
                       labelText: '電郵',
                       suffixIcon: Icon(
@@ -49,16 +56,21 @@ class _RegisterPage extends State<RegisterPage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                  margin: EdgeInsets.symmetric(vertical: 20),
                   child: TextFormField(
-                    cursorColor: Theme.of(context).hintColor,
+                    cursorColor: Colors.black,
                     initialValue: '',
                     maxLength: 20,
                     obscureText: hidePassword,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF6200EE)),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 3),
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
                       border: OutlineInputBorder(),
                       hintText: "密碼",
@@ -82,16 +94,21 @@ class _RegisterPage extends State<RegisterPage> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                  margin: EdgeInsets.symmetric(vertical: 20),
                   child: TextFormField(
-                    cursorColor: Theme.of(context).hintColor,
+                    cursorColor: Colors.black,
                     initialValue: '',
                     maxLength: 20,
                     obscureText: hidePassword,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF6200EE)),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 3),
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
                       border: OutlineInputBorder(),
                       hintText: "重複輸入密碼",
@@ -118,7 +135,7 @@ class _RegisterPage extends State<RegisterPage> {
             )),
             Container(
               constraints: BoxConstraints(maxWidth: 250),
-              margin: EdgeInsets.all(10),
+              margin: EdgeInsets.only(bottom: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,

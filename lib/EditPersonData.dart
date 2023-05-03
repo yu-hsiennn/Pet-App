@@ -26,13 +26,18 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
 
   Widget buildIntroTextField(String hints) {
     return TextField(
+        cursorColor: Colors.black,
         decoration: InputDecoration(
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(width: 3),
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      hintText: hints,
-    ));
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 3),
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 1),
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          hintText: hints,
+        ));
   }
 
   Widget buildNextStepButton() {
@@ -50,6 +55,7 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
       children: <Widget>[
         Flexible(
           child: RadioListTile(
+            activeColor: Colors.black,
             title: const Text("男性"),
             value: "male",
             groupValue: gender,
@@ -62,6 +68,7 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
         ),
         Flexible(
           child: RadioListTile(
+            activeColor: Colors.black,
             title: const Text("女性"),
             value: "female",
             groupValue: gender,
@@ -74,6 +81,7 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
         ),
         Flexible(
           child: RadioListTile(
+            activeColor: Colors.black,
             title: const Text("不透漏"),
             value: "unknown",
             groupValue: gender,
@@ -92,7 +100,7 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
     return DropdownButtonFormField(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 3),
+          borderSide: BorderSide(width: 1),
           borderRadius: BorderRadius.circular(30.0),
         ),
         focusedBorder: OutlineInputBorder(
@@ -107,38 +115,35 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
           child: Text(
             "狗",
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(color: type == "Dog" ? Colors.black : Colors.grey),
+            style: TextStyle(color: Colors.black),
           ),
         ),
         DropdownMenuItem(
           value: "Cat",
           child: Text(
             "貓",
-            style: TextStyle(color: type == "Cat" ? Colors.black : Colors.grey),
+            style: TextStyle(color: Colors.black),
           ),
         ),
         DropdownMenuItem(
           value: "Dolphin",
           child: Text(
             "海豚",
-            style: TextStyle(
-                color: type == "Dolphin" ? Colors.black : Colors.grey),
+            style: TextStyle(color: Colors.black),
           ),
         ),
         DropdownMenuItem(
           value: "Dinosaur",
           child: Text(
             "恐龍",
-            style: TextStyle(
-                color: type == "Dinosaur" ? Colors.black : Colors.grey),
+            style: TextStyle(color: Colors.black),
           ),
         ),
         DropdownMenuItem(
           value: "Others",
           child: Text(
             "其他",
-            style:
-                TextStyle(color: type == "Others" ? Colors.black : Colors.grey),
+            style: TextStyle(color: Colors.black),
           ),
         ),
       ],
@@ -162,40 +167,35 @@ class _EditPersonDataPageState extends State<EditPersonDataPage> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text("建立您的資料"),
-          titleTextStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          titleTextStyle: TextStyle(fontSize: 40),
         ),
-        body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Bottom Overflow!!
-                Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildTitle('您的名子'),
-                      buildIntroTextField("ex: 黃曉明"),
-                      buildSexRadioButton(),
-                      buildTitle('飼養的動物種類'),
-                      buildPetType(),
-                      buildTitle('寵物品種'),
-                      buildIntroTextField("柯基"),
-                      buildTitle('寵物的名子'),
-                      buildIntroTextField("小黑"),
-                    ],
-                  ),
-                  flex: 6,
-                ),
-                Flexible(
-                  child: Center(
-                    child: buildNextStepButton(),
-                  ),
-                  flex: 2,
-                )
-              ],
-            )));
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Bottom Overflow!!
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.all(20),
+                children: [
+                  buildTitle('您的名子'),
+                  buildIntroTextField("ex: 黃曉明"),
+                  buildSexRadioButton(),
+                  buildTitle('飼養的動物種類'),
+                  buildPetType(),
+                  buildTitle('寵物品種'),
+                  buildIntroTextField("柯基"),
+                  buildTitle('寵物的名子'),
+                  buildIntroTextField("小黑"),
+                ],
+              ),
+            ),
+            Container(
+              child: Center(
+                child: buildNextStepButton(),
+              ),
+            )
+          ],
+        ));
   }
 }
 

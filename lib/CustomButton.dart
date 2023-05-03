@@ -69,7 +69,7 @@ class _CustomButtonState extends State<CustomButton> {
                 offset: Offset(0, 3),
               )
             ]),
-        margin: EdgeInsets.all(5),
+        margin: EdgeInsets.symmetric(horizontal: 5),
         height: widget.height,
         width: widget.width,
         child: Center(
