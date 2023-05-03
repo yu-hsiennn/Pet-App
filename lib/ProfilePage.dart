@@ -20,15 +20,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.person.name,
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(20.0),
@@ -49,61 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: Colors.red,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.upload),
-            label: 'Posts',
-            backgroundColor: Colors.green,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: 'Message',
-            backgroundColor: Colors.purple,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Profile',
-            backgroundColor: Colors.pink,
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
     );
-  }
-
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Posts',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: Message',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: Profile',
-      style: optionStyle,
-    ),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   Widget profile_info(
