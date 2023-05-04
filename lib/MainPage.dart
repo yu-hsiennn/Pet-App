@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'UserData.dart';
 import 'ProfilePage.dart';
+import 'ChatOverviewPage.dart';
 
 //demo user with two pets
 PetDetail demoPet1 = PetDetail(
@@ -18,6 +19,37 @@ UserDetail demoUser1 = UserDetail(
     ["assets/image/dog2.jpeg", "assets/image/dog3.jpg"],
     [demoPet1, demoPet2]);
 
+List<Chat> chatList = [
+  Chat(
+      name: 'someFriend',
+      lastActive: DateTime.now(),
+      lastMessage: 'somelastmessage'),
+  Chat(
+      name: 'someFriend',
+      lastActive: DateTime.parse('2023-05-04 12:25'),
+      lastMessage: 'somelastmessage'),
+  Chat(
+      name: 'someFriend',
+      lastActive: DateTime.parse('2023-05-04 12:24'),
+      lastMessage: 'somelastmessage'),
+  Chat(
+      name: 'someFriend',
+      lastActive: DateTime.parse('2023-05-04 10:24'),
+      lastMessage: 'somelastmessage'),
+  Chat(
+      name: 'someFriend',
+      lastActive: DateTime.parse('2023-05-02 10:24'),
+      lastMessage: 'somelastmessage'),
+  Chat(
+      name: 'someFriend',
+      lastActive: DateTime.now(),
+      lastMessage: 'somelastmessage'),
+  Chat(
+      name: 'someFriend',
+      lastActive: DateTime.now(),
+      lastMessage: 'somelastmessage'),
+];
+
 class MainPage extends StatefulWidget {
   @override
   State<MainPage> createState() => _MainPageState();
@@ -28,7 +60,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     PlaceholderWidget(Colors.blue),
     PlaceholderWidget(Colors.orange),
-    PlaceholderWidget(Colors.purple),
+    ChatOverviewPage(chats: chatList),
     ProfilePage(person: demoUser1),
   ];
 
