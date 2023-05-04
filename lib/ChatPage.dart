@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class Message {
@@ -9,17 +11,25 @@ class Message {
 }
 
 class ChatPage extends StatefulWidget {
+  final String chatname;
   final List<Message> messages;
   final String currentUser;
 
-  ChatPage({required this.messages, required this.currentUser});
+  ChatPage(
+      {super.key,
+      required this.chatname,
+      required this.messages,
+      required this.currentUser}) {
+    messages.sort((a, b) => b.sentTime.compareTo(a.sentTime));
+  }
 
   @override
-  _ChatPageState createState() => _ChatPageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   bool _isComposing = false;
 
   @override
@@ -31,12 +41,16 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(widget.chatname),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.fromLTRB(8, 8, 20, 8),
-              reverse: false,
+              reverse: true,
               itemCount: widget.messages.length,
               itemBuilder: (context, index) {
                 final message = widget.messages[index];
@@ -68,7 +82,7 @@ class _ChatPageState extends State<ChatPage> {
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
       decoration: BoxDecoration(
         color: isMe ? Colors.grey[300] : Colors.blue[100],
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment:
@@ -82,7 +96,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           SizedBox(height: 4.0),
-          Text(
+          SelectableText(
             message.text,
             style: TextStyle(fontSize: 16.0),
           ),
@@ -99,7 +113,10 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     return isMe
-        ? messageBox
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [Flexible(child: messageBox)],
+          )
         : Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -113,29 +130,45 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildTextComposer() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: TextField(
-              controller: _textController,
-              onChanged: (text) {
-                setState(() {
-                  _isComposing = text.isNotEmpty;
-                });
-              },
-              onSubmitted: _handleSubmitted,
-              decoration: InputDecoration.collapsed(hintText: 'Send a message'),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        if (FocusScope.of(context).isFirstFocus) {
+          FocusScope.of(context).requestFocus(_focusNode);
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: TextField(
+                maxLines: 6,
+                minLines: 1,
+                focusNode: _focusNode,
+                selectionHeightStyle: BoxHeightStyle.max,
+                autofocus: true,
+                cursorColor: Colors.black,
+                controller: _textController,
+                onChanged: (text) {
+                  setState(() {
+                    _isComposing = text.isNotEmpty;
+                  });
+                },
+                onSubmitted: _handleSubmitted,
+                decoration: InputDecoration.collapsed(
+                  hintText: 'Type a message',
+                ),
+              ),
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.send),
-            onPressed: _isComposing
-                ? () => _handleSubmitted(_textController.text)
-                : null,
-          ),
-        ],
+            IconButton(
+              icon: Icon(Icons.send),
+              onPressed: _isComposing
+                  ? () => _handleSubmitted(_textController.text)
+                  : null,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -144,9 +177,14 @@ class _ChatPageState extends State<ChatPage> {
     _textController.clear();
     setState(() {
       _isComposing = false;
-      widget.messages.add(Message(
-          text: text, sender: widget.currentUser, sentTime: DateTime.now()));
+      widget.messages.insert(
+          0,
+          Message(
+              text: text,
+              sender: widget.currentUser,
+              sentTime: DateTime.now()));
     });
+    FocusScope.of(context).requestFocus(_focusNode);
   }
 
   String _getMessageTime(DateTime sentTime) {
