@@ -14,7 +14,9 @@ class Chat {
 class ChatOverviewPage extends StatelessWidget {
   final List<Chat> chats;
 
-  ChatOverviewPage({required this.chats});
+  ChatOverviewPage({super.key, required this.chats}) {
+    chats.sort((a, b) => b.lastActive.compareTo(a.lastActive));
+  }
 
   @override
   Widget build(BuildContext context) {
