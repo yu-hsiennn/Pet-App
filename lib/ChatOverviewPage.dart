@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ChatPage.dart';
 
 class Chat {
   String name;
@@ -10,6 +11,17 @@ class Chat {
       required this.lastMessage,
       required this.lastActive});
 }
+
+List<Message> chatContent = [
+  Message(text: 'hi', sender: 'friend1', sentTime: DateTime.now()),
+  Message(text: 'hello', sender: 'felix', sentTime: DateTime.now()),
+  Message(
+      text: 'asdlfka;sdlfkaslkdf', sender: 'friend1', sentTime: DateTime.now()),
+  Message(text: 'hi', sender: 'friend1', sentTime: DateTime.now()),
+  Message(text: 'hi', sender: 'friend1', sentTime: DateTime.now()),
+  Message(text: 'hi', sender: 'felix', sentTime: DateTime.now()),
+  Message(text: 'hi', sender: 'friend1', sentTime: DateTime.now()),
+];
 
 class ChatOverviewPage extends StatelessWidget {
   final List<Chat> chats;
@@ -30,7 +42,7 @@ class ChatOverviewPage extends StatelessWidget {
 
           return ListTile(
             leading: CircleAvatar(
-              child: Text(chat.name[0]),
+              child: Text(chat.name[0].toUpperCase()),
             ),
             title: Text(chat.name),
             subtitle: Text('${chat.lastMessage} · $lastActiveString'),
@@ -54,6 +66,12 @@ class ChatOverviewPage extends StatelessWidget {
   }
 
   void _openChatPage(BuildContext context, Chat chat) {
-    // Navigate to chat page
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ChatPage(
+                  messages: chatContent,
+                  currentUser: 'felix',
+                )));
   }
 }
