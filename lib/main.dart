@@ -16,8 +16,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Pet Match',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
+          primarySwatch: Colors.grey,
+          scrollbarTheme: ScrollbarThemeData().copyWith(
+            thickness: MaterialStateProperty.all(15),
+          )),
       home: const WelcomePage(title: 'Pet Match Welcome Page'),
     );
   }
