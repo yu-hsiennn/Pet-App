@@ -183,7 +183,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 padding: EdgeInsets.all(20),
                 children: [
                   buildTitle('您的名子'),
-                  buildIntroTextField("ex: 黃曉明"),
+                  buildIntroTextField("黃曉明"),
                   buildSexRadioButton(),
                   buildTitle('飼養的動物種類'),
                   buildPetType(),
