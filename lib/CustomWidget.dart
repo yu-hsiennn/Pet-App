@@ -27,10 +27,11 @@ class CustomWidget {
 
   // profile photo
   Widget Profile_photo(int framesize, {String file_name="assets/image/empty.jpg"}) {
+    String _file_name = file_name.isEmpty ? "assets/image/empty.jpg" : file_name;
     return CircleAvatar(
       radius: framesize.toDouble(),
       backgroundImage: AssetImage(
-        file_name,
+        _file_name,
       ),
     );
   }
