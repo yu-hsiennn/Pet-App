@@ -6,7 +6,7 @@ import 'package:album_image/album_image.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.person});
-  final UserDetail person;
+  final UserData person;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -30,8 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
               profile_info(widget.person.photo, widget.person.posts_count,
                   widget.person.follower, false),
               Text_title("飼主簡介"),
-              Text_info(
-                  "tttttttttttttttteeeeeeeeeeeeeeeeeeeesssssssssssssssssttttttttttttttt"),
+              Text_info(widget.person.intro),
               Text_title("寵物資料"),
               Pets_photo(widget.person.petdatas),
               Text_title("寵物相簿"),

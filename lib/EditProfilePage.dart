@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/CustomButton.dart';
+import 'package:pet_app/UserData.dart';
 import 'MainPage.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key, required this.title});
+  const EditProfilePage({super.key, required this.user});
 
-  final String title;
+  final UserData user;
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -14,6 +15,8 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   String? gender = "unknown";
   String? type = "Dog";
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _introController = TextEditingController();
 
   Widget buildTitle(String title) {
     return Padding(
@@ -25,9 +28,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget buildIntroTextField(String hints) {
+  Widget buildIntroTextField(String hints, TextEditingController? controller) {
     return TextField(
         cursorColor: Colors.black,
+        controller: controller,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(width: 3),
@@ -48,8 +52,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: CustomButton(
         label: '完成',
         onPressed: () {
+          widget.user.name = _nameController.text;
+          widget.user.intro = _introController.text;
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => MainPage()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MainPage(user: widget.user)));
         },
       ),
     );
@@ -183,14 +191,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 padding: EdgeInsets.all(20),
                 children: [
                   buildTitle('您的名子'),
-                  buildIntroTextField("黃曉明"),
+                  buildIntroTextField("黃曉明", _nameController),
                   buildSexRadioButton(),
+                  buildTitle('簡介'),
+                  buildIntroTextField('', _introController),
                   buildTitle('飼養的動物種類'),
                   buildPetType(),
                   buildTitle('寵物品種'),
-                  buildIntroTextField("柯基"),
+                  buildIntroTextField("柯基", null),
                   buildTitle('寵物的名子'),
-                  buildIntroTextField("小黑"),
+                  buildIntroTextField("小黑", null),
                 ],
               ),
             ),
