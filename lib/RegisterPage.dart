@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_app/UserData.dart';
 import 'CustomButton.dart';
 import 'EditProfilePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -12,15 +13,34 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPage extends State<RegisterPage> {
   bool hidePassword = true;
-  TextEditingController _textControllerUsername = TextEditingController();
-  TextEditingController _textControllerP1 = TextEditingController();
-  TextEditingController _textControllerP2 = TextEditingController();
+  final TextEditingController _textControllerUsername = TextEditingController();
+  final TextEditingController _textControllerP1 = TextEditingController();
+  final TextEditingController _textControllerP2 = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final FocusNode _focusNodePw1 = FocusNode();
   final FocusNode _focusNodePw2 = FocusNode();
 
+  void saveLocal(String username, String password) async {
+    final SharedPreferences storage = await SharedPreferences.getInstance();
+    await storage.setString('username', username);
+    await storage.setString('password', password);
+  }
+
+  void retrieveLocal() async {
+    final SharedPreferences storage = await SharedPreferences.getInstance();
+    final String? a = storage.getString('username');
+    if (a != null) {
+      _textControllerUsername.text = a;
+    } else {
+      setState(() {
+        _textControllerUsername.text = 'hihi';
+      });
+    }
+  }
+
   void _submit() {
     if (_formKey.currentState?.validate() == true) {
+      saveLocal(_textControllerUsername.text, _textControllerP1.text);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -29,6 +49,12 @@ class _RegisterPage extends State<RegisterPage> {
                       username: _textControllerUsername.text,
                       password: _textControllerP1.text))));
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    retrieveLocal();
   }
 
   @override

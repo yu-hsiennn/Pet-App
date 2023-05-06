@@ -52,6 +52,9 @@ List<Chat> chatList = [
 ];
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key, required this.user});
+  final UserData user;
+
   @override
   State<MainPage> createState() => _MainPageState();
 }
@@ -73,6 +76,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    _pages[3] = ProfilePage(person: widget.user); //a little dirty but works
     return Scaffold(
       appBar: AppBar(
         title: Text(
