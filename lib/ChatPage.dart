@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class Message {
   String text;
@@ -29,13 +31,67 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-  bool _isComposing = false;
 
+  final FocusNode _focusNode = FocusNode();
+  bool mic_on = false;
+  bool _isComposing = false;
+  bool _ismicSheetVisible = false;
+  SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
   @override
   void dispose() {
     _textController.dispose();
     super.dispose();
+  }
+
+  void _addToTextField(String textToAdd) {
+    final String currentValue = _textController.text;
+    final String newTextValue = currentValue + textToAdd;
+    _textController.text = newTextValue;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
+
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    print('please speak');
+    await _speechToText.listen(onResult: _onSpeechResult);
+    mic_on = !mic_on;
+    setState(() {});
+  }
+
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  void _stopListening() async {
+    print('stop speak');
+    await _speechToText.stop();
+    mic_on = !mic_on;
+    _addToTextField(_lastWords);
+    _lastWords = '';
+    setState(() {});
+  }
+
+  /// This is the callback that the SpeechToText plugin calls when
+  /// the platform returns recognized words.
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      _lastWords = result.recognizedWords;
+
+      print(_lastWords);
+    });
   }
 
   @override
@@ -61,9 +117,32 @@ class _ChatPageState extends State<ChatPage> {
           ),
           Divider(height: 1.0),
           _buildTextComposer(),
+          _buildSpeechRecognition(),
         ],
       ),
     );
+  }
+
+  Widget _buildSpeechRecognition() {
+    return Visibility(
+        visible: _ismicSheetVisible,
+        child: Container(
+          height: MediaQuery.of(context).size.height / 2,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black,
+              width: 2.0,
+            ),
+          ),
+          child: IconButton(
+            iconSize: MediaQuery.of(context).size.width / 8,
+            onPressed:
+                _speechToText.isNotListening ? _startListening : _stopListening,
+            tooltip: 'Listen',
+            icon: Icon(mic_on ? Icons.mic : Icons.mic_off),
+          ),
+        ));
   }
 
   Widget _buildMessage(Message message, bool isMe) {
@@ -141,6 +220,18 @@ class _ChatPageState extends State<ChatPage> {
         margin: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Row(
           children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.photo),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.mic),
+              onPressed: () {
+                setState(() {
+                  _ismicSheetVisible = !_ismicSheetVisible;
+                });
+              },
+            ),
             Expanded(
               child: TextField(
                 maxLines: 6,
