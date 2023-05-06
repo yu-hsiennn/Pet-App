@@ -11,6 +11,8 @@ PetDetail demoPet2 = PetDetail(
 
 UserData demoUser1 = UserData(
   name: "peach",
+  username: 'demouser',
+  password: 'demopw',
   follower: 116,
   pet_count: 2,
   intro: "aasddf",

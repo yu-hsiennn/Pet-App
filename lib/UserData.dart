@@ -1,5 +1,7 @@
 class UserData {
   String name;
+  String username;
+  String password;
   int follower;
   int posts_count;
   String intro;
@@ -8,13 +10,15 @@ class UserData {
   List<PetDetail> petdatas;
 
   UserData(
-      {required this.name,
+      {this.name = '',
+      required this.username,
+      required this.password,
       this.follower = 0,
       this.posts_count = 0,
       this.intro = '',
       this.pet_count = 0,
       this.photo = '',
-      required this.petdatas});
+      this.petdatas = const []});
 }
 
 class PetDetail {
