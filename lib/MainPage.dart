@@ -9,15 +9,14 @@ PetDetail demoPet1 = PetDetail(
 PetDetail demoPet2 = PetDetail(
     "Lushi", "Gold", "Female", 2, ["321", "987"], "assets/image/dog2.jpeg");
 
-UserDetail demoUser1 = UserDetail(
-    "peach",
-    116,
-    0,
-    "I'm priness",
-    2,
-    "assets/image/peach.jpg",
-    ["assets/image/dog2.jpeg", "assets/image/dog3.jpg"],
-    [demoPet1, demoPet2]);
+UserData demoUser1 = UserData(
+  name: "peach",
+  follower: 116,
+  pet_count: 2,
+  intro: "aasddf",
+  photo: "assets/image/peach.jpg",
+  petdatas: [demoPet1, demoPet2],
+);
 
 List<Chat> chatList = [
   Chat(
