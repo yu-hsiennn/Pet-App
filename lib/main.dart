@@ -71,10 +71,12 @@ class _WelcomePageState extends State<WelcomePage> {
                 Expanded(
                   flex: 1,
                   child: CustomButton(
-                    label: '登入',
+                    label: '登入(DEMO)',
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainPage(user: demoUser1)));
                     },
                   ),
                 ),

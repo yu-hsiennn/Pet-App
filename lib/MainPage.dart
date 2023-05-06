@@ -9,15 +9,16 @@ PetDetail demoPet1 = PetDetail(
 PetDetail demoPet2 = PetDetail(
     "Lushi", "Gold", "Female", 2, ["321", "987"], "assets/image/dog2.jpeg");
 
-UserDetail demoUser1 = UserDetail(
-    "peach",
-    116,
-    0,
-    "I'm priness",
-    2,
-    "assets/image/peach.jpg",
-    ["assets/image/dog2.jpeg", "assets/image/dog3.jpg"],
-    [demoPet1, demoPet2]);
+UserData demoUser1 = UserData(
+  name: "peach",
+  username: 'demouser',
+  password: 'demopw',
+  follower: 116,
+  pet_count: 2,
+  intro: "aasddf",
+  photo: "assets/image/peach.jpg",
+  petdatas: [demoPet1, demoPet2],
+);
 
 List<Chat> chatList = [
   Chat(
@@ -51,6 +52,9 @@ List<Chat> chatList = [
 ];
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key, required this.user});
+  final UserData user;
+
   @override
   State<MainPage> createState() => _MainPageState();
 }
@@ -72,6 +76,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    _pages[3] = ProfilePage(person: widget.user); //a little dirty but works
     return Scaffold(
       appBar: AppBar(
         title: Text(
