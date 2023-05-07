@@ -30,10 +30,12 @@ class _RegisterPage extends State<RegisterPage> {
     final SharedPreferences storage = await SharedPreferences.getInstance();
     final String? a = storage.getString('username');
     if (a != null) {
-      _textControllerUsername.text = a;
+      setState(() {
+        _textControllerUsername.text = a;
+      });
     } else {
       setState(() {
-        _textControllerUsername.text = 'hihi';
+        _textControllerUsername.text = '';
       });
     }
   }
