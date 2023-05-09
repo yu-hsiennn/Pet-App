@@ -67,7 +67,7 @@ class _RegisterPage extends State<RegisterPage> {
           appBar: AppBar(
             centerTitle: true,
             title: const Text(
-              '注冊',
+              '註冊',
             ),
             titleTextStyle: TextStyle(
               fontSize: 40,

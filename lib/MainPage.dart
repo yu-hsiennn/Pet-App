@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'UserData.dart';
 import 'ProfilePage.dart';
 import 'ChatOverviewPage.dart';
+import 'HomePage.dart';
 
 //demo user with two pets
 PetDetail demoPet1 = PetDetail(
@@ -62,7 +63,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    PlaceholderWidget(Colors.blue),
+    HomePage(title: "Map test"),
     PlaceholderWidget(Colors.orange),
     ChatOverviewPage(chats: chatList),
     ProfilePage(person: demoUser1),
@@ -99,7 +100,7 @@ class _MainPageState extends State<MainPage> {
         onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
+            icon: Icon(Icons.pin_drop_outlined),
             label: 'Home',
           ),
           BottomNavigationBarItem(

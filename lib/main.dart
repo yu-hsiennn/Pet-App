@@ -83,7 +83,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 Expanded(
                   flex: 1,
                   child: CustomButton(
-                    label: '注冊',
+                    label: '註冊',
                     onPressed: () {
                       Navigator.push(
                           context,
