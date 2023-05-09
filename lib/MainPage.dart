@@ -4,6 +4,7 @@ import 'ProfilePage.dart';
 import 'ChatOverviewPage.dart';
 import 'StoryPage.dart';
 import 'PostClass.dart';
+import "HomePage.dart";
 
 //demo user with two pets
 PetDetail demoPet1 = PetDetail(
@@ -132,7 +133,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    PlaceholderWidget(Colors.blue),
+    HomePage(title: "Google Map"),
     StoryPage(
       Post_list: _posts,
       Post_Index: 2,
