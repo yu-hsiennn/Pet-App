@@ -7,7 +7,7 @@ import 'StoryPage.dart';
 import 'PostClass.dart';
 import "HomePage.dart";
 import "PostPage.dart";
-
+import "UploadPostPicturePage.dart";
 //demo user with two pets
 PetDetail demoPet1 = PetDetail(
     "Luchi", "Gold", "Male", 3, ["123", "456", "789"], "assets/image/dog1.jpg");
@@ -141,6 +141,7 @@ class _MainPageState extends State<MainPage> {
     //   Post_Index: 2,
     // ),
     PostPage(),
+    //UploadPostPicturePage(),
     ChatOverviewPage(chats: chatList),
     ProfilePage(person: demoUser1),
   ];

@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class PostPage extends StatefulWidget {
-  const PostPage({super.key});
+class UploadPostPicturePage extends StatefulWidget {
+  const UploadPostPicturePage({super.key});
 
   @override
-  State<PostPage> createState() => _PostPageState();
+  State<UploadPostPicturePage> createState() => _UploadPostPicturePageState();
 }
 
-class _PostPageState extends State<PostPage> {
+class _UploadPostPicturePageState extends State<UploadPostPicturePage> {
   File? _imageFile;
 
   void _pickImage() async {
