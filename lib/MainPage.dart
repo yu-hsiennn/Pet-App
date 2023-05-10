@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pet_app/PostPage.dart';
 import 'UserData.dart';
 import 'ProfilePage.dart';
 import 'ChatOverviewPage.dart';
 import 'StoryPage.dart';
 import 'PostClass.dart';
 import "HomePage.dart";
+import "PostPage.dart";
 
 //demo user with two pets
 PetDetail demoPet1 = PetDetail(
@@ -134,10 +136,11 @@ class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     HomePage(title: "Google Map"),
-    StoryPage(
-      Post_list: _posts,
-      Post_Index: 2,
-    ),
+    // StoryPage(
+    //   Post_list: _posts,
+    //   Post_Index: 2,
+    // ),
+    PostPage(),
     ChatOverviewPage(chats: chatList),
     ProfilePage(person: demoUser1),
   ];
