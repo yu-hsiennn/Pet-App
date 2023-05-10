@@ -4,6 +4,8 @@ import 'PostClass.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'locations.dart' as locations;
 import 'location_service.dart';
+import 'AttractionPage.dart';
+import 'UserData.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -114,9 +116,238 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          Positioned(
+            bottom: 10,
+            left: 15,
+            child: IconButton(
+              icon: Icon(Icons.send),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AttractionPage(Post_list: _posts)
+                  )
+                );
+              },
+            )
+          ),
         ],
       ),
     );
   }
 
 }
+
+
+List<Post> _posts = [
+  Post(
+      poster: _users[0],
+      post_info: "Hi! First Post!!",
+      pictures: "assets/image/dog1.jpg",
+      label: ['可愛', '調皮'],
+      like_count: 251234,
+      comments: [_comment[1], _comment[2], _comment[3], _comment[4]]),
+  Post(
+      poster: _users[2],
+      post_info: "Hi! Nice to meet all!!",
+      pictures: "assets/image/dog4.jpg",
+      label: ['好吃', '美味'],
+      like_count: 34,
+      comments: [
+        _comment[1],
+        _comment[0],
+      ]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+      Post(
+      poster: _users[0],
+      post_info: "Hi! First Post!!",
+      pictures: "assets/image/dog1.jpg",
+      label: ['可愛', '調皮'],
+      like_count: 251234,
+      comments: [_comment[1], _comment[2], _comment[3], _comment[4]]),
+  Post(
+      poster: _users[2],
+      post_info: "Hi! Nice to meet all!!",
+      pictures: "assets/image/dog4.jpg",
+      label: ['好吃', '美味'],
+      like_count: 34,
+      comments: [
+        _comment[1],
+        _comment[0],
+      ]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[0],
+      post_info: "Hi! First Post!!",
+      pictures: "assets/image/dog1.jpg",
+      label: ['可愛', '調皮'],
+      like_count: 251234,
+      comments: [_comment[1], _comment[2], _comment[3], _comment[4]]),
+  Post(
+      poster: _users[2],
+      post_info: "Hi! Nice to meet all!!",
+      pictures: "assets/image/dog4.jpg",
+      label: ['好吃', '美味'],
+      like_count: 34,
+      comments: [
+        _comment[1],
+        _comment[0],
+      ]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[2],
+      post_info: "Hi! Nice to meet all!!",
+      pictures: "assets/image/dog4.jpg",
+      label: ['好吃', '美味'],
+      like_count: 34,
+      comments: [
+        _comment[1],
+        _comment[0],
+      ]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[0],
+      post_info: "Hi! First Post!!",
+      pictures: "assets/image/dog1.jpg",
+      label: ['可愛', '調皮'],
+      like_count: 251234,
+      comments: [_comment[1], _comment[2], _comment[3], _comment[4]]),
+  Post(
+      poster: _users[2],
+      post_info: "Hi! Nice to meet all!!",
+      pictures: "assets/image/dog4.jpg",
+      label: ['好吃', '美味'],
+      like_count: 34,
+      comments: [
+        _comment[1],
+        _comment[0],
+      ]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]]),
+  Post(
+      poster: _users[4],
+      post_info: "So hot!!",
+      pictures: "assets/image/dog5.jpg",
+      label: ['不乖就是備用糧食'],
+      like_count: 251,
+      comments: [_comment[5], _comment[6]])
+];
+
+List<UserData> _users = [
+  UserData(
+      name: "Bob",
+      username: "bob",
+      password: "123",
+      photo: "assets/image/empty.jpg"),
+  UserData(
+      name: "Alice",
+      username: "alice",
+      password: "123",
+      photo: "assets/image/peach.jpg"),
+  UserData(
+      name: "Joe",
+      username: "joe",
+      password: "123",
+      photo: "assets/image/dog9.jpg"),
+  UserData(
+      name: "Oreo",
+      username: "oreo",
+      password: "123",
+      photo: "assets/image/dog8.jpg"),
+  UserData(
+      name: "Bear",
+      username: "bear",
+      password: "123",
+      photo: "assets/image/dog7.jpg"),
+];
+
+List<Comment> _comment = [
+  Comment(user: _users[0], comment_info: "how are you", like_count: 19),
+  Comment(user: _users[1], comment_info: "how are you", like_count: 17),
+  Comment(user: _users[2], comment_info: "how are you", like_count: 10),
+  Comment(user: _users[3], comment_info: "how are you", like_count: 11),
+  Comment(user: _users[4], comment_info: "Cool!", like_count: 14),
+  Comment(user: _users[2], comment_info: "OMG! So Cute!!!", like_count: 1285),
+  Comment(
+      user: _users[3],
+      comment_info: "I totally agree with you!!",
+      like_count: 12),
+];
