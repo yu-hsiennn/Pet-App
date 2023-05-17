@@ -1,8 +1,6 @@
 import 'dart:ui';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 
 class Message {
   String text;
@@ -36,62 +34,11 @@ class _ChatPageState extends State<ChatPage> {
   bool mic_on = false;
   bool _isComposing = false;
   bool _ismicSheetVisible = false;
-  SpeechToText _speechToText = SpeechToText();
-  bool _speechEnabled = false;
-  String _lastWords = '';
+
   @override
   void dispose() {
     _textController.dispose();
     super.dispose();
-  }
-
-  void _addToTextField(String textToAdd) {
-    final String currentValue = _textController.text;
-    final String newTextValue = currentValue + textToAdd;
-    _textController.text = newTextValue;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _initSpeech();
-  }
-
-  /// This has to happen only once per app
-  void _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize();
-    setState(() {});
-  }
-
-  /// Each time to start a speech recognition session
-  void _startListening() async {
-    print('please speak');
-    await _speechToText.listen(onResult: _onSpeechResult);
-    mic_on = !mic_on;
-    setState(() {});
-  }
-
-  /// Manually stop the active speech recognition session
-  /// Note that there are also timeouts that each platform enforces
-  /// and the SpeechToText plugin supports setting timeouts on the
-  /// listen method.
-  void _stopListening() async {
-    print('stop speak');
-    await _speechToText.stop();
-    mic_on = !mic_on;
-    _addToTextField(_lastWords);
-    _lastWords = '';
-    setState(() {});
-  }
-
-  /// This is the callback that the SpeechToText plugin calls when
-  /// the platform returns recognized words.
-  void _onSpeechResult(SpeechRecognitionResult result) {
-    setState(() {
-      _lastWords = result.recognizedWords;
-
-      print(_lastWords);
-    });
   }
 
   @override
@@ -137,8 +84,16 @@ class _ChatPageState extends State<ChatPage> {
           ),
           child: IconButton(
             iconSize: MediaQuery.of(context).size.width / 8,
-            onPressed:
-                _speechToText.isNotListening ? _startListening : _stopListening,
+            onPressed: () {
+              if (mic_on == true) {
+                var random = Random();
+                var number = random.nextInt(3);
+                print(number);
+              }
+
+              mic_on = !mic_on;
+              setState(() {});
+            },
             tooltip: 'Listen',
             icon: Icon(mic_on ? Icons.mic : Icons.mic_off),
           ),
