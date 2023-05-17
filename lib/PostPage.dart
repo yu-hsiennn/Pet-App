@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'SearchLocationPage.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -9,31 +10,21 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   TextEditingController _newItemController = TextEditingController();
-  Widget buildPictureTextField() {
+  String location = "新增地點";
+  Widget buildPictureField() {
     return Expanded(
-      flex: 2, // 20%
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Image.asset('assets/image/dog1.jpg'),
+      flex: 4,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Image.asset(
+              'assets/image/dog1.jpg',
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.contain,
             ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(5.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter text here',
-                  ),
-                  maxLines: null,
-                  textInputAction: TextInputAction.newline,
-                ),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -43,29 +34,32 @@ class _PostPageState extends State<PostPage> {
   Widget buildSelectedField() {
     return Expanded(
       flex: 1,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(width: 1.0, color: Colors.black),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1.0, color: Colors.black),
+            ),
           ),
-        ),
-        child: Row(
-          children: [
-            Text(selectedItems.join(', ')),
-          ],
+          child: Row(
+            children: [
+              Text(selectedItems.join(', ')),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget buildLabelField(List<String> items) {
-    int rows = (items.length / 3).ceil();
+    int rows = (items.length / 4).ceil();
     List<Widget> rowsList = [];
 
     for (int i = 0; i < rows; i++) {
       List<Widget> buttonsList = [];
 
-      for (int j = i * 3; j < (i + 1) * 3 && j < items.length; j++) {
+      for (int j = i * 4; j < (i + 1) * 4 && j < items.length; j++) {
         buttonsList.add(
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -74,7 +68,9 @@ class _PostPageState extends State<PostPage> {
                 if (selectedItems.contains(items[j])) {
                   selectedItems.remove(items[j]);
                 } else {
-                  selectedItems.add(items[j]);
+                  if (selectedItems.length < 5) {
+                    selectedItems.add(items[j]);
+                  }
                 }
                 setState(() {});
               },
@@ -131,7 +127,7 @@ class _PostPageState extends State<PostPage> {
                           String newItem = _newItemController.text.trim();
                           if (newItem.isNotEmpty) {
                             items.add(newItem);
-                            selectedItems.add(newItem);
+
                             setState(() {});
                             Navigator.pop(context);
                           }
@@ -156,7 +152,7 @@ class _PostPageState extends State<PostPage> {
     );
 
     return Expanded(
-      flex: 4,
+      flex: 3,
       child: Column(
         children: rowsList,
       ),
@@ -174,14 +170,96 @@ class _PostPageState extends State<PostPage> {
     'Button 8',
     'Button 9'
   ];
+  Widget buildInputField() {
+    return Expanded(
+      flex: 2,
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: '輸入說明文字...',
+            border: InputBorder.none,
+          ),
+          maxLines: null,
+          textInputAction: TextInputAction.newline,
+        ),
+      ),
+    );
+  }
+
+  Widget buildLocationButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: OutlinedButton(
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    location,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(Icons.arrow_forward),
+              ),
+            ],
+          ),
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(width: 1, color: Colors.grey),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            padding: EdgeInsets.symmetric(vertical: 15.0),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchLocationPage()),
+            ).then((value) {
+              setState(() {
+                location = value ?? '新增地點';
+              });
+              // Do something with returned data
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(String Word) {
+    return Padding(
+      padding: EdgeInsets.only(left: 10),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          '$Word',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
       children: [
-        buildPictureTextField(),
+        buildPictureField(),
+        buildLocationButton(),
+        buildTextField('新增貼文標籤'),
         buildSelectedField(),
         buildLabelField(items),
+        buildTextField('輸入貼文說明'),
+        buildInputField(),
       ],
     ));
   }
