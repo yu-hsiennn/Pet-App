@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 class Message {
   String text;
   String sender;
+  bool isPicture;
   DateTime sentTime;
 
-  Message({required this.text, required this.sender, required this.sentTime});
+  Message(
+      {required this.text,
+      required this.sender,
+      required this.isPicture,
+      required this.sentTime});
 }
 
 class ChatPage extends StatefulWidget {
@@ -58,6 +63,7 @@ class _ChatPageState extends State<ChatPage> {
               itemBuilder: (context, index) {
                 final message = widget.messages[index];
                 final isMe = message.sender == widget.currentUser;
+
                 return _buildMessage(message, isMe);
               },
             ),
@@ -89,6 +95,13 @@ class _ChatPageState extends State<ChatPage> {
                 var random = Random();
                 var number = random.nextInt(3);
                 print(number);
+                if (number == 0) {
+                  handlePictureSubmmited('assets/pet_emotion/pet_angry.png');
+                } else if (number == 1) {
+                  handlePictureSubmmited('assets/pet_emotion/pet_happy.png');
+                } else {
+                  handlePictureSubmmited('assets/pet_emotion/pet_sad.png');
+                }
               }
 
               mic_on = !mic_on;
@@ -130,10 +143,29 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           SizedBox(height: 4.0),
-          SelectableText(
-            message.text,
-            style: TextStyle(fontSize: 16.0),
+          RichText(
+            text: TextSpan(
+              children: [
+                if (message.isPicture)
+                  WidgetSpan(
+                    child: Image.asset(
+                      message.text,
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+                if (!message.isPicture)
+                  TextSpan(
+                    text: message.text,
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+              ],
+            ),
           ),
+          // SelectableText(
+          //   message.text,
+          //   style: TextStyle(fontSize: 16.0),
+          // ),
           SizedBox(height: 4.0),
           Text(
             _getMessageTime(message.sentTime),
@@ -228,6 +260,22 @@ class _ChatPageState extends State<ChatPage> {
           Message(
               text: text,
               sender: widget.currentUser,
+              isPicture: false,
+              sentTime: DateTime.now()));
+    });
+    FocusScope.of(context).requestFocus(_focusNode);
+  }
+
+  void handlePictureSubmmited(String url) {
+    _textController.clear();
+    setState(() {
+      _isComposing = false;
+      widget.messages.insert(
+          0,
+          Message(
+              text: url,
+              sender: widget.currentUser,
+              isPicture: true,
               sentTime: DateTime.now()));
     });
     FocusScope.of(context).requestFocus(_focusNode);

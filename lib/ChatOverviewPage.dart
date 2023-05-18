@@ -13,16 +13,38 @@ class Chat {
 }
 
 List<Message> chatContent = [
-  Message(text: 'hi', sender: 'friend1', sentTime: DateTime.now()),
-  Message(text: 'hello', sender: 'felix', sentTime: DateTime.now()),
+  Message(
+      text: 'hi',
+      sender: 'friend1',
+      isPicture: false,
+      sentTime: DateTime.now()),
+  Message(
+      text: 'hello',
+      sender: 'felix',
+      isPicture: false,
+      sentTime: DateTime.now()),
   Message(
       text: 'asdlfka;sdlfkaslkdf',
       sender: 'friend1',
+      isPicture: false,
       sentTime: DateTime.parse('2023-05-04 14:00')),
-  Message(text: 'hi', sender: 'friend1', sentTime: DateTime.now()),
-  Message(text: 'hi', sender: 'friend1', sentTime: DateTime.now()),
-  Message(text: 'hi', sender: 'felix', sentTime: DateTime.now()),
-  Message(text: 'hi', sender: 'friend1', sentTime: DateTime.now()),
+  Message(
+      text: 'hi',
+      sender: 'friend1',
+      isPicture: false,
+      sentTime: DateTime.now()),
+  Message(
+      text: 'hi',
+      sender: 'friend1',
+      isPicture: false,
+      sentTime: DateTime.now()),
+  Message(
+      text: 'hi', sender: 'felix', isPicture: false, sentTime: DateTime.now()),
+  Message(
+      text: 'hi',
+      sender: 'friend1',
+      isPicture: false,
+      sentTime: DateTime.now()),
 ];
 
 class ChatOverviewPage extends StatelessWidget {
