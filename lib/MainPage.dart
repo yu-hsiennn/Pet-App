@@ -140,8 +140,8 @@ class _MainPageState extends State<MainPage> {
     //   Post_list: _posts,
     //   Post_Index: 2,
     // ),
-    PostPage(),
-    //UploadPostPicturePage(),
+    // PostPage(),
+    UploadPostPicturePage(),
     ChatOverviewPage(chats: chatList),
     ProfilePage(person: demoUser1),
   ];
