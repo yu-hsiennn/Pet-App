@@ -15,7 +15,7 @@ class _SetLocationPageState extends State<SetLocationPage> {
   TextEditingController _searchController = TextEditingController();
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-  late GoogleMapController mycontroller;
+  GoogleMapController? mycontroller;
 
   Future<void> _goToPlace(Map<String, dynamic> place) async {
     final double lat = place['geometry']['location']['lat'];
@@ -34,75 +34,80 @@ class _SetLocationPageState extends State<SetLocationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Expanded(
-            child: GoogleMap(
-              myLocationButtonEnabled: false,
-              myLocationEnabled: true,
-              // onMapCreated: _onMapCreated,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-              initialCameraPosition: const CameraPosition(
-                target: LatLng(22.99749, 120.22062),
-                zoom: 15,
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Expanded(
+              child: GoogleMap(
+                myLocationButtonEnabled: false,
+                myLocationEnabled: true,
+                // onMapCreated: _onMapCreated,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                  mycontroller = controller;
+                },
+                initialCameraPosition: const CameraPosition(
+                  target: LatLng(22.99749, 120.22062),
+                  zoom: 15,
+                ),
+                markers: _markers.values.toSet(),
+                onCameraIdle: () {
+                  Future<LatLngBounds> bounds = mycontroller!.getVisibleRegion();
+                  bounds.then((LatLngBounds boundsData) {
+                    final lon = (boundsData.northeast.longitude + boundsData.southwest.longitude) / 2;
+                    final lat = (boundsData.northeast.latitude + boundsData.southwest.latitude) / 2;
+                    print("lon: $lon");
+                    print("lat: $lat");
+                  });
+                },
               ),
-              markers: _markers.values.toSet(),
-              onCameraIdle: () async {
-                LatLngBounds bounds = await mycontroller.getVisibleRegion();
-                final lon = (bounds.northeast.longitude + bounds.southwest.longitude) / 2;
-                final lat = (bounds.northeast.latitude + bounds.southwest.latitude) / 2;
-                print("lon: $lon");
-                print("lat: $lat");
-              },
             ),
-          ),
-          Positioned(
-            top: 10,
-            right: 15,
-            left: 15,
-            child: Container(
-              color: Colors.white,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.go,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 15),
-                        hintText: "Search Here"
+            Positioned(
+              top: 10,
+              right: 15,
+              left: 15,
+              child: Container(
+                color: Colors.white,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        cursorColor: Colors.black,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.go,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 15),
+                          hintText: "Search Here"
+                        ),
+                        controller: _searchController,
+                        textCapitalization: TextCapitalization.words,
+                        onChanged: (value) {
+                          print(value);
+                        },
                       ),
-                      controller: _searchController,
-                      textCapitalization: TextCapitalization.words,
-                      onChanged: (value) {
-                        print(value);
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        var place = await LocationService().getPlace(_searchController.text);
-                        _goToPlace(place);
-                      },
-                      icon: Icon(Icons.search),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: IconButton(
+                        onPressed: () async {
+                          var place = await LocationService().getPlace(_searchController.text);
+                          _goToPlace(place);
+                        },
+                        icon: Icon(Icons.search),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Center(
-            child: Icon(Icons.location_on)
-          )
-        ],
+            Center(
+              child: Icon(Icons.location_on)
+            )
+          ],
+        ),
       ),
     );
   }
