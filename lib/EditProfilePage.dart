@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/CustomButton.dart';
-import 'package:pet_app/UserData.dart';
+import 'package:pet_app/PetApp.dart';
 import 'MainPage.dart';
 
 class EditProfilePage extends StatefulWidget {

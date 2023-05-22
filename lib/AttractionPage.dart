@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'PostClass.dart';
+import 'PetApp.dart';
 
 class AttractionPage extends StatefulWidget {
   const AttractionPage({super.key, required this.Post_list});
