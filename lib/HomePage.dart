@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'PostClass.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'locations.dart' as locations;
 import 'location_service.dart';
 import 'AttractionPage.dart';
-import 'UserData.dart';
+import 'PetApp.dart';
 
 
 class HomePage extends StatefulWidget {

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/PostPage.dart';
-import 'UserData.dart';
+import 'PetApp.dart';
 import 'ProfilePage.dart';
 import 'ChatOverviewPage.dart';
 import 'StoryPage.dart';
-import 'PostClass.dart';
 import "HomePage.dart";
 import "PostPage.dart";
 import "UploadPostPicturePage.dart";
 //demo user with two pets
 PetDetail demoPet1 = PetDetail(
-    "Luchi", "Gold", "Male", 3, ["123", "456", "789"], "assets/image/dog1.jpg");
+    name: "Luchi", breed: "Gold", gender: "Male", age: 3, personality_lable: ["123", "456", "789"], photo: "assets/image/dog1.jpg");
 PetDetail demoPet2 = PetDetail(
-    "Lushi", "Gold", "Female", 2, ["321", "987"], "assets/image/dog2.jpeg");
+    name: "Lushi", breed: "Gold", gender: "Female", age: 2, personality_lable: ["321", "987"], photo: "assets/image/dog2.jpeg");
 
 UserData demoUser1 = UserData(
   name: "peach",
@@ -141,7 +140,6 @@ class _MainPageState extends State<MainPage> {
     //   Post_Index: 2,
     // ),
     PostPage(),
-    //UploadPostPicturePage(),
     ChatOverviewPage(chats: chatList),
     ProfilePage(person: demoUser1),
   ];

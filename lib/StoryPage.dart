@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'PostClass.dart';
+import 'PetApp.dart';
 
 class StoryPage extends StatefulWidget {
   const StoryPage(
