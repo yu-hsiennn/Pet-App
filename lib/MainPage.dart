@@ -156,7 +156,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'PETMATCH',
+          'PETSHARE',
           style: TextStyle(fontSize: 40),
         ),
         centerTitle: true,
@@ -164,30 +164,42 @@ class _MainPageState extends State<MainPage> {
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
+        selectedItemColor: Colors.yellow,
         selectedIconTheme: IconThemeData(size: 30),
         unselectedIconTheme: IconThemeData(size: 20),
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
+            icon: Icon(
+              Icons.home_outlined,
+              color: Colors.blue,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.upload_outlined),
+            icon: Icon(
+              Icons.upload_outlined,
+              color: Colors.blue,
+            ),
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_outlined),
+            icon: Icon(
+              Icons.chat_outlined,
+              color: Colors.blue,
+            ),
             label: 'Favorites',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
+            icon: Icon(
+              color: Colors.blue,
+              Icons.person_outlined
+            ),
             label: 'Profile',
           ),
         ],
