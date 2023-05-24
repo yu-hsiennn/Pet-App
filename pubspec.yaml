@@ -48,6 +48,8 @@ dependencies:
   path_provider: ^2.0.15
   flutter_native_image: ^0.0.6+1
   image: ^3.2.2
+  custom_marker: ^1.0.0
+  
 
 dev_dependencies:
   flutter_test:

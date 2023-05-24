@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'PetApp.dart';
 
 class AttractionPage extends StatefulWidget {
-  const AttractionPage({super.key, required this.Post_list});
+  const AttractionPage({super.key, required this.name, required this.address, required this.Post_list});
   final List<Post> Post_list;
+  final String name, address;
 
   @override
   State<AttractionPage> createState() => _AttractionPageState();
@@ -27,7 +28,7 @@ class _AttractionPageState extends State<AttractionPage> {
                 fit: BoxFit.cover,
               ),
               title: Text(
-                '榕園',
+                widget.name,
                 style: TextStyle(
                   color: Colors.white,
                   ),
@@ -70,7 +71,7 @@ class _AttractionPageState extends State<AttractionPage> {
             height: double.infinity,
             width: double.infinity,
             child: Card(
-              child: Image.asset(
+              child: Image.network(
                   widget.Post_list[index].pictures,
                   fit: BoxFit.cover,
               ),

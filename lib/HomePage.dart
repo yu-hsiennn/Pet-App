@@ -7,11 +7,11 @@ import 'location_service.dart';
 import 'AttractionPage.dart';
 import 'PetApp.dart';
 import 'package:image/image.dart' as IMG;
+import 'package:custom_marker/marker_icon.dart';
 
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
-  // final List<Post> Post_list;
   final String title;
 
   @override
@@ -25,26 +25,11 @@ class _HomePageState extends State<HomePage> {
       Completer<GoogleMapController>();
 
   Future<void> _onMapCreated(GoogleMapController controller) async {
-    // final googleOffices = await locations.getGoogleOffices();
     _controller.complete(controller);
-    setState(() {
-      _markers.clear();
-      for (final attractions in _attraction) {
-        addMarker(attractions);
-      }
-      // for (final office in googleOffices.offices) {
-
-        // final marker = Marker(
-        //   markerId: MarkerId(office.name),
-        //   position: LatLng(office.lat, office.lng),
-        //   infoWindow: InfoWindow(
-        //     title: office.name,
-        //     snippet: office.address,
-        //   ),
-        // );
-        // _markers[office.name] = marker;
-      // }
-    });
+    _markers.clear();
+    for (final attractions in _attraction) {
+      addMarker(attractions);
+    }
   }
 
   Future<void> _goToPlace(Map<String, dynamic> place) async {
@@ -56,40 +41,40 @@ class _HomePageState extends State<HomePage> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: LatLng(lat, lng), 
-          zoom: 16
+          zoom: 13
         ),
       ),
     );
   }
 
-  Uint8List? resizeImage(Uint8List data, width, height) {
-      Uint8List? resizedData = data;
-      IMG.Image? img = IMG.decodeImage(data);
-      IMG.Image resized = IMG.copyResize(img!, width: width, height: height);
-      resizedData = Uint8List.fromList(IMG.encodePng(resized));
-      return resizedData;
-  }
-
   addMarker(Attraction attraction) async {
-    Uint8List? bytes = (await NetworkAssetBundle(Uri.parse(attraction.post_list[0].pictures))
-      .load(attraction.post_list[0].pictures))
-      .buffer
-      .asUint8List();
-    int _size = attraction.post_list.length < 10? 100 : attraction.post_list.length * 10;
-    Uint8List? img =  resizeImage(bytes, _size, _size);
-
-    var markerIcon = BitmapDescriptor.fromBytes(img!);
-
+    int _size = attraction.post_list.length < 5? 200 : attraction.post_list.length * 50;
+    var markerIcon = await MarkerIcon.downloadResizePictureCircle(
+                  attraction.post_list[0].pictures,
+                  size: _size,
+                  addBorder: true,
+                  borderColor: Colors.blue,
+                  borderSize: 15);
     var marker = Marker(
       markerId: MarkerId(attraction.name),
       position: LatLng(attraction.lat, attraction.lon),
       icon: markerIcon,
-      onTap: (){},
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AttractionPage(
+              name: attraction.name,
+              address: attraction.address,
+              Post_list: attraction.post_list)
+          )
+        );
+      },
     );
 
     _markers[attraction.name] = marker;
-    // setState(() {
-    // });
+    setState(() {
+    });
 
   }
 
@@ -103,9 +88,6 @@ class _HomePageState extends State<HomePage> {
               myLocationButtonEnabled: false,
               myLocationEnabled: true,
               onMapCreated: _onMapCreated,
-              // onMapCreated: (GoogleMapController controller) {
-              //   _controller.complete(controller);
-              // },
               initialCameraPosition: const CameraPosition(
                 target: LatLng(22.99749, 120.22062),
                 zoom: 15,
@@ -153,21 +135,21 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Positioned(
-            bottom: 10,
-            left: 15,
-            child: IconButton(
-              icon: Icon(Icons.send),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AttractionPage(Post_list: _posts)
-                  )
-                );
-              },
-            )
-          ),
+          // Positioned(
+          //   bottom: 10,
+          //   left: 15,
+          //   child: IconButton(
+          //     icon: Icon(Icons.send),
+          //     onPressed: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => AttractionPage(Post_list: _posts)
+          //         )
+          //       );
+          //     },
+          //   )
+          // ),
         ],
       ),
     );
