@@ -18,22 +18,50 @@ class _AttractionPageState extends State<AttractionPage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: Colors.green,
-            expandedHeight: 200,
+            backgroundColor: Colors.white,
+            expandedHeight: 120,
             floating: true,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.network(
-                'https://web.ncku.edu.tw/var/file/0/1000/img/495849468.jpg',
-                fit: BoxFit.cover,
-              ),
-              title: Text(
-                widget.name,
-                style: TextStyle(
-                  color: Colors.white,
-                  ),
+              background: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(50, 5, 0, 0),
+                      child: Text(
+                        widget.name,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 30,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(52, 0, 0, 0),
+                      child: Text(
+                        widget.address,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              centerTitle: true,
+              ),
+              // Image.network(
+              //   'https://web.ncku.edu.tw/var/file/0/1000/img/495849468.jpg',
+              //   fit: BoxFit.cover,
+              // ),
+              // title: Text(
+              //   widget.name,
+              //   style: TextStyle(
+              //     color: Colors.white,
+              //     ),
+              //   ),
+              // centerTitle: true,
             ),
             //title: Text('My App Bar'),
             leading: IconButton(
