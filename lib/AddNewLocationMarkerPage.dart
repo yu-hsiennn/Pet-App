@@ -45,7 +45,10 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("輸入地點名稱"),
+            Text("地點名稱"),
+            TextField(),
+            SizedBox(height: 16),
+            Text("地址"),
             TextField(),
             SizedBox(height: 16),
             Text("經度"),
@@ -54,28 +57,78 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
             Text("緯度"),
             TextField(),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: getImage,
-              child: Text('選擇圖片'),
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SetLocationPage()),
+                  ).then((value) {
+                    // Do something with returned data
+                  });
+                },
+                child: Stack(
+                  children: [
+                    LayoutBuilder(
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        return ClipRRect(
+                          child: Image(
+                            image: AssetImage('assets/map/map.png'),
+                            width: constraints.maxWidth,
+                            height: constraints.maxHeight,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0), // 可選，設置圓角
+                        );
+                      },
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: Colors.black.withOpacity(0.5), // 調整淡化的透明度
+                      child: Center(
+                        child: Text(
+                          '從地圖選擇',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            _image == null
-                ? Text('No image selected.')
-                : Image.file(
-                    _image!,
-                    height: 200,
-                    width: 200,
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.all(16.0), // Add padding to the button
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          20.0), // Set button shape to rounded rectangle
+                    ),
+                    primary: Colors.lightBlue, // Set button color to light blue
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 32.0,
+                        vertical: 16.0), // Increase button size
                   ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SetLocationPage()),
-                ).then((value) {
-                  // Do something with returned data
-                });
-              },
-              child: Text("選擇地點"),
+                  child: Text(
+                    "完成",
+                    style: TextStyle(
+                      fontSize: 18.0, // Set font size
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

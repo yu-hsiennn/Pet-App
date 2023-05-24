@@ -53,16 +53,16 @@ class _PostPageState extends State<PostPage> {
   }
 
   Widget buildLabelField(List<String> items) {
-    int rows = (items.length / 4).ceil();
+    int rows = (items.length / 5).ceil();
     List<Widget> rowsList = [];
 
     for (int i = 0; i < rows; i++) {
       List<Widget> buttonsList = [];
 
-      for (int j = i * 4; j < (i + 1) * 4 && j < items.length; j++) {
+      for (int j = i * 5; j < (i + 1) * 5 && j < items.length; j++) {
         buttonsList.add(
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
+            padding: EdgeInsets.symmetric(vertical: 4.0),
             child: OutlinedButton(
               onPressed: () {
                 if (selectedItems.contains(items[j])) {
@@ -76,7 +76,7 @@ class _PostPageState extends State<PostPage> {
               },
               style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.symmetric(horizontal: 16.0)),
+                    EdgeInsets.symmetric(horizontal: 8.0)),
                 side: MaterialStateProperty.all<BorderSide>(
                     BorderSide(width: 1.0, color: Colors.grey)),
               ),
@@ -152,7 +152,7 @@ class _PostPageState extends State<PostPage> {
     );
 
     return Expanded(
-      flex: 3,
+      flex: 2,
       child: Column(
         children: rowsList,
       ),
@@ -165,14 +165,10 @@ class _PostPageState extends State<PostPage> {
     'Button 3',
     'Button 4',
     'Button 5',
-    'Button 6',
-    'Button 7',
-    'Button 8',
-    'Button 9'
   ];
   Widget buildInputField() {
     return Expanded(
-      flex: 2,
+      flex: 3,
       child: Padding(
         padding: EdgeInsets.all(10.0),
         child: TextField(

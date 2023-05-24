@@ -78,6 +78,7 @@ flutter:
   assets:
     - assets/image/
     - assets/pet_emotion/
+    - assets/map/
     - assets/locations.json
   #   - images/a_dot_ham.jpeg
 
