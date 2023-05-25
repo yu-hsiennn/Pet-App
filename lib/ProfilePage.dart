@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_app/StoryPage.dart';
 import 'CustomWidget.dart';
 import 'CustomButton.dart';
 import 'PetApp.dart';
@@ -308,11 +309,23 @@ class _ProfilePageState extends State<ProfilePage> {
                             width: 0,
                           ),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            _images[i].imagePath,
-                            fit: BoxFit.cover,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      StoryPage(Post_list: [], Post_Index: 0)),
+                            ).then((value) {
+                              // Do something with returned data
+                            });
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              _images[i].imagePath,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),

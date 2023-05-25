@@ -251,16 +251,32 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+            title: const Text('新貼文'),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.check),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ]),
         body: Column(
-      children: [
-        buildPictureField(),
-        buildLocationButton(),
-        buildTextField('新增貼文標籤'),
-        buildSelectedField(),
-        buildLabelField(items),
-        buildTextField('輸入貼文說明'),
-        buildInputField(),
-      ],
-    ));
+          children: [
+            buildPictureField(),
+            buildLocationButton(),
+            buildTextField('新增貼文標籤'),
+            buildSelectedField(),
+            buildLabelField(items),
+            buildTextField('輸入貼文說明'),
+            buildInputField(),
+          ],
+        ));
   }
 }

@@ -7,11 +7,22 @@ import 'StoryPage.dart';
 import "HomePage.dart";
 import "PostPage.dart";
 import "UploadPostPicturePage.dart";
+
 //demo user with two pets
 PetDetail demoPet1 = PetDetail(
-    name: "Luchi", breed: "Gold", gender: "Male", age: 3, personality_lable: ["123", "456", "789"], photo: "assets/image/dog1.jpg");
+    name: "Luchi",
+    breed: "Gold",
+    gender: "Male",
+    age: 3,
+    personality_lable: ["123", "456", "789"],
+    photo: "assets/image/dog1.jpg");
 PetDetail demoPet2 = PetDetail(
-    name: "Lushi", breed: "Gold", gender: "Female", age: 2, personality_lable: ["321", "987"], photo: "assets/image/dog2.jpeg");
+    name: "Lushi",
+    breed: "Gold",
+    gender: "Female",
+    age: 2,
+    personality_lable: ["321", "987"],
+    photo: "assets/image/dog2.jpeg");
 
 UserData demoUser1 = UserData(
   name: "peach",
@@ -154,14 +165,14 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     _pages[3] = ProfilePage(person: widget.user); //a little dirty but works
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'PETSHARE',
-          style: TextStyle(fontSize: 40),
-        ),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
+      // appBar: AppBar(
+      //   title: Text(
+      //     'PETSHARE',
+      //     style: TextStyle(fontSize: 40),
+      //   ),
+      //   centerTitle: true,
+      //   automaticallyImplyLeading: false,
+      // ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.yellow,
@@ -196,10 +207,7 @@ class _MainPageState extends State<MainPage> {
             label: 'Favorites',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              color: Colors.blue,
-              Icons.person_outlined
-            ),
+            icon: Icon(color: Colors.blue, Icons.person_outlined),
             label: 'Profile',
           ),
         ],
