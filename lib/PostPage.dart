@@ -151,10 +151,14 @@ class _PostPageState extends State<PostPage> {
       ),
     );
 
-    return Expanded(
-      flex: 2,
-      child: Column(
-        children: rowsList,
+    return Container(
+      width: double.infinity,
+      // height: 50,
+      child: Expanded(
+        flex: 2,
+        child: Column(
+          children: rowsList,
+        ),
       ),
     );
   }

@@ -51,26 +51,13 @@ class _AttractionPageState extends State<AttractionPage> {
                   ],
                 ),
               ),
-              // Image.network(
-              //   'https://web.ncku.edu.tw/var/file/0/1000/img/495849468.jpg',
-              //   fit: BoxFit.cover,
-              // ),
-              // title: Text(
-              //   widget.name,
-              //   style: TextStyle(
-              //     color: Colors.white,
-              //     ),
-              //   ),
-              // centerTitle: true,
             ),
-            //title: Text('My App Bar'),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-            // Icon(Icons.arrow_back),
             actions: [
               // Icon(Icons.settings),
               SizedBox(width: 12),
