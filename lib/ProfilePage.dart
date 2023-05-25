@@ -20,22 +20,25 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              profile_info(widget.person.photo, widget.person.posts_count,
-                  widget.person.follower, false),
-              Text_title("飼主簡介"),
-              Text_info(widget.person.intro),
-              Text_title("寵物資料"),
-              Pets_photo(widget.person.petdatas),
-              Text_title("寵物相簿"),
-              Album(context),
-            ],
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Container(
+            // Added height to the container
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                profile_info(widget.person.photo, widget.person.posts_count,
+                    widget.person.follower, false),
+                Text_title("飼主簡介"),
+                Text_info(widget.person.intro),
+                Text_title("寵物資料"),
+                Pets_photo(widget.person.petdatas),
+                Text_title("寵物相簿"),
+                Album(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -285,59 +288,41 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget Album(BuildContext context) {
-    return Expanded(
-        child: Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 30,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-      ),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemBuilder: (context, index) {
-          return RawMaterialButton(
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => DetailsPage(
-              //       imagePath: _images[index].imagePath,
-              //       title: _images[index].title,
-              //       photographer: _images[index].photographer,
-              //       price: _images[index].price,
-              //       details: _images[index].details,
-              //       index: index,
-              //     ),
-              //   ),
-              // );
-            },
-            child: Hero(
-              tag: 'logo$index',
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  image: DecorationImage(
-                    image: AssetImage(_images[index].imagePath),
-                    fit: BoxFit.cover,
+    return Column(
+      children: [
+        for (int index = 0; index < _images.length; index += 3)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              for (int i = index; i < index + 3 && i < _images.length; i++)
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: AspectRatio(
+                      aspectRatio: 1.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 0,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(
+                            _images[i].imagePath,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-        itemCount: _images.length,
-      ),
-    ));
+            ],
+          ),
+      ],
+    );
   }
 }
 
