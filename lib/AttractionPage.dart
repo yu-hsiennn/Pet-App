@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'PetApp.dart';
+import 'StoryPage.dart';
 
 class AttractionPage extends StatefulWidget {
   const AttractionPage({super.key, required this.name, required this.address, required this.Post_list});
@@ -80,7 +81,15 @@ class _AttractionPageState extends State<AttractionPage> {
       itemBuilder: (context, index) {
         // print(widget.Post_list.length);
         return RawMaterialButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StoryPage(
+                      Post_list: widget.Post_list,
+                      Post_Index: index,
+                    )));
+          },
           child: Container(
             // color: Colors.black,
             height: double.infinity,

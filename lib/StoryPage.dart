@@ -208,29 +208,31 @@ class _StoryPageState extends State<StoryPage> {
           ));
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey.withOpacity(0.5),
-          width: 1,
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey.withOpacity(0.5),
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(5),
         ),
-        borderRadius: BorderRadius.circular(5),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        height: MediaQuery.of(context).size.height * 6 / 7,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              buildNameTextField(Post.poster.name, Post.poster.photo),
+              buildPicture(Post.pictures),
+              buildLikeField(Post.like_count),
+              buildTextField(Post.post_info),
+              buildLabelField(Post.label),
+              buildMessageField(Post.comments),
+              buildInputMessageField(Post.poster.photo)
+            ]),
       ),
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      height: MediaQuery.of(context).size.height * 6 / 7,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            buildNameTextField(Post.poster.name, Post.poster.photo),
-            buildPicture(Post.pictures),
-            buildLikeField(Post.like_count),
-            buildTextField(Post.post_info),
-            buildLabelField(Post.label),
-            buildMessageField(Post.comments),
-            buildInputMessageField(Post.poster.photo)
-          ]),
     );
   }
 }
