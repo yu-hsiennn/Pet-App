@@ -30,17 +30,18 @@ class _AttractionPageState extends State<AttractionPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.fromLTRB(50, 5, 0, 0),
+                      padding: EdgeInsets.fromLTRB(50, 10, 0, 0),
                       child: Text(
                         widget.name,
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.fromLTRB(52, 0, 0, 0),
+                      padding: EdgeInsets.fromLTRB(50, 5, 0, 0),
                       child: Text(
                         widget.address,
                         textAlign: TextAlign.left,
@@ -54,7 +55,11 @@ class _AttractionPageState extends State<AttractionPage> {
               ),
             ),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(
+                Icons.arrow_back,
+                size: 30,
+                color: Color.fromRGBO(96, 175, 245, 1),
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -79,7 +84,6 @@ class _AttractionPageState extends State<AttractionPage> {
       shrinkWrap: true,
       itemCount: widget.Post_list.length,
       itemBuilder: (context, index) {
-        // print(widget.Post_list.length);
         return RawMaterialButton(
           onPressed: () {
             Navigator.push(
@@ -91,7 +95,6 @@ class _AttractionPageState extends State<AttractionPage> {
                     )));
           },
           child: Container(
-            // color: Colors.black,
             height: double.infinity,
             width: double.infinity,
             child: Card(

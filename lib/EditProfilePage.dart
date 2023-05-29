@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:pet_app/CustomButton.dart';
 import 'package:pet_app/PetApp.dart';
 import 'MainPage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key, required this.user});
@@ -30,9 +33,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Widget buildIntroTextField(String hints, TextEditingController? controller) {
     return TextField(
-        cursorColor: Colors.black,
+        cursorColor: Color.fromRGBO(96, 175, 245, 1),
         controller: controller,
         decoration: InputDecoration(
+          focusColor: Color.fromRGBO(96, 175, 245, 1),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(width: 3),
             borderRadius: BorderRadius.circular(30.0),
@@ -50,14 +54,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
       constraints: BoxConstraints(maxWidth: 250),
       margin: EdgeInsets.only(bottom: 10),
       child: CustomButton(
-        label: '完成',
+        label: '下一步',
         onPressed: () {
           widget.user.name = _nameController.text;
           widget.user.intro = _introController.text;
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MainPage(user: widget.user)));
+                  builder: (context) => EditUploadPhoto(user: widget.user)));
         },
       ),
     );
@@ -174,33 +178,174 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
+          // Avoid button OverFlow
+          resizeToAvoidBottomInset: true,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 20, 0, 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }, 
+                      icon: Icon(
+                        size: 30,
+                        Icons.arrow_back,
+                        color: Color.fromRGBO(96, 175, 245, 1),
+                      )
+                    ),
+                    SizedBox(
+                      height: 55,
+                      child: Text(
+                        "建立您的資料",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.all(20),
+                  children: [
+                    buildTitle('您的暱稱'),
+                    buildIntroTextField("黃曉明", _nameController),
+                    buildSexRadioButton(),
+                    buildTitle('飼養的動物種類'),
+                    buildPetType(),
+                    buildTitle('經常散步區域'),
+                    buildIntroTextField("台南市 東區", null),
+                  ],
+                ),
+              ),
+              Container(
+                child: Center(
+                  child: buildNextStepButton(),
+                ),
+              )
+            ],
+          )),
+    );
+  }
+}
+
+class EditUploadPhoto extends StatefulWidget {
+  const EditUploadPhoto({super.key, required this.user});
+  final UserData user;
+
+  @override
+  State<EditUploadPhoto> createState() => _EditUploadPhotoState();
+}
+
+class _EditUploadPhotoState extends State<EditUploadPhoto> {
+  File? _imageFile ;
+  final String _empty = "assets/image/_upload.png";
+  
+  void _pickImage() async {
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedImage != null) {
+        _imageFile = File(pickedImage.path);
+      } else {
+        _imageFile = null;
+      }
+    });
+  }
+
+  Widget buildNextStepButton() {
+    widget.user.photo = "assets/image/peach.jpg";
+    return Container(
+      constraints: BoxConstraints(maxWidth: 250),
+      margin: EdgeInsets.only(bottom: 10),
+      child: CustomButton(
+        label: '完成',
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MainPage(user: widget.user)));
+        },
+      ),
+    );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
         // Avoid button OverFlow
         resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text("建立您的資料"),
-          titleTextStyle: TextStyle(fontSize: 40),
-        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Bottom Overflow!!
+            Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 0, 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }, 
+                    icon: Icon(
+                      size: 30,
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(96, 175, 245, 1),
+                    )
+                  ),
+                  SizedBox(
+                    height: 55,
+                    child: Text(
+                      "建立您的資料",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.all(20),
                 children: [
-                  buildTitle('您的名子'),
-                  buildIntroTextField("黃曉明", _nameController),
-                  buildSexRadioButton(),
-                  buildTitle('簡介'),
-                  buildIntroTextField('', _introController),
-                  buildTitle('飼養的動物種類'),
-                  buildPetType(),
-                  buildTitle('寵物品種'),
-                  buildIntroTextField("柯基", null),
-                  buildTitle('寵物的名子'),
-                  buildIntroTextField("小黑", null),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
+                    child: Text(
+                      "上傳頭像",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: Container(
+                      width: 300,
+                      height: 300,
+                      child: _imageFile != null ? 
+                      Image.file(
+                        _imageFile!,
+                        width: 300,
+                        height: 300,
+                      ) : Image.asset(
+                        _empty,
+                        width: 200,
+                        height: 200,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -210,6 +355,70 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             )
           ],
-        ));
+        )
+      ),
+    );
   }
 }
+
+// class _UploadPostPicturePageState extends State<UploadPostPicturePage> {
+//   File? _imageFile;
+
+//   void _pickImage() async {
+//     final pickedImage =
+//         await ImagePicker().pickImage(source: ImageSource.gallery);
+
+//     setState(() {
+//       if (pickedImage != null) {
+//         _imageFile = File(pickedImage.path);
+//       } else {
+//         _imageFile = null;
+//       }
+//     });
+//   }
+
+//   void _clearImage() {
+//     setState(() {
+//       _imageFile = null;
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Image Picker Demo'),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             if (_imageFile != null)
+//               Image.file(
+//                 _imageFile!,
+//                 width: 200,
+//                 height: 200,
+//               )
+//             else
+//               const Text('No image selected'),
+//             const SizedBox(height: 20),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: <Widget>[
+//                 ElevatedButton(
+//                   onPressed: _pickImage,
+//                   child: const Text('Pick Image'),
+//                 ),
+//                 const SizedBox(width: 20),
+//                 ElevatedButton(
+//                   onPressed: _clearImage,
+//                   child: const Text('Clear Image'),
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

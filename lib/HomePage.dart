@@ -41,14 +41,14 @@ class _HomePageState extends State<HomePage> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: LatLng(lat, lng), 
-          zoom: 13
+          zoom: 12
         ),
       ),
     );
   }
 
   addMarker(Attraction attraction) async {
-    int _size = attraction.post_list.length < 5? 200 : attraction.post_list.length * 50;
+    int _size = attraction.post_list.length < 5? 100 : attraction.post_list.length * 25;
     var markerIcon = await MarkerIcon.downloadResizePictureCircle(
                   attraction.post_list[0].pictures,
                   size: _size,
@@ -80,77 +80,94 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Expanded(
-            child: GoogleMap(
-              myLocationButtonEnabled: false,
-              myLocationEnabled: true,
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: const CameraPosition(
-                target: LatLng(22.99749, 120.22062),
-                zoom: 15,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color.fromRGBO(96, 175, 245, 1),
+          title: Center(
+            child: Text(
+              "PETSHARE",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              markers: _markers.values.toSet(),
             ),
           ),
-          Positioned(
-            top: 10,
-            right: 15,
-            left: 15,
-            child: Container(
-              color: Colors.white,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.go,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 15),
-                        hintText: "Search Here"
+          automaticallyImplyLeading: false,
+        ),
+        body: Stack(
+          children: [
+            Expanded(
+              child: GoogleMap(
+                myLocationButtonEnabled: false,
+                myLocationEnabled: true,
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: const CameraPosition(
+                  target: LatLng(22.99749, 120.22062),
+                  zoom: 15,
+                ),
+                markers: _markers.values.toSet(),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 15,
+              left: 15,
+              child: Container(
+                color: Colors.white,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        cursorColor: Color.fromRGBO(96, 175, 245, 1),
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.go,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 15),
+                          hintText: "Search Here"
+                        ),
+                        controller: _searchController,
+                        textCapitalization: TextCapitalization.words,
+                        onChanged: (value) {
+                          print(value);
+                        },
                       ),
-                      controller: _searchController,
-                      textCapitalization: TextCapitalization.words,
-                      onChanged: (value) {
-                        print(value);
-                      },
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        var place = await LocationService().getPlace(_searchController.text);
-                        _goToPlace(place);
-                      },
-                      icon: Icon(Icons.search),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: IconButton(
+                        color: Color.fromRGBO(96, 175, 245, 1),
+                        onPressed: () async {
+                          var place = await LocationService().getPlace(_searchController.text);
+                          _goToPlace(place);
+                        },
+                        icon: Icon(Icons.search),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          // Positioned(
-          //   bottom: 10,
-          //   left: 15,
-          //   child: IconButton(
-          //     icon: Icon(Icons.send),
-          //     onPressed: () {
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => AttractionPage(Post_list: _posts)
-          //         )
-          //       );
-          //     },
-          //   )
-          // ),
-        ],
+            // Positioned(
+            //   bottom: 10,
+            //   left: 15,
+            //   child: IconButton(
+            //     icon: Icon(Icons.send),
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => AttractionPage(Post_list: _posts)
+            //         )
+            //       );
+            //     },
+            //   )
+            // ),
+          ],
+        ),
       ),
     );
   }

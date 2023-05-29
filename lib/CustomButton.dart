@@ -16,8 +16,8 @@ class CustomButton extends StatefulWidget {
       Color.fromRGBO(168, 124, 94, 1),
     ],
     this.regularColors = const [
-      Color.fromRGBO(255, 143, 158, 1),
-      Color.fromRGBO(255, 188, 143, 1),
+      Color.fromRGBO(96, 175, 245, 1),
+      Color.fromRGBO(170, 227, 254, 1),
     ],
     this.height = 60,
     this.width,

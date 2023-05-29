@@ -10,7 +10,7 @@ class CustomWidget {
         children: [
           Text(title,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -21,6 +21,21 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Color.fromRGBO(96, 175, 245, 1),
+          size: 30
+        ),
+        backgroundColor: Colors.white30,
+        shadowColor: Colors.white30,
+        title: Text(
+          widget.person.name,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Container(
@@ -31,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 profile_info(widget.person.photo, widget.person.posts_count,
-                    widget.person.follower, false),
+                    widget.person.follower, true),
                 Text_title("飼主簡介"),
                 Text_info(widget.person.intro),
                 Text_title("寵物資料"),
@@ -61,12 +76,17 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Spacer(),
             Flexible(
-              child: cw.Text_count("Follower", followers),
+              child: cw.Text_count("追蹤者", followers),
               flex: 1,
             ),
             Spacer(),
             Flexible(
-              child: cw.Text_count("Posts", posts_count),
+              child: cw.Text_count("追蹤中", 50),
+              flex: 1,
+            ),
+            Spacer(),
+            Flexible(
+              child: cw.Text_count("貼文數", posts_count),
               flex: 1,
             ),
           ],
