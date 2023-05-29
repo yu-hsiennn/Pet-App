@@ -46,16 +46,36 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("地點名稱"),
-            TextField(),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: '輸入地點名稱...',
+              ),
+            ),
             SizedBox(height: 16),
             Text("地址"),
-            TextField(),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: '輸入地址...',
+              ),
+            ),
             SizedBox(height: 16),
             Text("經度"),
-            TextField(),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: '輸入經度...',
+              ),
+            ),
             SizedBox(height: 16),
             Text("緯度"),
-            TextField(),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: '輸入緯度...',
+              ),
+            ),
             SizedBox(height: 16),
             Expanded(
               flex: 1,

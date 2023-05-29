@@ -22,10 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Color.fromRGBO(96, 175, 245, 1),
-          size: 30
-        ),
+        iconTheme:
+            IconThemeData(color: Color.fromRGBO(96, 175, 245, 1), size: 30),
         backgroundColor: Colors.white30,
         shadowColor: Colors.white30,
         title: Text(
@@ -180,131 +178,140 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: EdgeInsets.all(25.0),
       child: Row(
-        children: petsList.map((pet) {
-          String fileName =
-              pet.photo.isEmpty ? "assets/image/empty.jpg" : pet.photo;
-          return GestureDetector(
+        children: [
+          ...petsList.map((pet) {
+            String fileName =
+                pet.photo.isEmpty ? "assets/image/empty.jpg" : pet.photo;
+            return GestureDetector(
+              onTap: () {
+                showPetProfile(pet);
+              },
+              child: CircleAvatar(
+                radius: 35,
+                backgroundImage: AssetImage(fileName),
+              ),
+            );
+          }).toList(),
+          GestureDetector(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  var screenSize = MediaQuery.of(context).size;
-                  var dialogWidth = screenSize.width * 1 / 2;
-                  var dialogHeight = screenSize.height * 1 / 2;
-                  return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Container(
-                      width: dialogWidth,
-                      height: dialogHeight,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(width: 30.0),
-                              CircleAvatar(
-                                radius: 50,
-                                backgroundImage: AssetImage(pet.photo),
-                              ),
-                              SizedBox(width: 10.0),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Text(
-                                      pet.name,
-                                      style: TextStyle(
-                                          fontSize: 32.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(pet.breed,
-                                        style: TextStyle(fontSize: 16.0)),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(
-                                        '${pet.age.toString()} / ${pet.gender}',
-                                        style: TextStyle(fontSize: 16.0)),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft, // Align left
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 30.0), // Add left padding
-                              child: Text(
-                                '個性標籤',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: 30.0), // Add left padding
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.start, // Align left
-                                children: List.generate(
-                                  pet.personality_lable.length,
-                                  (index) => Container(
-                                    padding: EdgeInsets.all(8),
-                                    margin: EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.black,
-                                        width: 1.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    child: Text(pet.personality_lable[index]),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
+              // Handle the "+" button tap
             },
             child: CircleAvatar(
               radius: 35,
-              backgroundImage: AssetImage(fileName),
+              foregroundImage: AssetImage('assets/image/AddPetProfile.png'),
             ),
-          );
-        }).toList(),
+          ),
+        ],
       ),
+    );
+  }
+
+  Future<dynamic> showPetProfile(PetDetail pet) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        var screenSize = MediaQuery.of(context).size;
+        var dialogWidth = screenSize.width * 1 / 2;
+        var dialogHeight = screenSize.height * 1 / 2;
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            width: dialogWidth,
+            height: dialogHeight,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    SizedBox(width: 30.0),
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: AssetImage(pet.photo),
+                    ),
+                    SizedBox(width: 10.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Text(
+                            pet.name,
+                            style: TextStyle(
+                                fontSize: 32.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child:
+                              Text(pet.breed, style: TextStyle(fontSize: 16.0)),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text('${pet.age.toString()} / ${pet.gender}',
+                              style: TextStyle(fontSize: 16.0)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft, // Align left
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 30.0), // Add left padding
+                    child: Text(
+                      '個性標籤',
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 30.0), // Add left padding
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start, // Align left
+                      children: List.generate(
+                        pet.personality_lable.length,
+                        (index) => Container(
+                          padding: EdgeInsets.all(8),
+                          margin: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Text(pet.personality_lable[index]),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
+import 'PetApp.dart';
 import 'SearchLocationPage.dart';
+import 'MainPage.dart';
+
+UserData demoUser1 = UserData(
+  name: "peach",
+  username: 'demouser',
+  password: 'demopw',
+  follower: 116,
+  pet_count: 2,
+  intro: "aasddf",
+  photo: "assets/image/peach.jpg",
+  petdatas: [demoPet1, demoPet2],
+);
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -12,41 +25,41 @@ class _PostPageState extends State<PostPage> {
   TextEditingController _newItemController = TextEditingController();
   String location = "新增地點";
   Widget buildPictureField() {
-    return Expanded(
-      flex: 4,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return Padding(
-            padding: EdgeInsets.all(5.0),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Padding(
+          padding: EdgeInsets.all(5.0),
+          child: GestureDetector(
+            onTap: () {
+              // 點擊事件處理程式碼
+              print('點擊了圖片');
+            },
             child: Image.asset(
-              'assets/image/dog1.jpg',
-              width: MediaQuery.of(context).size.width,
+              'assets/image/NonePicture.png',
+              width: constraints.maxWidth, // 螢幕寬度的一半
               fit: BoxFit.contain,
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
   List<String> selectedItems = [];
 
   Widget buildSelectedField() {
-    return Expanded(
-      flex: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.black),
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1.0, color: Colors.black),
           ),
-          child: Row(
-            children: [
-              Text(selectedItems.join(', ')),
-            ],
-          ),
+        ),
+        child: Row(
+          children: [
+            Text(selectedItems.join(', ')),
+          ],
         ),
       ),
     );
@@ -154,11 +167,9 @@ class _PostPageState extends State<PostPage> {
     return Container(
       width: double.infinity,
       // height: 50,
-      child: Expanded(
-        flex: 2,
-        child: Column(
-          children: rowsList,
-        ),
+
+      child: Column(
+        children: rowsList,
       ),
     );
   }
@@ -171,18 +182,15 @@ class _PostPageState extends State<PostPage> {
     'Button 5',
   ];
   Widget buildInputField() {
-    return Expanded(
-      flex: 3,
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: TextField(
-          decoration: InputDecoration(
-            hintText: '輸入說明文字...',
-            border: InputBorder.none,
-          ),
-          maxLines: null,
-          textInputAction: TextInputAction.newline,
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: '輸入說明文字...',
+          border: InputBorder.none,
         ),
+        maxLines: null,
+        textInputAction: TextInputAction.newline,
       ),
     );
   }
@@ -251,32 +259,53 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: const Text('新貼文'),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+      appBar: AppBar(
+          title: const Text('新貼文'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => new MainPage(
+                          user: demoUser1,
+                        )),
+                (route) => route == null,
+              );
+            },
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.check),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new MainPage(
+                            user: demoUser1,
+                          )),
+                  (route) => route == null,
+                );
               },
             ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.check),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ]),
-        body: Column(
-          children: [
-            buildPictureField(),
-            buildLocationButton(),
-            buildTextField('新增貼文標籤'),
-            buildSelectedField(),
-            buildLabelField(items),
-            buildTextField('輸入貼文說明'),
-            buildInputField(),
-          ],
-        ));
+          ]),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Container(
+            child: Column(
+              children: [
+                buildPictureField(),
+                buildLocationButton(),
+                buildTextField('新增貼文標籤'),
+                buildSelectedField(),
+                buildLabelField(items),
+                buildTextField('輸入貼文說明'),
+                buildInputField(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
