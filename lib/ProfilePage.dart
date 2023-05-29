@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pet_app/AddPetProfile.dart';
 import 'package:pet_app/StoryPage.dart';
 import 'CustomWidget.dart';
 import 'CustomButton.dart';
 import 'PetApp.dart';
 import 'package:album_image/album_image.dart';
+import 'AddPetProfile.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.person});
@@ -186,19 +188,33 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () {
                 showPetProfile(pet);
               },
-              child: CircleAvatar(
-                radius: 35,
-                backgroundImage: AssetImage(fileName),
+              child: Padding(
+                padding:
+                    EdgeInsets.only(right: 20.0), // Add spacing between items
+                child: CircleAvatar(
+                  radius: 35,
+                  backgroundImage: AssetImage(fileName),
+                ),
               ),
             );
           }).toList(),
           GestureDetector(
             onTap: () {
-              // Handle the "+" button tap
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddPetProfilePage(),
+                  maintainState: false,
+                ),
+              );
             },
-            child: CircleAvatar(
-              radius: 35,
-              foregroundImage: AssetImage('assets/image/AddPetProfile.png'),
+            child: Padding(
+              padding:
+                  EdgeInsets.only(right: 10.0), // Add spacing between items
+              child: CircleAvatar(
+                radius: 35,
+                foregroundImage: AssetImage('assets/image/AddPetProfile.png'),
+              ),
             ),
           ),
         ],
@@ -216,6 +232,9 @@ class _ProfilePageState extends State<ProfilePage> {
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
+            side: BorderSide(
+                color: Color.fromRGBO(96, 175, 245, 1),
+                width: 3.0), // Add the desired blue color
           ),
           child: Container(
             width: dialogWidth,
@@ -295,11 +314,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           padding: EdgeInsets.all(8),
                           margin: EdgeInsets.all(4),
                           decoration: BoxDecoration(
+                            color: Color.fromRGBO(170, 227, 254,
+                                1), // Add the desired background color
                             border: Border.all(
-                              color: Colors.black,
+                              color: Colors.white,
                               width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                           child: Text(pet.personality_lable[index]),
                         ),
