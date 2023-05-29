@@ -8,6 +8,7 @@ import 'AttractionPage.dart';
 import 'PetApp.dart';
 import 'package:image/image.dart' as IMG;
 import 'package:custom_marker/marker_icon.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -82,8 +83,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(96, 175, 245, 1),
+        appBar: GradientAppBar(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(170, 227, 254, 1),
+              Color.fromRGBO(121, 199, 235, 1),
+            ],
+          ),
           title: Center(
             child: Text(
               "PETSHARE",

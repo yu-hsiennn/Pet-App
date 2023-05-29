@@ -38,65 +38,104 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              child: ListView(
+        body: Stack(
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                alignment: Alignment.topLeft,
-                child: Text('PET MATCH',
-                    style: TextStyle(
-                      fontSize: 50,
-                    )),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-                alignment: Alignment.topLeft,
-                child: Text('Welcome \nPage',
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                    )),
-              ),
-            ],
-          )),
-          Container(
-            constraints: BoxConstraints(maxWidth: 500),
-            margin: EdgeInsets.only(bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: CustomButton(
-                    label: '登入(DEMO)',
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MainPage(user: demoUser1)));
-                    },
+                  decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color.fromRGBO(170, 227, 254, 1),
+                      Color.fromRGBO(121, 199, 235, 1),
+                    ],
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: CustomButton(
-                    label: '註冊',
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterPage()));
-                    },
-                  ),
-                )
-              ],
-            ),
+              ),
+              Image.asset(
+                "assets/image/Home.jpg",
+                height: double.infinity,
+                // width: double.infinity,
+              ),
+              Positioned(
+                top: 700,
+                bottom: 20,
+                child: Column(
+                  children: [
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 410),
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: CustomButton(
+                              label: '登入(DEMO)',
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MainPage(user: demoUser1)));
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: CustomButton(
+                              label: '註冊',
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RegisterPage()));
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-        ],
-      ),
-    );
+        );
   }
 }
+// Column(
+//           Container(
+//             constraints: BoxConstraints(maxWidth: 500),
+//             margin: EdgeInsets.only(bottom: 10),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Expanded(
+//                   flex: 1,
+//                   child: CustomButton(
+//                     label: '登入(DEMO)',
+//                     onPressed: () {
+//                       Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                               builder: (context) => MainPage(user: demoUser1)));
+//                     },
+//                   ),
+//                 ),
+//                 Expanded(
+//                   flex: 1,
+//                   child: CustomButton(
+//                     label: '註冊',
+//                     onPressed: () {
+//                       Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                               builder: (context) => RegisterPage()));
+//                     },
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
