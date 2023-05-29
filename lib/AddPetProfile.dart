@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'SetLocationPage.dart';
@@ -170,123 +172,122 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text('新建寵物資訊'),
         ),
-        title: Text('新建寵物資訊'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("寵物名稱"),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '輸入寵物名稱...',
-              ),
-            ),
-            SizedBox(height: 16),
-            Text("寵物品種"),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '輸入寵物品種...',
-              ),
-            ),
-            SizedBox(height: 16),
-            Text("寵物年齡"),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '輸入寵物年齡...',
-              ),
-            ),
-            SizedBox(height: 16),
-            Text("寵物性別"),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '輸入寵物性別...',
-              ),
-            ),
-            SizedBox(height: 16),
-            Text("寵物個性標籤"),
-            buildSelectedField(),
-            buildLabelField(items),
-            SizedBox(height: 16),
-            Expanded(
-              flex: 1,
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddPetProfilePage()),
-                  ).then((value) {
-                    // Do something with returned data
-                    setState() {}
-                    ;
-                  });
-                },
-                child: Stack(
-                  children: [
-                    LayoutBuilder(
-                      builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        return ClipRRect(
-                          child: Image(
-                            image:
-                                AssetImage('assets/image/NonePetPicture.png'),
-                            width: constraints.maxWidth,
-                            height: constraints.maxHeight,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(10.0), // 可選，設置圓角
-                        );
-                      },
-                    ),
-                  ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("寵物名稱"),
+                TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: '輸入寵物名稱...',
+                  ),
                 ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.all(16.0), // Add padding to the button
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
+                SizedBox(height: 16),
+                Text("寵物品種"),
+                TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: '輸入寵物品種...',
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text("寵物年齡"),
+                TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: '輸入寵物年齡...',
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text("寵物性別"),
+                TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: '輸入寵物性別...',
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text("寵物個性標籤"),
+                buildSelectedField(),
+                buildLabelField(items),
+                SizedBox(height: 16),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddPetProfilePage()),
+                    ).then((value) {
+                      // Do something with returned data
+                      setState() {}
+                      ;
+                    });
                   },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          20.0), // Set button shape to rounded rectangle
-                    ),
-                    primary: Colors.lightBlue, // Set button color to light blue
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 32.0,
-                        vertical: 16.0), // Increase button size
+                  child: Stack(
+                    children: [
+                      LayoutBuilder(
+                        builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          return ClipRRect(
+                            child: Image(
+                              image:
+                                  AssetImage('assets/image/NonePetPicture.png'),
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius:
+                                BorderRadius.circular(10.0), // 可選，設置圓角
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                  child: Text(
-                    "完成",
-                    style: TextStyle(
-                      fontSize: 18.0, // Set font size
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0), // Add padding to the button
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              20.0), // Set button shape to rounded rectangle
+                        ),
+                        primary:
+                            Colors.lightBlue, // Set button color to light blue
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 32.0,
+                            vertical: 16.0), // Increase button size
+                      ),
+                      child: Text(
+                        "完成",
+                        style: TextStyle(
+                          fontSize: 18.0, // Set font size
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
