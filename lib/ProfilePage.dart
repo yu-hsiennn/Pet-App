@@ -26,8 +26,8 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         iconTheme:
             IconThemeData(color: Color.fromRGBO(96, 175, 245, 1), size: 30),
-        backgroundColor: Colors.white30,
-        shadowColor: Colors.white30,
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
         title: Text(
           widget.person.name,
           style: TextStyle(
@@ -47,10 +47,9 @@ class _ProfilePageState extends State<ProfilePage> {
               children: <Widget>[
                 profile_info(widget.person.photo, widget.person.posts_count,
                     widget.person.follower, true),
-                Text_title("飼主簡介"),
-                Text_info(widget.person.intro),
+                Text_info(widget.person.intro, true),
                 Text_title("寵物資料"),
-                Pets_photo(widget.person.petdatas),
+                Pets_photo(widget.person.petdatas, true),
                 Text_title("寵物相簿"),
                 Album(context),
               ],
@@ -65,80 +64,122 @@ class _ProfilePageState extends State<ProfilePage> {
       String file_name, int posts_count, int followers, bool is_user) {
     if (is_user) {
       return Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(20.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: cw.Profile_photo(35, file_name: file_name),
+                flex: 1,
+              ),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Flexible(
+                      child: cw.Text_count("追蹤者", followers),
+                      flex: 1,
+                    ),
+                    Spacer(),
+                    Flexible(
+                      child: cw.Text_count("追蹤中", 50),
+                      flex: 1,
+                    ),
+                    Spacer(),
+                    Flexible(
+                      child: cw.Text_count("貼文數", posts_count),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ));
+    }
+
+    return Container(
+        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(20.0),
         child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Flexible(
+          children: [
+            Expanded(
               child: cw.Profile_photo(35, file_name: file_name),
               flex: 1,
             ),
-            Spacer(),
-            Flexible(
-              child: cw.Text_count("追蹤者", followers),
-              flex: 1,
-            ),
-            Spacer(),
-            Flexible(
-              child: cw.Text_count("追蹤中", 50),
-              flex: 1,
-            ),
-            Spacer(),
-            Flexible(
-              child: cw.Text_count("貼文數", posts_count),
-              flex: 1,
-            ),
+            Expanded(
+                flex: 2,
+                child: Column(children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Flexible(
+                        child: cw.Text_count("追蹤者", followers),
+                        flex: 1,
+                      ),
+                      Spacer(),
+                      Flexible(
+                        child: cw.Text_count("追蹤中", 50),
+                        flex: 1,
+                      ),
+                      Spacer(),
+                      Flexible(
+                        child: cw.Text_count("貼文數", posts_count),
+                        flex: 1,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 3,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // 按钮点击事件
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary:
+                                Color.fromRGBO(170, 227, 254, 1), // 设置背景颜色为蓝色
+                          ),
+                          child: Text(
+                            '追蹤',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold, // 设置字体颜色为黑色
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(flex: 1, child: SizedBox()),
+                      Expanded(
+                        flex: 3,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // 按钮点击事件
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary:
+                                Color.fromRGBO(170, 227, 254, 1), // 设置背景颜色为蓝色
+                          ),
+                          child: Text(
+                            '聊天',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold, // 设置字体颜色为黑色
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ])),
           ],
-        ),
-      );
-    }
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Flexible(
-            child: cw.Profile_photo(25, file_name: file_name),
-            flex: 1,
-            fit: FlexFit.loose,
-          ),
-          Spacer(),
-          Flexible(
-            child: Column(
-              children: [
-                cw.Text_count("Follower", followers),
-                CustomButton(
-                  label: 'Follow',
-                  onPressed: () {},
-                  height: 20,
-                  width: 100,
-                ),
-              ],
-            ),
-            flex: 1,
-            fit: FlexFit.loose,
-          ),
-          Spacer(),
-          Flexible(
-            child: Column(
-              children: [
-                cw.Text_count("Posts", posts_count),
-                CustomButton(
-                  label: 'Chats',
-                  onPressed: () {},
-                  height: 20,
-                  width: 100,
-                ),
-              ],
-            ),
-            flex: 1,
-            fit: FlexFit.loose,
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget Text_title(String title) {
@@ -155,28 +196,44 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget Text_info(String info) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
-            width: 2.0,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0),
-          )),
-      child: Text(
-        info,
-        style: TextStyle(
-          fontSize: 18.0,
+  Widget Text_info(String info, bool is_user) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text_title("飼主簡介"),
+            if (is_user)
+              IconButton(
+                onPressed: () {
+                  // 按钮点击事件
+                },
+                icon: Icon(Icons.mode_edit),
+              ),
+          ],
         ),
-      ),
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromRGBO(96, 175, 245, 1),
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(0.0),
+              )),
+          child: Text(
+            info,
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget Pets_photo(List<PetDetail> petsList) {
+  Widget Pets_photo(List<PetDetail> petsList, bool isUser) {
     return Container(
       padding: EdgeInsets.all(25.0),
       child: Row(
@@ -198,25 +255,26 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             );
           }).toList(),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddPetProfilePage(),
-                  maintainState: false,
+          if (isUser)
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddPetProfilePage(),
+                    maintainState: false,
+                  ),
+                );
+              },
+              child: Padding(
+                padding:
+                    EdgeInsets.only(right: 10.0), // Add spacing between items
+                child: CircleAvatar(
+                  radius: 35,
+                  foregroundImage: AssetImage('assets/image/AddPetProfile.png'),
                 ),
-              );
-            },
-            child: Padding(
-              padding:
-                  EdgeInsets.only(right: 10.0), // Add spacing between items
-              child: CircleAvatar(
-                radius: 35,
-                foregroundImage: AssetImage('assets/image/AddPetProfile.png'),
               ),
             ),
-          ),
         ],
       ),
     );

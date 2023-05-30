@@ -32,47 +32,109 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Color.fromRGBO(96, 175, 245, 1),
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('新建地標'),
+        title: Text(
+          '新建地標',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("地點名稱"),
+            Text(
+              "地點名稱",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: UnderlineInputBorder(), // 设置为底线样式
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                ),
                 hintText: '輸入地點名稱...',
               ),
             ),
             SizedBox(height: 16),
-            Text("地址"),
+            Text(
+              "地址",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: UnderlineInputBorder(), // 设置为底线样式
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                ),
                 hintText: '輸入地址...',
               ),
             ),
             SizedBox(height: 16),
-            Text("經度"),
+            Text(
+              "經度",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: UnderlineInputBorder(), // 设置为底线样式
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                ),
                 hintText: '輸入經度...',
               ),
             ),
             SizedBox(height: 16),
-            Text("緯度"),
+            Text(
+              "緯度",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             TextField(
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: UnderlineInputBorder(), // 设置为底线样式
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                ),
                 hintText: '輸入緯度...',
               ),
             ),
@@ -136,16 +198,15 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
                       borderRadius: BorderRadius.circular(
                           20.0), // Set button shape to rounded rectangle
                     ),
-                    primary: Colors.lightBlue, // Set button color to light blue
+                    primary: Color.fromRGBO(
+                        96, 175, 245, 1), // Set button color to light blue
                     padding: EdgeInsets.symmetric(
                         horizontal: 32.0,
                         vertical: 16.0), // Increase button size
                   ),
                   child: Text(
                     "完成",
-                    style: TextStyle(
-                      fontSize: 18.0, // Set font size
-                    ),
+                    style: TextStyle(fontSize: 18.0, color: Colors.white),
                   ),
                 ),
               ),

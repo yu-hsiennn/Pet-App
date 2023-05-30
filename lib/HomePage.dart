@@ -80,15 +80,28 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(96, 175, 245, 1),
           title: Center(
-            child: Text(
-              "PETSHARE",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+              child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                "PETSHARE",
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 1
+                      ..color = Colors.black),
               ),
-            ),
-          ),
+              Text(
+                "PETSHARE",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          )),
           automaticallyImplyLeading: false,
         ),
         body: Stack(
@@ -110,7 +123,12 @@ class _HomePageState extends State<HomePage> {
               right: 15,
               left: 15,
               child: Container(
-                color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                      color: Color.fromRGBO(96, 175, 245, 1)), // 设置边框颜色为蓝色
+                  borderRadius: BorderRadius.circular(10.0), // 设置圆角半径为10.0
+                ),
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -122,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                             border: InputBorder.none,
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 15),
-                            hintText: "Search Here"),
+                            hintText: "搜尋"),
                         controller: _searchController,
                         textCapitalization: TextCapitalization.words,
                         onChanged: (value) {

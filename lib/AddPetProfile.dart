@@ -40,7 +40,8 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
       child: Container(
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(width: 1.0, color: Colors.black),
+            bottom:
+                BorderSide(width: 1.0, color: Color.fromRGBO(170, 227, 254, 1)),
           ),
         ),
         child: Row(
@@ -53,13 +54,13 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
   }
 
   Widget buildLabelField(List<String> items) {
-    int rows = (items.length / 5).ceil();
+    int rows = (items.length / 4).ceil();
     List<Widget> rowsList = [];
 
     for (int i = 0; i < rows; i++) {
       List<Widget> buttonsList = [];
 
-      for (int j = i * 5; j < (i + 1) * 5 && j < items.length; j++) {
+      for (int j = i * 4; j < (i + 1) * 4 && j < items.length; j++) {
         buttonsList.add(
           Padding(
             padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -68,7 +69,7 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                 if (selectedItems.contains(items[j])) {
                   selectedItems.remove(items[j]);
                 } else {
-                  if (selectedItems.length < 5) {
+                  if (selectedItems.length < 4) {
                     selectedItems.add(items[j]);
                   }
                 }
@@ -77,12 +78,17 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
               style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(
                     EdgeInsets.symmetric(horizontal: 8.0)),
-                side: MaterialStateProperty.all<BorderSide>(
-                    BorderSide(width: 1.0, color: Colors.grey)),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromRGBO(170, 227, 254, 1)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
               ),
               child: Text(
                 items[j],
-                style: TextStyle(fontSize: 16.0),
+                style: TextStyle(fontSize: 16.0, color: Colors.black),
               ),
             ),
           ),
@@ -110,10 +116,23 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text("新增項目"),
+                    title: Text(
+                      "新增label",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     content: TextField(
                       controller: _newItemController,
-                      decoration: InputDecoration(hintText: "請輸入新項目"),
+                      decoration: InputDecoration(
+                        border: InputBorder.none, // 去除边框
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromRGBO(
+                                  170, 227, 254, 1)), // 设置底线颜色为蓝色
+                        ),
+                        hintText: '輸入新label...',
+                      ),
                     ),
                     actions: [
                       TextButton(
@@ -141,10 +160,18 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
               style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(
                     EdgeInsets.symmetric(horizontal: 16.0)),
-                side: MaterialStateProperty.all<BorderSide>(
-                    BorderSide(width: 1.0, color: Colors.grey)),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromRGBO(170, 227, 254, 1)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
               ),
-              child: Icon(Icons.add),
+              child: Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
             ),
           ),
         ],
@@ -173,55 +200,112 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text('新建寵物資訊'),
-        ),
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Color.fromRGBO(96, 175, 245, 1),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(
+              '新建寵物資訊',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.check,
+                  color: Color.fromRGBO(96, 175, 245, 1),
+                ),
+                onPressed: () {},
+              ),
+            ]),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("寵物名稱"),
+                Text(
+                  "寵物名",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: InputBorder.none, // 去除边框
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                    ),
                     hintText: '輸入寵物名稱...',
                   ),
                 ),
                 SizedBox(height: 16),
-                Text("寵物品種"),
+                Text(
+                  "寵物品種",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: InputBorder.none, // 去除边框
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                    ),
                     hintText: '輸入寵物品種...',
                   ),
                 ),
                 SizedBox(height: 16),
-                Text("寵物年齡"),
+                Text(
+                  "寵物年齡",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: InputBorder.none, // 去除边框
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                    ),
                     hintText: '輸入寵物年齡...',
                   ),
                 ),
                 SizedBox(height: 16),
-                Text("寵物性別"),
+                Text(
+                  "寵物性別",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextField(
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: InputBorder.none, // 去除边框
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromRGBO(170, 227, 254, 1)), // 设置底线颜色为蓝色
+                    ),
                     hintText: '輸入寵物性別...',
                   ),
                 ),
                 SizedBox(height: 16),
-                Text("寵物個性標籤"),
+                Text(
+                  "寵物個性標籤",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 buildSelectedField(),
                 buildLabelField(items),
                 SizedBox(height: 16),
@@ -255,34 +339,6 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                         },
                       ),
                     ],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0), // Add padding to the button
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              20.0), // Set button shape to rounded rectangle
-                        ),
-                        primary:
-                            Colors.lightBlue, // Set button color to light blue
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 32.0,
-                            vertical: 16.0), // Increase button size
-                      ),
-                      child: Text(
-                        "完成",
-                        style: TextStyle(
-                          fontSize: 18.0, // Set font size
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ],

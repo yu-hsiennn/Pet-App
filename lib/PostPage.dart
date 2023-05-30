@@ -53,7 +53,8 @@ class _PostPageState extends State<PostPage> {
       child: Container(
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(width: 1.0, color: Colors.black),
+            bottom:
+                BorderSide(width: 1.0, color: Color.fromRGBO(170, 227, 254, 1)),
           ),
         ),
         child: Row(
@@ -66,13 +67,13 @@ class _PostPageState extends State<PostPage> {
   }
 
   Widget buildLabelField(List<String> items) {
-    int rows = (items.length / 5).ceil();
+    int rows = (items.length / 4).ceil();
     List<Widget> rowsList = [];
 
     for (int i = 0; i < rows; i++) {
       List<Widget> buttonsList = [];
 
-      for (int j = i * 5; j < (i + 1) * 5 && j < items.length; j++) {
+      for (int j = i * 4; j < (i + 1) * 4 && j < items.length; j++) {
         buttonsList.add(
           Padding(
             padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -81,7 +82,7 @@ class _PostPageState extends State<PostPage> {
                 if (selectedItems.contains(items[j])) {
                   selectedItems.remove(items[j]);
                 } else {
-                  if (selectedItems.length < 5) {
+                  if (selectedItems.length < 4) {
                     selectedItems.add(items[j]);
                   }
                 }
@@ -90,12 +91,17 @@ class _PostPageState extends State<PostPage> {
               style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(
                     EdgeInsets.symmetric(horizontal: 8.0)),
-                side: MaterialStateProperty.all<BorderSide>(
-                    BorderSide(width: 1.0, color: Colors.grey)),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromRGBO(170, 227, 254, 1)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
               ),
               child: Text(
                 items[j],
-                style: TextStyle(fontSize: 16.0),
+                style: TextStyle(fontSize: 16.0, color: Colors.black),
               ),
             ),
           ),
@@ -123,10 +129,23 @@ class _PostPageState extends State<PostPage> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text("新增項目"),
+                    title: Text(
+                      "新增label",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     content: TextField(
                       controller: _newItemController,
-                      decoration: InputDecoration(hintText: "請輸入新項目"),
+                      decoration: InputDecoration(
+                        border: InputBorder.none, // 去除边框
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromRGBO(
+                                  170, 227, 254, 1)), // 设置底线颜色为蓝色
+                        ),
+                        hintText: '輸入新label...',
+                      ),
                     ),
                     actions: [
                       TextButton(
@@ -154,10 +173,18 @@ class _PostPageState extends State<PostPage> {
               style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(
                     EdgeInsets.symmetric(horizontal: 16.0)),
-                side: MaterialStateProperty.all<BorderSide>(
-                    BorderSide(width: 1.0, color: Colors.grey)),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromRGBO(170, 227, 254, 1)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
               ),
-              child: Icon(Icons.add),
+              child: Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
             ),
           ),
         ],
@@ -209,17 +236,22 @@ class _PostPageState extends State<PostPage> {
                   child: Text(
                     location,
                     textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(right: 8.0),
-                child: Icon(Icons.arrow_forward),
+                child: Icon(Icons.arrow_forward,
+                    color: Color.fromRGBO(170, 227, 254, 1)),
               ),
             ],
           ),
           style: OutlinedButton.styleFrom(
-            side: BorderSide(width: 1, color: Colors.grey),
+            side: BorderSide(width: 1, color: Color.fromRGBO(170, 227, 254, 1)),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
@@ -260,9 +292,19 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('新貼文'),
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          title: const Text(
+            '新貼文',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Color.fromRGBO(96, 175, 245, 1),
+            ),
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,
@@ -276,7 +318,10 @@ class _PostPageState extends State<PostPage> {
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.check),
+              icon: Icon(
+                Icons.check,
+                color: Color.fromRGBO(96, 175, 245, 1),
+              ),
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
