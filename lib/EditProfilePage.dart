@@ -26,7 +26,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
       child: Text(
         title,
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -36,33 +36,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
         cursorColor: Color.fromRGBO(96, 175, 245, 1),
         controller: controller,
         decoration: InputDecoration(
-          focusColor: Color.fromRGBO(96, 175, 245, 1),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 3),
-            borderRadius: BorderRadius.circular(30.0),
-          ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 1),
+            borderSide:
+                BorderSide(width: 1, color: Color.fromRGBO(96, 175, 245, 1)),
             borderRadius: BorderRadius.circular(30.0),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(width: 3, color: Color.fromRGBO(96, 175, 245, 1)),
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 1, color: Colors.red),
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 3, color: Colors.red),
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          border: OutlineInputBorder(),
           hintText: hints,
         ));
   }
 
   Widget buildNextStepButton() {
-    return Container(
-      constraints: BoxConstraints(maxWidth: 250),
-      margin: EdgeInsets.only(bottom: 10),
-      child: CustomButton(
-        label: '下一步',
-        onPressed: () {
-          widget.user.name = _nameController.text;
-          widget.user.intro = _introController.text;
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => EditUploadPhoto(user: widget.user)));
-        },
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 93),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            width: MediaQuery.of(context).size.width / 2,
+            child: CustomButton(
+              label: '下一步',
+              onPressed: () {
+                widget.user.name = _nameController.text;
+                widget.user.intro = _introController.text;
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            EditUploadPhoto(user: widget.user)));
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -71,42 +89,66 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Row(
       children: <Widget>[
         Flexible(
-          child: RadioListTile(
-            activeColor: Colors.black,
-            title: const Text("男性"),
-            value: "male",
-            groupValue: gender,
-            onChanged: (value) {
-              setState(() {
-                gender = value.toString();
-              });
-            },
+          child: Theme(
+            data: ThemeData(
+              unselectedWidgetColor: Color.fromRGBO(96, 175, 245, 1),
+            ),
+            child: RadioListTile(
+              activeColor: Color.fromRGBO(96, 175, 245, 1),
+              title: const Text(
+                "男性",
+                style: TextStyle(color: Color.fromRGBO(96, 175, 245, 1)),
+              ),
+              value: "male",
+              groupValue: gender,
+              onChanged: (value) {
+                setState(() {
+                  gender = value.toString();
+                });
+              },
+            ),
           ),
         ),
         Flexible(
-          child: RadioListTile(
-            activeColor: Colors.black,
-            title: const Text("女性"),
-            value: "female",
-            groupValue: gender,
-            onChanged: (value) {
-              setState(() {
-                gender = value.toString();
-              });
-            },
+          child: Theme(
+            data: ThemeData(
+              unselectedWidgetColor: Color.fromRGBO(96, 175, 245, 1),
+            ),
+            child: RadioListTile(
+              activeColor: Color.fromRGBO(96, 175, 245, 1),
+              title: const Text(
+                "女性",
+                style: TextStyle(color: Color.fromRGBO(96, 175, 245, 1)),
+              ),
+              value: "female",
+              groupValue: gender,
+              onChanged: (value) {
+                setState(() {
+                  gender = value.toString();
+                });
+              },
+            ),
           ),
         ),
         Flexible(
-          child: RadioListTile(
-            activeColor: Colors.black,
-            title: const Text("不透漏"),
-            value: "unknown",
-            groupValue: gender,
-            onChanged: (value) {
-              setState(() {
-                gender = value.toString();
-              });
-            },
+          child: Theme(
+            data: ThemeData(
+              unselectedWidgetColor: Color.fromRGBO(96, 175, 245, 1),
+            ),
+            child: RadioListTile(
+              activeColor: Color.fromRGBO(96, 175, 245, 1),
+              title: const Text(
+                "不透漏",
+                style: TextStyle(color: Color.fromRGBO(96, 175, 245, 1)),
+              ),
+              value: "unknown",
+              groupValue: gender,
+              onChanged: (value) {
+                setState(() {
+                  gender = value.toString();
+                });
+              },
+            ),
           ),
         )
       ],
@@ -116,12 +158,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget buildPetType() {
     return DropdownButtonFormField(
       decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color.fromRGBO(96, 175, 245, 1),
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(30.0),
+        ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 1),
+          borderSide: BorderSide(
+            color: Color.fromRGBO(96, 175, 245, 1),
+            width: 1,
+          ),
           borderRadius: BorderRadius.circular(30.0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 3),
+          borderSide: BorderSide(
+            color: Color.fromRGBO(96, 175, 245, 1),
+            width: 3,
+          ),
           borderRadius: BorderRadius.circular(30.0),
         ),
       ),
@@ -173,6 +228,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       },
       value: type, // 設定初始值，要與列表中的value是相同的
       iconSize: 30, //設定三角標icon的大小
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: Color.fromRGBO(96, 175, 245, 1),
+      ),
     );
   }
 
@@ -191,14 +250,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }, 
-                      icon: Icon(
-                        size: 30,
-                        Icons.arrow_back,
-                        color: Color.fromRGBO(96, 175, 245, 1),
-                      )
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          size: 30,
+                          Icons.arrow_back,
+                          color: Color.fromRGBO(96, 175, 245, 1),
+                        )),
+                    SizedBox(
+                      width: 10,
                     ),
                     SizedBox(
                       height: 55,
@@ -247,9 +308,9 @@ class EditUploadPhoto extends StatefulWidget {
 }
 
 class _EditUploadPhotoState extends State<EditUploadPhoto> {
-  File? _imageFile ;
+  File? _imageFile;
   final String _empty = "assets/image/_upload.png";
-  
+
   void _pickImage() async {
     final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -265,98 +326,107 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
 
   Widget buildNextStepButton() {
     widget.user.photo = "assets/image/peach.jpg";
-    return Container(
-      constraints: BoxConstraints(maxWidth: 250),
-      margin: EdgeInsets.only(bottom: 10),
-      child: CustomButton(
-        label: '完成',
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MainPage(user: widget.user)));
-        },
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 93),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            width: MediaQuery.of(context).size.width / 2,
+            child: CustomButton(
+              label: '完成',
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MainPage(user: widget.user)));
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // Avoid button OverFlow
-        resizeToAvoidBottomInset: true,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 20, 0, 20),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }, 
-                    icon: Icon(
-                      size: 30,
-                      Icons.arrow_back,
-                      color: Color.fromRGBO(96, 175, 245, 1),
-                    )
-                  ),
-                  SizedBox(
-                    height: 55,
-                    child: Text(
-                      "建立您的資料",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
+          // Avoid button OverFlow
+          resizeToAvoidBottomInset: true,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 20, 0, 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          size: 30,
+                          Icons.arrow_back,
+                          color: Color.fromRGBO(96, 175, 245, 1),
+                        )),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      height: 55,
+                      child: Text(
+                        "建立您的資料",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(20),
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
-                    child: Text(
-                      "上傳頭像",
-                      style: TextStyle(fontSize: 16),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.all(20),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
+                      child: Text(
+                        "上傳頭像",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: Container(
-                      width: 300,
-                      height: 300,
-                      child: _imageFile != null ? 
-                      Image.file(
-                        _imageFile!,
+                    GestureDetector(
+                      onTap: _pickImage,
+                      child: Container(
                         width: 300,
                         height: 300,
-                      ) : Image.asset(
-                        _empty,
-                        width: 200,
-                        height: 200,
+                        child: _imageFile != null
+                            ? Image.file(
+                                _imageFile!,
+                                width: 300,
+                                height: 300,
+                              )
+                            : Image.asset(
+                                _empty,
+                                width: 200,
+                                height: 200,
+                              ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Container(
-              child: Center(
-                child: buildNextStepButton(),
-              ),
-            )
-          ],
-        )
-      ),
+              Container(
+                child: Center(
+                  child: buildNextStepButton(),
+                ),
+              )
+            ],
+          )),
     );
   }
 }

@@ -54,7 +54,13 @@ class _StoryPageState extends State<StoryPage> {
           leading: CircleAvatar(
             backgroundImage: AssetImage(icon),
           ),
-          title: Text(name),
+          title: Text(
+            name,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold, // 设置文本加粗
+            ),
+          ),
         ),
       );
     }
@@ -95,124 +101,140 @@ class _StoryPageState extends State<StoryPage> {
     }
 
     Widget buildLabelField(List<String> label) {
-      return Expanded(
-          flex: 1, // 20%
-          child: Row(
-            children: [
-              for (var item in label)
-                Padding(
+      return Row(
+        children: [
+          for (var item in label)
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(170, 227, 254, 1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: Text(item),
+                  child: Text(
+                    item,
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
-            ],
-          ));
+              ),
+            ),
+        ],
+      );
     }
 
     Widget buildMessageField(List<Comment> messages) {
       return Expanded(
-          flex: 4, // 20%
-          child: Column(
-            children: [
-              for (int i = 0; i < messages.length; i++)
-                if (i < 2)
-                  Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(messages[i].user.photo),
-                          radius: 15.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(messages[i].comment_info),
-                      ),
-                    ],
-                  )
-                else
-                  Visibility(
-                      visible: _isVisible,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(messages[i].user.photo),
-                              radius: 15.0,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(messages[i].comment_info),
-                          ),
-                        ],
-                      )),
-              if (messages.length > 2)
-                Visibility(
-                  visible: !_isVisible,
-                  child: Row(
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.all(8),
-                          child: TextButton(
-                            child: Text('查看全部留言'),
-                            onPressed: () {
-                              setState(() {
-                                _isVisible = true;
-                              });
-                            },
-                          )),
-                    ],
+        flex: 4, // 20%
+        child: Column(
+          children: [
+            for (int i = 0;
+                i < (messages.length > 2 ? 2 : messages.length);
+                i++)
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(messages[i].user.photo),
+                      radius: 15.0,
+                    ),
                   ),
-                )
-            ],
-          ));
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(messages[i].comment_info),
+                  ),
+                ],
+              ),
+            if (messages.length > 2 && !_isVisible)
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: TextButton(
+                      child: Text('查看全部留言'),
+                      onPressed: () {
+                        setState(() {
+                          _isVisible = true;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            if (_isVisible)
+              for (int i = 2; i < messages.length; i++)
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(messages[i].user.photo),
+                        radius: 15.0,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(messages[i].comment_info),
+                    ),
+                  ],
+                ),
+          ],
+        ),
+      );
     }
 
     Widget buildInputMessageField(String usericon) {
       return Expanded(
-          flex: 1, // 20%
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextField(
-                      autofocus: false,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          hintText: "新增留言...",
-                          prefixIcon: CircleAvatar(
-                            backgroundImage: NetworkImage(usericon),
-                            radius: 15.0,
-                          )),
-                    )),
+        flex: 2, // 20%
+        child: Row(
+          children: [
+            SizedBox(width: 10),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromRGBO(96, 175, 245, 1),
+                      width: 1,
+                    ),
+
+                    borderRadius: BorderRadius.circular(20), // 设置圆角半径
+                  ),
+                  child: TextField(
+                    autofocus: false,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      hintText: "新增留言...",
+                    ),
+                  ),
+                ),
               ),
-              SizedBox(width: 8),
-              IconButton(
-                onPressed: () {
-                  // 这里可以写提交操作的代码
-                },
-                icon: Icon(Icons.near_me),
+            ),
+            SizedBox(width: 8),
+            IconButton(
+              iconSize: 40,
+              onPressed: () {
+                // 这里可以写提交操作的代码
+              },
+              icon: Image.asset(
+                'assets/image/post_message_submit.png',
               ),
-            ],
-          ));
+            ),
+          ],
+        ),
+      );
     }
 
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.grey.withOpacity(0.5),
+            color: Color.fromRGBO(96, 175, 245, 1),
             width: 1,
           ),
           borderRadius: BorderRadius.circular(5),
@@ -225,6 +247,7 @@ class _StoryPageState extends State<StoryPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               buildNameTextField(Post.poster.name, Post.poster.photo),
+              SizedBox(height: 20),
               buildPicture(Post.pictures),
               buildLikeField(Post.like_count),
               buildTextField(Post.post_info),

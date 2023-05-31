@@ -29,6 +29,7 @@ class _AccessPageState extends State<AccessPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        padding: EdgeInsets.all(30.0),
         height: MediaQuery.of(context).size.height,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,7 +40,7 @@ class _AccessPageState extends State<AccessPage> {
                 width: double.infinity,
                 height: 55,
                 child: Text(
-                  "註冊",
+                  "登入",
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
@@ -51,7 +52,7 @@ class _AccessPageState extends State<AccessPage> {
               margin: EdgeInsets.symmetric(vertical: 20),
               child: TextFormField(
                 autofocus: true,
-                cursorColor: Colors.black,
+                cursorColor: Color.fromRGBO(96, 175, 245, 1),
                 maxLength: 20,
                 validator: (value) {
                   if (value?.isEmpty == true) {
@@ -61,11 +62,13 @@ class _AccessPageState extends State<AccessPage> {
                 decoration: InputDecoration(
                   icon: Icon(Icons.account_circle),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1),
+                    borderSide: BorderSide(
+                        width: 1, color: Color.fromRGBO(96, 175, 245, 1)),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 3),
+                    borderSide: BorderSide(
+                        width: 3, color: Color.fromRGBO(96, 175, 245, 1)),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -87,17 +90,27 @@ class _AccessPageState extends State<AccessPage> {
             Container(
               margin: EdgeInsets.symmetric(vertical: 20),
               child: TextFormField(
-                cursorColor: Colors.black,
+                cursorColor: Color.fromRGBO(96, 175, 245, 1),
                 maxLength: 20,
                 obscureText: hidePassword,
                 decoration: InputDecoration(
                   icon: Icon(Icons.lock),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 1),
+                    borderSide: BorderSide(
+                        width: 1, color: Color.fromRGBO(96, 175, 245, 1)),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(width: 3),
+                    borderSide: BorderSide(
+                        width: 3, color: Color.fromRGBO(96, 175, 245, 1)),
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Colors.red),
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(width: 3, color: Colors.red),
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   border: OutlineInputBorder(),
@@ -117,41 +130,41 @@ class _AccessPageState extends State<AccessPage> {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        constraints: BoxConstraints(maxWidth: 500),
-        margin: EdgeInsets.only(bottom: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
             Expanded(
-              flex: 1,
-              child: CustomButton(
-                label: '返回',
-                onPressed: () {
-                  Navigator.pop(
-                    context,
-                  );
-                },
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: CustomButton(
-                label: '確認',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MainPage(user: demoUser1),
+              child: Container(
+                margin: EdgeInsets.only(bottom: 93),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        CustomButton(
+                          label: '確認',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MainPage(user: demoUser1),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        CustomButton(
+                          label: '返回',
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),
