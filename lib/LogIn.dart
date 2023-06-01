@@ -54,12 +54,9 @@ class _AccessPageState extends State<AccessPage> {
   }
 
   Future<void> GetUser() async {
-    final response = await http.get(
-      Uri.parse(GetUserUrl + _email),
-      headers: {
-        'accept': 'application/json',
-      }
-    );
+    final response = await http.get(Uri.parse(GetUserUrl + _email), headers: {
+      'accept': 'application/json',
+    });
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
@@ -200,7 +197,7 @@ class _AccessPageState extends State<AccessPage> {
                         CustomButton(
                           label: '確認',
                           onPressed: () {
-                            loginUser();
+                            //loginUser();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

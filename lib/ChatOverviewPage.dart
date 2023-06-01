@@ -47,12 +47,17 @@ List<Message> chatContent = [
       sentTime: DateTime.now()),
 ];
 
-class ChatOverviewPage extends StatelessWidget {
+class ChatOverviewPage extends StatefulWidget {
   final List<Chat> chats;
 
-  ChatOverviewPage({super.key, required this.chats}) {
-    chats.sort((a, b) => b.lastActive.compareTo(a.lastActive));
-  }
+  ChatOverviewPage({Key? key, required this.chats}) : super(key: key);
+
+  @override
+  _ChatOverviewPageState createState() => _ChatOverviewPageState();
+}
+
+class _ChatOverviewPageState extends State<ChatOverviewPage> {
+  String searchText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -63,20 +68,52 @@ class ChatOverviewPage extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Chat Overview',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '聊天室',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Search',
+            padding: const EdgeInsets.all(20.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color.fromRGBO(246, 247, 252, 1),
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: '搜尋',
+                    prefixIcon: Icon(Icons.search),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchText = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20, 8),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '訊息',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -90,27 +127,37 @@ class ChatOverviewPage extends StatelessWidget {
                 final lastActiveString =
                     _getLastActiveString(lastActiveDuration);
 
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.blue, // 蓝色底线颜色
-                        width: 1.0, // 蓝色底线宽度
+                if (searchText.isNotEmpty &&
+                    !chat.name
+                        .toLowerCase()
+                        .contains(searchText.toLowerCase())) {
+                  return Container(); // Skip rendering if the name doesn't match the search text
+                }
+
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color.fromRGBO(96, 175, 245, 1), // 蓝色底线颜色
+                          width: 1.0, // 蓝色底线宽度
+                        ),
                       ),
                     ),
-                  ),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: Text(chat.name[0].toUpperCase()),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Text(chat.name[0].toUpperCase()),
+                      ),
+                      title: Text(chat.name),
+                      subtitle: Text('${chat.lastMessage} · $lastActiveString'),
+                      onTap: () => _openChatPage(context, chat),
                     ),
-                    title: Text(chat.name),
-                    subtitle: Text('${chat.lastMessage} · $lastActiveString'),
-                    onTap: () => _openChatPage(context, chat),
                   ),
                 );
               },
             ),
-          ),
+          )
         ],
       ),
     );
@@ -118,7 +165,7 @@ class ChatOverviewPage extends StatelessWidget {
 
   Map<String, List<Chat>> _groupChatsBySender() {
     final groupedChats = <String, List<Chat>>{};
-    for (final chat in chats) {
+    for (final chat in widget.chats) {
       final sender = chat.name;
       if (!groupedChats.containsKey(sender)) {
         groupedChats[sender] = [];
