@@ -60,22 +60,58 @@ class ChatOverviewPage extends StatelessWidget {
     final latestChats = _getLatestChats(groupedChats);
 
     return Scaffold(
-      body: ListView.builder(
-        itemCount: latestChats.length,
-        itemBuilder: (context, index) {
-          final chat = latestChats[index];
-          final lastActiveDuration = DateTime.now().difference(chat.lastActive);
-          final lastActiveString = _getLastActiveString(lastActiveDuration);
-
-          return ListTile(
-            leading: CircleAvatar(
-              child: Text(chat.name[0].toUpperCase()),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Chat Overview',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            title: Text(chat.name),
-            subtitle: Text('${chat.lastMessage} · $lastActiveString'),
-            onTap: () => _openChatPage(context, chat),
-          );
-        },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Search',
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: latestChats.length,
+              itemBuilder: (context, index) {
+                final chat = latestChats[index];
+                final lastActiveDuration =
+                    DateTime.now().difference(chat.lastActive);
+                final lastActiveString =
+                    _getLastActiveString(lastActiveDuration);
+
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.blue, // 蓝色底线颜色
+                        width: 1.0, // 蓝色底线宽度
+                      ),
+                    ),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Text(chat.name[0].toUpperCase()),
+                    ),
+                    title: Text(chat.name),
+                    subtitle: Text('${chat.lastMessage} · $lastActiveString'),
+                    onTap: () => _openChatPage(context, chat),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
