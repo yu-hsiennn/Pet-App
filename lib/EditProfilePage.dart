@@ -248,7 +248,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return SafeArea(
       child: Scaffold(
           // Avoid button OverFlow
-          resizeToAvoidBottomInset: true,
+          resizeToAvoidBottomInset: false,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

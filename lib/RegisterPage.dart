@@ -65,6 +65,7 @@ class _RegisterPage extends State<RegisterPage> {
       key: _formKey,
       child: SafeArea(
         child: Scaffold(
+            resizeToAvoidBottomInset: false,
             body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

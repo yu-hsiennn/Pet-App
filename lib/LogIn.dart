@@ -53,6 +53,7 @@ class _AccessPageState extends State<AccessPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: EdgeInsets.all(30.0),
         height: MediaQuery.of(context).size.height,
@@ -175,7 +176,7 @@ class _AccessPageState extends State<AccessPage> {
                         CustomButton(
                           label: '確認',
                           onPressed: () {
-                            // loginUser();
+                            loginUser();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
