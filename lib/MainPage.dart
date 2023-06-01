@@ -165,14 +165,6 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     _pages[3] = ProfilePage(person: widget.user); //a little dirty but works
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     'PETSHARE',
-      //     style: TextStyle(fontSize: 40),
-      //   ),
-      //   centerTitle: true,
-      //   automaticallyImplyLeading: false,
-      // ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.yellow,
