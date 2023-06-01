@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_app/ReadPostPage.dart';
 import 'PetApp.dart';
 
 class StoryPage extends StatefulWidget {
@@ -14,6 +15,7 @@ class StoryPage extends StatefulWidget {
 class _StoryPageState extends State<StoryPage> {
   late ScrollController _scrollController;
   double _scrollOffset = 0;
+  List<bool> isLiked = [true, false, false];
   @override
   void initState() {
     super.initState();
@@ -36,13 +38,13 @@ class _StoryPageState extends State<StoryPage> {
         itemCount: widget.Post_list.length,
         itemBuilder: (BuildContext context, int index) {
           //return Text(widget.Post_list[index].pictures);
-          return buildPost(widget.Post_list[index]);
+          return buildPost(widget.Post_list[index], index);
         },
       ),
     );
   }
 
-  Widget buildPost(Post Post) {
+  Widget buildPost(Post Post, int post_index) {
     bool _isVisible = false;
 
     Widget buildNameTextField(String name, String icon) {
@@ -76,26 +78,50 @@ class _StoryPageState extends State<StoryPage> {
       );
     }
 
-    Widget buildLikeField(int likeNum) {
-      return Expanded(
-          flex: 1, // 20%
-          child: ListTile(
-            visualDensity: const VisualDensity(vertical: 3),
-            dense: true,
-            leading: Icon(Icons.favorite),
-            title: Text(
-              "$likeNum個喜歡",
-              style: TextStyle(fontSize: 16),
+    Widget buildLikeField(int likeNum, int index) {
+      return Row(
+        children: [
+          SizedBox(width: 12),
+          IconButton(
+            icon: Icon(
+              isLiked[index] ? Icons.favorite : Icons.favorite_border,
+              color: isLiked[index] ? Colors.red : null,
             ),
-          ));
+            onPressed: () {
+              setState(() {
+                isLiked[index] = !isLiked[index];
+              });
+            },
+          ),
+          Text(
+            "$likeNum個喜歡",
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      );
     }
 
     Widget buildTextField(String text) {
       return Expanded(
         flex: 2, // 20%
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Text(
+            text,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      );
+    }
+
+    Widget buildDateField(String date) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Text(
-          text,
-          overflow: TextOverflow.ellipsis,
+          date,
+          style: TextStyle(
+            color: Colors.grey[400], // 使用淡化的颜色值
+          ),
         ),
       );
     }
@@ -103,6 +129,9 @@ class _StoryPageState extends State<StoryPage> {
     Widget buildLabelField(List<String> label) {
       return Row(
         children: [
+          SizedBox(
+            width: 12,
+          ),
           for (var item in label)
             Padding(
               padding: const EdgeInsets.all(8),
@@ -115,7 +144,8 @@ class _StoryPageState extends State<StoryPage> {
                   padding: const EdgeInsets.all(8),
                   child: Text(
                     item,
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -125,69 +155,93 @@ class _StoryPageState extends State<StoryPage> {
     }
 
     Widget buildMessageField(List<Comment> messages) {
-      return Expanded(
-        flex: 4, // 20%
-        child: Column(
-          children: [
-            for (int i = 0;
-                i < (messages.length > 2 ? 2 : messages.length);
-                i++)
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(messages[i].user.photo),
-                      radius: 15.0,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(messages[i].comment_info),
-                  ),
-                ],
+      return Row(
+        children: [
+          SizedBox(
+            width: 12,
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReadPostPage(
+                          post: Post,
+                        )),
+              );
+            },
+            child: Text(
+              '查看全部${messages.length}則留言',
+              style: TextStyle(
+                color: Colors.grey[400], // 使用淡化的颜色值
               ),
-            if (messages.length > 2 && !_isVisible)
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextButton(
-                      child: Text('查看全部留言'),
-                      onPressed: () {
-                        setState(() {
-                          _isVisible = true;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            if (_isVisible)
-              for (int i = 2; i < messages.length; i++)
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(messages[i].user.photo),
-                        radius: 15.0,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(messages[i].comment_info),
-                    ),
-                  ],
-                ),
-          ],
-        ),
+            ),
+          ),
+        ],
       );
+      // return Expanded(
+      //   flex: 4, // 20%
+      //   child: Column(
+      //     children: [
+      //       for (int i = 0;
+      //           i < (messages.length > 2 ? 2 : messages.length);
+      //           i++)
+      //         Row(
+      //           children: [
+      //             Padding(
+      //               padding: EdgeInsets.all(8),
+      //               child: CircleAvatar(
+      //                 backgroundImage: NetworkImage(messages[i].user.photo),
+      //                 radius: 15.0,
+      //               ),
+      //             ),
+      //             Padding(
+      //               padding: EdgeInsets.all(8),
+      //               child: Text(messages[i].comment_info),
+      //             ),
+      //           ],
+      //         ),
+      //       if (messages.length > 2 && !_isVisible)
+      //         Row(
+      //           children: [
+      //             Padding(
+      //               padding: EdgeInsets.all(8),
+      //               child: TextButton(
+      //                 child: Text('查看全部留言'),
+      //                 onPressed: () {
+      //                   setState(() {
+      //                     _isVisible = true;
+      //                   });
+      //                 },
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       if (_isVisible)
+      //         for (int i = 2; i < messages.length; i++)
+      //           Row(
+      //             children: [
+      //               Padding(
+      //                 padding: EdgeInsets.all(8),
+      //                 child: CircleAvatar(
+      //                   backgroundImage: NetworkImage(messages[i].user.photo),
+      //                   radius: 15.0,
+      //                 ),
+      //               ),
+      //               Padding(
+      //                 padding: EdgeInsets.all(8),
+      //                 child: Text(messages[i].comment_info),
+      //               ),
+      //             ],
+      //           ),
+      //     ],
+      //   ),
+      // );
     }
 
     Widget buildInputMessageField(String usericon) {
       return Expanded(
-        flex: 2, // 20%
+        flex: 1, // 20%
         child: Row(
           children: [
             SizedBox(width: 10),
@@ -249,8 +303,9 @@ class _StoryPageState extends State<StoryPage> {
               buildNameTextField(Post.poster.name, Post.poster.photo),
               SizedBox(height: 20),
               buildPicture(Post.pictures),
-              buildLikeField(Post.like_count),
+              buildLikeField(Post.like_count, post_index),
               buildTextField(Post.post_info),
+              buildDateField('5月20號 16:34'),
               buildLabelField(Post.label),
               buildMessageField(Post.comments),
               buildInputMessageField(Post.poster.photo)

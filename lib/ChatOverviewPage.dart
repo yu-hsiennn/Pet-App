@@ -95,6 +95,8 @@ class ChatOverviewPage extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) => ChatPage(
                   chatname: 'aChatName',
+                  photo:
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYWRSDNv7PjuDHov3_3supR5DR_eaLnDgg7A&usqp=CAU',
                   messages: chatContent,
                   currentUser: 'felix',
                 )));
