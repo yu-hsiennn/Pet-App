@@ -1,15 +1,19 @@
 import 'dart:io';
-
+import 'location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_app/CustomButton.dart';
 import 'package:pet_app/PetApp.dart';
 import 'MainPage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'main.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key, required this.user});
+  const EditProfilePage(
+      {super.key, required this.user_email, required this.user_password});
 
-  final UserData user;
+  final String user_email, user_password;
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -18,8 +22,9 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   String? gender = "unknown";
   String? type = "Dog";
+  String nickname = "";
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _introController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
   Widget buildTitle(String title) {
     return Padding(
@@ -70,13 +75,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: CustomButton(
               label: '下一步',
               onPressed: () {
-                widget.user.name = _nameController.text;
-                widget.user.intro = _introController.text;
+                nickname = _nameController.text;
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            EditUploadPhoto(user: widget.user)));
+                        builder: (context) => EditUploadPhoto(
+                              user_email: widget.user_email,
+                              user_password: widget.user_password,
+                              location: _locationController.text,
+                              nickname: _nameController.text,
+                            )));
               },
             ),
           ),
@@ -284,7 +292,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     buildTitle('飼養的動物種類'),
                     buildPetType(),
                     buildTitle('經常散步區域'),
-                    buildIntroTextField("台南市 東區", null),
+                    buildIntroTextField("台南市 東區", _locationController),
                   ],
                 ),
               ),
@@ -300,8 +308,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 }
 
 class EditUploadPhoto extends StatefulWidget {
-  const EditUploadPhoto({super.key, required this.user});
-  final UserData user;
+  const EditUploadPhoto(
+      {super.key,
+      required this.user_email,
+      required this.user_password,
+      required this.nickname,
+      required this.location});
+  final String user_email, user_password, location, nickname;
 
   @override
   State<EditUploadPhoto> createState() => _EditUploadPhotoState();
@@ -310,6 +323,7 @@ class EditUploadPhoto extends StatefulWidget {
 class _EditUploadPhotoState extends State<EditUploadPhoto> {
   File? _imageFile;
   final String _empty = "assets/image/_upload.png";
+  String profile_picture = "";
 
   void _pickImage() async {
     final pickedImage =
@@ -325,25 +339,65 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
   }
 
   Widget buildNextStepButton() {
-    widget.user.photo = "assets/image/peach.jpg";
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.only(bottom: 93),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            width: MediaQuery.of(context).size.width / 2,
-            child: CustomButton(
-              label: '完成',
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MainPage(user: widget.user)));
-              },
-            ),
-          ),
-        ),
+    String signupUrl = 'http://10.0.2.2:8000/user/signup';
+    String loginUrl = 'http://10.0.2.2:8000/user/login';
+
+    Future<void> signupUser() async {
+      final response = await http.post(
+        Uri.parse(signupUrl),
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': widget.user_email,
+          'name': widget.nickname,
+          'intro': "",
+          'birthday': "2023/6/1",
+          'password': widget.user_password
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(responseData);
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+      }
+    }
+
+    Future<void> loginUser() async {
+      final response = await http.post(
+        Uri.parse(loginUrl),
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': widget.user_email,
+          'password': widget.user_password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(responseData);
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+      }
+    }
+
+    // widget.user.photo = "assets/image/peach.jpg";
+    return Container(
+      constraints: BoxConstraints(maxWidth: 250),
+      margin: EdgeInsets.only(bottom: 10),
+      child: CustomButton(
+        label: '完成',
+        onPressed: () {
+          signupUser();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => MyApp()));
+        },
       ),
     );
   }
@@ -430,65 +484,3 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
     );
   }
 }
-
-// class _UploadPostPicturePageState extends State<UploadPostPicturePage> {
-//   File? _imageFile;
-
-//   void _pickImage() async {
-//     final pickedImage =
-//         await ImagePicker().pickImage(source: ImageSource.gallery);
-
-//     setState(() {
-//       if (pickedImage != null) {
-//         _imageFile = File(pickedImage.path);
-//       } else {
-//         _imageFile = null;
-//       }
-//     });
-//   }
-
-//   void _clearImage() {
-//     setState(() {
-//       _imageFile = null;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Image Picker Demo'),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             if (_imageFile != null)
-//               Image.file(
-//                 _imageFile!,
-//                 width: 200,
-//                 height: 200,
-//               )
-//             else
-//               const Text('No image selected'),
-//             const SizedBox(height: 20),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: <Widget>[
-//                 ElevatedButton(
-//                   onPressed: _pickImage,
-//                   child: const Text('Pick Image'),
-//                 ),
-//                 const SizedBox(width: 20),
-//                 ElevatedButton(
-//                   onPressed: _clearImage,
-//                   child: const Text('Clear Image'),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

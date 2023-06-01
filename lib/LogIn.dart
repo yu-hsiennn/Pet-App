@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/MainPage.dart';
-
 import 'CustomButton.dart';
 import 'PetApp.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 UserData demoUser1 = UserData(
   name: "peach",
@@ -24,6 +25,30 @@ class AccessPage extends StatefulWidget {
 
 class _AccessPageState extends State<AccessPage> {
   bool hidePassword = true;
+  String _email = "", _password = "";
+  String loginUrl = 'http://10.0.2.2:8000/user/login';
+
+  Future<void> loginUser() async {
+    final response = await http.post(
+      Uri.parse(loginUrl),
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'email': _email,
+        'password': _password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +76,9 @@ class _AccessPageState extends State<AccessPage> {
             Container(
               margin: EdgeInsets.symmetric(vertical: 20),
               child: TextFormField(
+                onChanged: (value) {
+                  _email = value;
+                },
                 autofocus: true,
                 cursorColor: Color.fromRGBO(96, 175, 245, 1),
                 maxLength: 20,
@@ -90,6 +118,9 @@ class _AccessPageState extends State<AccessPage> {
             Container(
               margin: EdgeInsets.symmetric(vertical: 20),
               child: TextFormField(
+                onChanged: (value) {
+                  _password = value;
+                },
                 cursorColor: Color.fromRGBO(96, 175, 245, 1),
                 maxLength: 20,
                 obscureText: hidePassword,
@@ -144,6 +175,7 @@ class _AccessPageState extends State<AccessPage> {
                         CustomButton(
                           label: '確認',
                           onPressed: () {
+                            // loginUser();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

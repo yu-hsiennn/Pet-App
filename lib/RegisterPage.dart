@@ -19,6 +19,7 @@ class _RegisterPage extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode _focusNodePw1 = FocusNode();
   final FocusNode _focusNodePw2 = FocusNode();
+  String Email = "", Password = "";
 
   void saveLocal(String username, String password) async {
     final SharedPreferences storage = await SharedPreferences.getInstance();
@@ -47,9 +48,8 @@ class _RegisterPage extends State<RegisterPage> {
           context,
           MaterialPageRoute(
               builder: (context) => EditProfilePage(
-                  user: UserData(
-                      username: _textControllerUsername.text,
-                      password: _textControllerP1.text))));
+                  user_email: _textControllerUsername.text,
+                  user_password: _textControllerP1.text)));
     }
   }
 
