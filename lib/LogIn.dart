@@ -27,6 +27,7 @@ class _AccessPageState extends State<AccessPage> {
   bool hidePassword = true;
   String _email = "", _password = "";
   String loginUrl = 'http://10.0.2.2:8000/user/login';
+  String GetUserUrl = 'http://10.0.2.2:8000/user/';
 
   Future<void> loginUser() async {
     final response = await http.post(
@@ -43,6 +44,29 @@ class _AccessPageState extends State<AccessPage> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
+      PetApp.CurrentUser.authorization = responseData['access token'];
+      print(responseData);
+      GetUser();
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
+  Future<void> GetUser() async {
+    final response = await http.get(
+      Uri.parse(GetUserUrl + _email),
+      headers: {
+        'accept': 'application/json',
+      }
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      PetApp.CurrentUser.email = responseData['email'];
+      PetApp.CurrentUser.name = responseData['name'];
+      PetApp.CurrentUser.intro = responseData['intro'];
+      PetApp.CurrentUser.birthday = responseData['birthday'];
       print(responseData);
     } else {
       print(

@@ -81,11 +81,11 @@ class Attraction {
 // --------------------------------------------------------------
 class PetApp {
   static User CurrentUser =
-      new User(email: "", name: "", intro: "", birthday: "", password: "");
+      new User(email: "", name: "", intro: "", birthday: "");
 }
 
 class User {
-  String name, email, intro, birthday, password, profile_picture, authorization;
+  String name, email, intro, birthday, profile_picture, authorization;
   List<Pet> pets;
   List<User> Following, Follower;
   User({
@@ -93,7 +93,6 @@ class User {
     required this.name,
     required this.intro,
     required this.birthday,
-    required this.password,
     this.pets = const [],
     this.Follower = const [],
     this.Following = const [],
