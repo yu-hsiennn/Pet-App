@@ -64,101 +64,103 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
     final groupedChats = _groupChatsBySender();
     final latestChats = _getLatestChats(groupedChats);
 
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '聊天室',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color.fromRGBO(246, 247, 252, 1),
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: '搜尋',
-                    prefixIcon: Icon(Icons.search),
-                    border: InputBorder.none,
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '聊天室',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      searchText = value;
-                    });
-                  },
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20, 8),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '訊息',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Color.fromRGBO(246, 247, 252, 1),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: '搜尋',
+                      prefixIcon: Icon(Icons.search),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchText = value;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: latestChats.length,
-              itemBuilder: (context, index) {
-                final chat = latestChats[index];
-                final lastActiveDuration =
-                    DateTime.now().difference(chat.lastActive);
-                final lastActiveString =
-                    _getLastActiveString(lastActiveDuration);
-
-                if (searchText.isNotEmpty &&
-                    !chat.name
-                        .toLowerCase()
-                        .contains(searchText.toLowerCase())) {
-                  return Container(); // Skip rendering if the name doesn't match the search text
-                }
-
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Color.fromRGBO(96, 175, 245, 1), // 蓝色底线颜色
-                          width: 1.0, // 蓝色底线宽度
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20, 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '訊息',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: latestChats.length,
+                itemBuilder: (context, index) {
+                  final chat = latestChats[index];
+                  final lastActiveDuration =
+                      DateTime.now().difference(chat.lastActive);
+                  final lastActiveString =
+                      _getLastActiveString(lastActiveDuration);
+    
+                  if (searchText.isNotEmpty &&
+                      !chat.name
+                          .toLowerCase()
+                          .contains(searchText.toLowerCase())) {
+                    return Container(); // Skip rendering if the name doesn't match the search text
+                  }
+    
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Color.fromRGBO(96, 175, 245, 1), // 蓝色底线颜色
+                            width: 1.0, // 蓝色底线宽度
+                          ),
                         ),
                       ),
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        child: Text(chat.name[0].toUpperCase()),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          child: Text(chat.name[0].toUpperCase()),
+                        ),
+                        title: Text(chat.name),
+                        subtitle: Text('${chat.lastMessage} · $lastActiveString'),
+                        onTap: () => _openChatPage(context, chat),
                       ),
-                      title: Text(chat.name),
-                      subtitle: Text('${chat.lastMessage} · $lastActiveString'),
-                      onTap: () => _openChatPage(context, chat),
                     ),
-                  ),
-                );
-              },
-            ),
-          )
-        ],
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
