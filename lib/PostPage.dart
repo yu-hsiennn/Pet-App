@@ -67,7 +67,7 @@ class _PostPageState extends State<PostPage> {
   }
 
   Widget buildLabelField(List<String> items) {
-    List<int> pattern = [3, 4, 3, 4, 3, 4]; // 数量模式
+    List<int> pattern = [3, 4]; // 数量模式
     List<Widget> rowsList = [];
 
     int itemCount = 0;
