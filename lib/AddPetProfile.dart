@@ -54,13 +54,18 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
   }
 
   Widget buildLabelField(List<String> items) {
-    int rows = (items.length / 4).ceil();
+    List<int> pattern = [3, 4, 3, 4, 3, 4]; // 数量模式
     List<Widget> rowsList = [];
 
-    for (int i = 0; i < rows; i++) {
+    int itemCount = 0;
+    int row = 0;
+    while (itemCount < items.length) {
       List<Widget> buttonsList = [];
+      int rowButtonsCount = pattern[row % pattern.length];
 
-      for (int j = i * 4; j < (i + 1) * 4 && j < items.length; j++) {
+      for (int j = itemCount;
+          j < itemCount + rowButtonsCount && j < items.length;
+          j++) {
         buttonsList.add(
           Padding(
             padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -69,7 +74,7 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                 if (selectedItems.contains(items[j])) {
                   selectedItems.remove(items[j]);
                 } else {
-                  if (selectedItems.length < 4) {
+                  if (selectedItems.length < 5) {
                     selectedItems.add(items[j]);
                   }
                 }
@@ -77,13 +82,19 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
               },
               style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.symmetric(horizontal: 8.0)),
+                  EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                ),
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromRGBO(170, 227, 254, 1)),
+                  Color.fromRGBO(170, 227, 254, 1),
+                ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
+                ),
+                fixedSize: MaterialStateProperty.all<Size>(
+                  Size(MediaQuery.of(context).size.width / 6,
+                      double.infinity), // 设置按钮的最大宽度
                 ),
               ),
               child: Text(
@@ -95,15 +106,19 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
         );
       }
 
+      itemCount += rowButtonsCount;
+      row++;
+
       rowsList.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        Wrap(
+          spacing: 8.0, // 按钮之间的水平间距
+          runSpacing: 8.0, // 按钮之间的垂直间距
+          alignment: WrapAlignment.center,
           children: buttonsList,
         ),
       );
     }
 
-    // 加號按鈕
     rowsList.add(
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -112,7 +127,6 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: OutlinedButton(
               onPressed: () {
-                // 彈出對話框輸入新項目
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -125,11 +139,11 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                     content: TextField(
                       controller: _newItemController,
                       decoration: InputDecoration(
-                        border: InputBorder.none, // 去除边框
+                        border: InputBorder.none,
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
-                              color: Color.fromRGBO(
-                                  170, 227, 254, 1)), // 设置底线颜色为蓝色
+                            color: Color.fromRGBO(170, 227, 254, 1),
+                          ),
                         ),
                         hintText: '輸入新label...',
                       ),
@@ -146,7 +160,6 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                           String newItem = _newItemController.text.trim();
                           if (newItem.isNotEmpty) {
                             items.add(newItem);
-
                             setState(() {});
                             Navigator.pop(context);
                           }
@@ -159,9 +172,11 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
               },
               style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.symmetric(horizontal: 16.0)),
+                  EdgeInsets.symmetric(horizontal: 16.0),
+                ),
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromRGBO(170, 227, 254, 1)),
+                  Color.fromRGBO(170, 227, 254, 1),
+                ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
@@ -180,8 +195,6 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
 
     return Container(
       width: double.infinity,
-      // height: 50,
-
       child: Column(
         children: rowsList,
       ),
@@ -189,11 +202,13 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
   }
 
   List<String> items = [
-    'Button 1',
-    'Button 2',
-    'Button 3',
-    'Button 4',
-    'Button 5',
+    '飛盤',
+    '接球',
+    '散步',
+    '捉迷藏',
+    '慢跑',
+    '衝刺',
+    '笨狗',
   ];
 
   @override
