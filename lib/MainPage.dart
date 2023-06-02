@@ -146,11 +146,11 @@ class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     HomePage(title: "Google Map"),
-    StoryPage(
-      Post_list: _posts,
-      Post_Index: 2,
-    ),
-    //PostPage(),
+    // StoryPage(
+    //   Post_list: _posts,
+    //   Post_Index: 2,
+    // ),
+    PostPage(),
     ChatOverviewPage(chats: chatList),
     ProfilePage(person: demoUser1),
   ];

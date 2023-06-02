@@ -286,14 +286,7 @@ class _StoryPageState extends State<StoryPage> {
 
     return SafeArea(
       child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Color.fromRGBO(96, 175, 245, 1),
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        margin: const EdgeInsets.symmetric(vertical: 10),
         height: MediaQuery.of(context).size.height * 6 / 7,
         width: MediaQuery.of(context).size.width,
         child: Column(

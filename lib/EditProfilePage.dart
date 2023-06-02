@@ -475,6 +475,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
                 ),
               ),
               Container(
+                margin: EdgeInsets.only(bottom: 93),
                 child: Center(
                   child: buildNextStepButton(),
                 ),

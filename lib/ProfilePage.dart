@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
   CustomWidget cw = new CustomWidget();
   String gender = "";
   int _selectedIndex = 0;
-
+  bool isMe = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,10 +46,10 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 profile_info(widget.person.photo, widget.person.posts_count,
-                    widget.person.follower, true),
-                Text_info(widget.person.intro, true),
+                    widget.person.follower, isMe),
+                Text_info(widget.person.intro, isMe),
                 Text_title("寵物資料"),
-                Pets_photo(widget.person.petdatas, true),
+                Pets_photo(widget.person.petdatas, isMe),
                 Text_title("寵物相簿"),
                 Album(context),
               ],
