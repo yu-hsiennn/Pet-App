@@ -1,103 +1,33 @@
-class UserData {
-  String name;
-  String username;
-  String password;
-  int follower;
-  int posts_count;
-  String intro;
-  int pet_count;
-  String photo;
-  List<PetDetail> petdatas;
-
-  UserData(
-      {this.name = '',
-      required this.username,
-      required this.password,
-      this.follower = 0,
-      this.posts_count = 0,
-      this.intro = '',
-      this.pet_count = 0,
-      this.photo = '',
-      this.petdatas = const []});
-}
-
-class PetDetail {
-  String name;
-  String breed;
-  String gender;
-  int age;
-  List<String> personality_lable;
-  String photo;
-
-  PetDetail(
-      {required this.name,
-      required this.breed,
-      required this.gender,
-      required this.age,
-      required this.personality_lable,
-      required this.photo});
-}
-
-class Post {
-  final UserData poster;
-  final String post_info;
-  final String pictures;
-  final List<String> label;
-  final int like_count;
-  final List<Comment> comments;
-  Post({
-    required this.poster,
-    required this.post_info,
-    required this.pictures,
-    required this.label,
-    required this.like_count,
-    required this.comments,
-  });
-}
-
-class Comment {
-  final UserData user;
-  final String comment_info;
-  final int like_count;
-  Comment({
-    required this.user,
-    required this.comment_info,
-    required this.like_count,
-  });
-}
-
-class Attraction {
-  String name, address;
-  double lat, lon;
-  List<Post> post_list;
-  Attraction(
-      {required this.name,
-      required this.address,
-      required this.lat,
-      required this.lon,
-      required this.post_list});
-}
+import 'package:flutter/material.dart';
 
 // --------------------------------------------------------------
 class PetApp {
+
+  // global variable
   static User CurrentUser =
-      new User(email: "", name: "", intro: "", birthday: "");
+      new User(email: "", name: "", intro: "", locations: "");
+
+  static List<Attraction> Attractions = [];
+
 }
 
+// -----------------------class define-----------------------------
 class User {
-  String name, email, intro, birthday, profile_picture, authorization;
+  String name, email, intro, locations, profile_picture, authorization;
   List<Pet> pets;
   List<User> Following, Follower;
+  List<Posts> posts;
   User({
     required this.email,
     required this.name,
     required this.intro,
-    required this.birthday,
+    required this.locations,
     this.pets = const [],
     this.Follower = const [],
     this.Following = const [],
     this.profile_picture = "",
     this.authorization = "",
+    this.posts = const [],
   });
 }
 
@@ -125,6 +55,7 @@ class Posts {
   int response_to, id, timestamp;
   List<Like> Likes;
   List<_File> Files;
+  List<Comment> Comments;
   Posts(
       {required this.owner_id,
       this.response_to = 0,
@@ -132,21 +63,196 @@ class Posts {
       required this.id,
       this.Files = const [],
       this.Likes = const [],
-      required this.timestamp});
+      required this.timestamp,
+      this .Comments = const []
+      });
+}
+
+class Comment {
+  User user;
+  List<Like> Likes;
+  int timestamp;
+  String content;
+  Comment({
+    required this.user,
+    required this.Likes,
+    required this.content,
+    required this.timestamp
+  });
 }
 
 class Pet {
-  String owner, name, breed, gender, birthday, personality_labels;
+  String owner, name, breed, gender, age, personality_labels;
   int id;
   List<_File> Files;
   Pet(
       {required this.owner,
       required this.name,
       required this.breed,
-      required this.birthday,
+      required this.age,
       required this.personality_labels,
       required this.gender,
       required this.id,
       this.Files = const []});
 }
-// -----------------------
+
+class Attraction {
+  String name, address;
+  double lat, lon;
+  List<Posts> posts;
+  Attraction({
+    required this.name,
+    required this.address,
+    required this.lat,
+    required this.lon,
+    required this.posts
+  });
+}
+
+// -----------------custom widget-------------------------
+class CustomWidget {
+  CustomWidget();
+
+  // follower or following or posts widget
+  Widget Text_count(String title, int counts) {
+    return Container(
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.black.withOpacity(0.4),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            counts.toString(),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // profile photo
+  Widget Profile_photo(int framesize,
+      {String file_name = "assets/image/empty.jpg"}) {
+    String _file_name =
+        file_name.isEmpty ? "assets/image/empty.jpg" : file_name;
+    return CircleAvatar(
+      radius: framesize.toDouble(),
+      backgroundImage: AssetImage(
+        _file_name,
+      ),
+    );
+  }
+
+  // Label
+  Widget Labels(String label) {
+    return Container(
+      margin: EdgeInsets.all(5.0),
+      padding: EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+      ),
+      child: Text(label),
+    );
+  }
+}
+
+// ---------------custom button--------------------------
+class CustomButton extends StatefulWidget {
+  final String label;
+  final VoidCallback onPressed;
+  final double? height;
+  final double? width;
+  final List<Color> tappedDownColors;
+  final List<Color> regularColors;
+  const CustomButton({
+    Key? key,
+    required this.label,
+    required this.onPressed,
+    this.tappedDownColors = const [
+      Color.fromRGBO(159, 89, 99, 1),
+      Color.fromRGBO(168, 124, 94, 1),
+    ],
+    this.regularColors = const [
+      Color.fromRGBO(96, 175, 245, 1),
+      Color.fromRGBO(170, 227, 254, 1),
+    ],
+    this.height = 60,
+    this.width,
+  }) : super(key: key);
+
+  @override
+  State<CustomButton> createState() => _CustomButtonState();
+}
+
+class _CustomButtonState extends State<CustomButton> {
+  bool _isTappedDown = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTapDown: (_) {
+          setState(() {
+            _isTappedDown = true;
+          });
+        },
+        onTapUp: (_) {
+          setState(() {
+            _isTappedDown = false;
+          });
+          widget.onPressed();
+        },
+        onTapCancel: () {
+          setState(() {
+            _isTappedDown = false;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: _isTappedDown
+                    ? widget.tappedDownColors
+                    : widget.regularColors,
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(25.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.pink.withOpacity(0.2),
+                  spreadRadius: 4,
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
+                )
+              ]),
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          height: widget.height,
+          width: widget.width,
+          child: Center(
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                fontFamily: "Netflix",
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                letterSpacing: 0.0,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

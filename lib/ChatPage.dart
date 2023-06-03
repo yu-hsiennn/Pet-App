@@ -51,6 +51,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     print(widget.photo);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0, // 去除阴影

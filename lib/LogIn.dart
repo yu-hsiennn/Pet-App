@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/MainPage.dart';
-import 'CustomButton.dart';
 import 'PetApp.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-UserData demoUser1 = UserData(
-  name: "peach",
-  username: 'demouser',
-  password: 'demopw',
-  follower: 116,
-  pet_count: 2,
-  intro: "aasddf",
-  photo: "assets/image/peach.jpg",
-  petdatas: [demoPet1, demoPet2],
-);
 
 class AccessPage extends StatefulWidget {
   const AccessPage({super.key});
@@ -54,16 +42,29 @@ class _AccessPageState extends State<AccessPage> {
   }
 
   Future<void> GetUser() async {
+    List<Posts> _post = [];
     final response = await http.get(Uri.parse(GetUserUrl + _email), headers: {
       'accept': 'application/json',
     });
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
+      for (var post in responseData['posts']) {
+        _post.add(
+          Posts(
+            owner_id: post["owner_id"], 
+            content: post["content"], 
+            id: post["id"], 
+            timestamp: post["timestamp"]
+          )
+        );
+      }
+      
       PetApp.CurrentUser.email = responseData['email'];
       PetApp.CurrentUser.name = responseData['name'];
       PetApp.CurrentUser.intro = responseData['intro'];
-      PetApp.CurrentUser.birthday = responseData['birthday'];
+      PetApp.CurrentUser.locations = responseData['birthday'];
+      PetApp.CurrentUser.posts = _post;
       print(responseData);
     } else {
       print(
@@ -201,7 +202,7 @@ class _AccessPageState extends State<AccessPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MainPage(user: demoUser1),
+                                builder: (context) => MainPage(),
                               ),
                             );
                           },

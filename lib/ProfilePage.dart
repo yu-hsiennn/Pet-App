@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/AddPetProfile.dart';
 import 'package:pet_app/StoryPage.dart';
-import 'CustomWidget.dart';
-import 'CustomButton.dart';
 import 'PetApp.dart';
 import 'package:album_image/album_image.dart';
 import 'AddPetProfile.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key, required this.person});
-  final UserData person;
+  const ProfilePage({super.key, required this.Is_Me, required this.user});
+  final bool Is_Me;
+  final User user;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -19,9 +18,16 @@ class _ProfilePageState extends State<ProfilePage> {
   CustomWidget cw = new CustomWidget();
   String gender = "";
   int _selectedIndex = 0;
-  bool isMe = true;
+  // bool isMe = true;
+  late User u;
+
   @override
   Widget build(BuildContext context) {
+    if (widget.Is_Me) {
+      u = PetApp.CurrentUser;
+    } else {
+      u = widget.user;
+    }
     return Scaffold(
       appBar: AppBar(
         iconTheme:
@@ -29,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         title: Text(
-          widget.person.name,
+          u.name,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -45,11 +51,22 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                profile_info(widget.person.photo, widget.person.posts_count,
-                    widget.person.follower, isMe),
-                Text_info(widget.person.intro, isMe),
+                profile_info(
+                  u.profile_picture, 
+                  u.posts.length,
+                  u.Follower.length,
+                  u.Following.length, 
+                  widget.Is_Me
+                ),
+                Text_info(
+                  u.intro, 
+                  widget.Is_Me
+                ),
                 Text_title("寵物資料"),
-                Pets_photo(widget.person.petdatas, isMe),
+                Pets_photo(
+                  u.pets, 
+                  widget.Is_Me
+                ),
                 Text_title("寵物相簿"),
                 Album(context),
               ],
@@ -61,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget profile_info(
-      String file_name, int posts_count, int followers, bool is_user) {
+      String file_name, int posts_count, int followers, int following, bool is_user) {
     if (is_user) {
       return Container(
           width: MediaQuery.of(context).size.width,
@@ -84,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Spacer(),
                     Flexible(
-                      child: cw.Text_count("追蹤中", 50),
+                      child: cw.Text_count("追蹤中", following),
                       flex: 1,
                     ),
                     Spacer(),
@@ -233,14 +250,14 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget Pets_photo(List<PetDetail> petsList, bool isUser) {
+  Widget Pets_photo(List<Pet> petsList, bool isUser) {
     return Container(
       padding: EdgeInsets.all(25.0),
       child: Row(
         children: [
           ...petsList.map((pet) {
             String fileName =
-                pet.photo.isEmpty ? "assets/image/empty.jpg" : pet.photo;
+                pet.Files.isEmpty ? "assets/image/empty.jpg" : pet.photo;
             return GestureDetector(
               onTap: () {
                 showPetProfile(pet);
@@ -280,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<dynamic> showPetProfile(PetDetail pet) {
+  Future<dynamic> showPetProfile(Pet pet) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -367,7 +384,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start, // Align left
                       children: List.generate(
-                        pet.personality_lable.length,
+                        pet.personality_labels.length,
                         (index) => Container(
                           padding: EdgeInsets.all(8),
                           margin: EdgeInsets.all(4),
@@ -380,7 +397,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             borderRadius: BorderRadius.circular(20.0),
                           ),
-                          child: Text(pet.personality_lable[index]),
+                          child: Text(pet.personality_labels[index]),
                         ),
                       ),
                     ),

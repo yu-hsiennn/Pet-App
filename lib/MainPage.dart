@@ -6,102 +6,7 @@ import 'ChatOverviewPage.dart';
 import 'StoryPage.dart';
 import "HomePage.dart";
 import "PostPage.dart";
-import "UploadPostPicturePage.dart";
 
-//demo user with two pets
-PetDetail demoPet1 = PetDetail(
-    name: "Luchi",
-    breed: "Gold",
-    gender: "Male",
-    age: 3,
-    personality_lable: ["123", "456", "789"],
-    photo: "assets/image/dog1.jpg");
-PetDetail demoPet2 = PetDetail(
-    name: "Lushi",
-    breed: "Gold",
-    gender: "Female",
-    age: 2,
-    personality_lable: ["321", "987"],
-    photo: "assets/image/dog2.jpeg");
-
-UserData demoUser1 = UserData(
-  name: "peach",
-  username: 'demouser',
-  password: 'demopw',
-  follower: 116,
-  pet_count: 2,
-  intro: "aasddf",
-  photo: "assets/image/peach.jpg",
-  petdatas: [demoPet1, demoPet2],
-);
-
-List<Post> _posts = [
-  Post(
-      poster: _users[0],
-      post_info: "Hi! First Post!!",
-      pictures: "assets/image/dog1.jpg",
-      label: ['可愛', '調皮'],
-      like_count: 251234,
-      comments: [_comment[1], _comment[2], _comment[3], _comment[4]]),
-  Post(
-      poster: _users[2],
-      post_info: "Hi! Nice to meet all!!",
-      pictures: "assets/image/dog4.jpg",
-      label: ['好吃', '美味'],
-      like_count: 34,
-      comments: [
-        _comment[1],
-        _comment[0],
-      ]),
-  Post(
-      poster: _users[4],
-      post_info: "So hot!!",
-      pictures: "assets/image/dog5.jpg",
-      label: ['不乖就是備用糧食'],
-      like_count: 251,
-      comments: [_comment[5], _comment[6]]),
-];
-
-List<UserData> _users = [
-  UserData(
-      name: "Bob",
-      username: "bob",
-      password: "123",
-      photo: "assets/image/empty.jpg"),
-  UserData(
-      name: "Alice",
-      username: "alice",
-      password: "123",
-      photo: "assets/image/peach.jpg"),
-  UserData(
-      name: "Joe",
-      username: "joe",
-      password: "123",
-      photo: "assets/image/dog9.jpg"),
-  UserData(
-      name: "Oreo",
-      username: "oreo",
-      password: "123",
-      photo: "assets/image/dog8.jpg"),
-  UserData(
-      name: "Bear",
-      username: "bear",
-      password: "123",
-      photo: "assets/image/dog7.jpg"),
-];
-
-List<Comment> _comment = [
-  Comment(user: _users[0], comment_info: "how are you", like_count: 19),
-  Comment(user: _users[1], comment_info: "how are you", like_count: 17),
-  Comment(user: _users[2], comment_info: "how are you", like_count: 10),
-  Comment(user: _users[3], comment_info: "how are you", like_count: 11),
-  Comment(user: _users[4], comment_info: "Cool!", like_count: 14),
-  Comment(user: _users[2], comment_info: "OMG! So Cute!!!", like_count: 1285),
-  Comment(
-      user: _users[3],
-      comment_info: "I totally agree with you!!",
-      like_count: 12),
-];
 
 List<Chat> chatList = [
   Chat(
@@ -135,8 +40,7 @@ List<Chat> chatList = [
 ];
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key, required this.user});
-  final UserData user;
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -152,7 +56,7 @@ class _MainPageState extends State<MainPage> {
     // ),
     PostPage(),
     ChatOverviewPage(chats: chatList),
-    ProfilePage(person: demoUser1),
+    ProfilePage(Is_Me: true, user: User(email: "", name: "", intro: "", locations: "")),
   ];
 
   void _onItemTapped(int index) {
@@ -163,7 +67,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    _pages[3] = ProfilePage(person: widget.user); //a little dirty but works
+    _pages[3] = ProfilePage(Is_Me: true, user: User(email: "", name: "", intro: "", locations: "")); //a little dirty but works
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

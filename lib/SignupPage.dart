@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/PetApp.dart';
-import 'CustomButton.dart';
+import 'PetApp.dart';
 import 'EditProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPage();
+  State<SignupPage> createState() => _SignupPage();
 }
 
-class _RegisterPage extends State<RegisterPage> {
+class _SignupPage extends State<SignupPage> {
   bool hidePassword = true;
   final TextEditingController _textControllerUsername = TextEditingController();
   final TextEditingController _textControllerP1 = TextEditingController();

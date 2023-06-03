@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'location_service.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_app/CustomButton.dart';
 import 'package:pet_app/PetApp.dart';
 import 'MainPage.dart';
 import 'package:image_picker/image_picker.dart';
