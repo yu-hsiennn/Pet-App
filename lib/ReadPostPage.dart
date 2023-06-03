@@ -3,7 +3,7 @@ import 'package:pet_app/PetApp.dart';
 
 class ReadPostPage extends StatefulWidget {
   const ReadPostPage({super.key, required this.post});
-  final Post post;
+  final Posts post;
   @override
   State<ReadPostPage> createState() => _ReadPostPageState();
 }
@@ -121,13 +121,13 @@ class _ReadPostPageState extends State<ReadPostPage> {
               Padding(
                 padding: EdgeInsets.all(8),
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(messages[i].user.photo),
+                  backgroundImage: NetworkImage(messages[i].user.profile_picture),
                   radius: 15.0,
                 ),
               ),
               Padding(
                 padding: EdgeInsets.all(8),
-                child: Text(messages[i].comment_info),
+                child: Text(messages[i].content),
               ),
             ],
           ),
@@ -188,20 +188,20 @@ class _ReadPostPageState extends State<ReadPostPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildNameTextField(
-                widget.post.poster.name, widget.post.poster.photo),
+                widget.post.owner_id.name, widget.post.owner_id.profile_picture),
             SizedBox(height: 20),
-            buildPicture(widget.post.pictures),
-            buildLikeField(widget.post.like_count),
-            buildTextField(widget.post.post_info),
+            buildPicture(widget.post.post_picture),
+            buildLikeField(widget.post.Likes.length),
+            buildTextField(widget.post.content),
             buildDateField('5月20號 16:34'),
-            buildLabelField(widget.post.label),
+            buildLabelField([]),
             Divider(
               // 添加蓝色线
               color: Color.fromRGBO(170, 227, 254, 1),
               thickness: 1,
             ),
-            buildMessageField(widget.post.comments),
-            buildInputMessageField(widget.post.poster.photo)
+            buildMessageField(widget.post.Comments),
+            buildInputMessageField(widget.post.owner_id.profile_picture)
           ]),
     ))));
   }

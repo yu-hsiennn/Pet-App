@@ -449,9 +449,7 @@ class _PostPageState extends State<PostPage> {
               Navigator.pushAndRemoveUntil(
                 context,
                 new MaterialPageRoute(
-                    builder: (context) => new MainPage(
-                          user: demoUser1,
-                        )),
+                    builder: (context) => new MainPage()),
                 (route) => route == null,
               );
             },
@@ -466,9 +464,7 @@ class _PostPageState extends State<PostPage> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   new MaterialPageRoute(
-                      builder: (context) => new MainPage(
-                            user: demoUser1,
-                          )),
+                      builder: (context) => new MainPage()),
                   (route) => route == null,
                 );
               },

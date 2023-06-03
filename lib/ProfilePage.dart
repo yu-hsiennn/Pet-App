@@ -257,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           ...petsList.map((pet) {
             String fileName =
-                pet.Files.isEmpty ? "assets/image/empty.jpg" : pet.photo;
+                pet.picture.isEmpty ? "assets/image/empty.jpg" : pet.picture;
             return GestureDetector(
               onTap: () {
                 showPetProfile(pet);
@@ -332,7 +332,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(width: 30.0),
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage(pet.photo),
+                      backgroundImage: AssetImage(pet.picture),
                     ),
                     SizedBox(width: 10.0),
                     Column(

@@ -4,7 +4,7 @@ import 'StoryPage.dart';
 
 class AttractionPage extends StatefulWidget {
   const AttractionPage({super.key, required this.name, required this.address, required this.Post_list});
-  final List<Post> Post_list;
+  final List<Posts> Post_list;
   final String name, address;
 
   @override
@@ -99,7 +99,7 @@ class _AttractionPageState extends State<AttractionPage> {
             width: double.infinity,
             child: Card(
               child: Image.network(
-                  widget.Post_list[index].pictures,
+                  widget.Post_list[index].post_picture,
                   fit: BoxFit.cover,
               ),
             ),

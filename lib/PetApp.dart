@@ -51,17 +51,17 @@ class _File {
 }
 
 class Posts {
-  String owner_id, content;
+  User owner_id;
+  String content, post_picture;
   int response_to, id, timestamp;
   List<Like> Likes;
-  List<_File> Files;
   List<Comment> Comments;
   Posts(
       {required this.owner_id,
       this.response_to = 0,
       required this.content,
       required this.id,
-      this.Files = const [],
+      this.post_picture = "",
       this.Likes = const [],
       required this.timestamp,
       this .Comments = const []
@@ -82,18 +82,18 @@ class Comment {
 }
 
 class Pet {
-  String owner, name, breed, gender, age, personality_labels;
+  String owner, name, breed, gender, age, personality_labels, picture;
   int id;
-  List<_File> Files;
-  Pet(
-      {required this.owner,
-      required this.name,
-      required this.breed,
-      required this.age,
-      required this.personality_labels,
-      required this.gender,
-      required this.id,
-      this.Files = const []});
+  Pet({
+    required this.owner,
+    required this.name,
+    required this.breed,
+    required this.age,
+    required this.personality_labels,
+    required this.gender,
+    required this.id,
+    required this.picture
+  });
 }
 
 class Attraction {

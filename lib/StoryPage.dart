@@ -5,7 +5,7 @@ import 'PetApp.dart';
 class StoryPage extends StatefulWidget {
   const StoryPage(
       {super.key, required this.Post_list, required this.Post_Index});
-  final List<Post> Post_list;
+  final List<Posts> Post_list;
   final int Post_Index;
 
   @override
@@ -44,7 +44,7 @@ class _StoryPageState extends State<StoryPage> {
     );
   }
 
-  Widget buildPost(Post Post, int post_index) {
+  Widget buildPost(Posts Post, int post_index) {
     bool _isVisible = false;
 
     Widget buildNameTextField(String name, String icon) {
@@ -293,15 +293,15 @@ class _StoryPageState extends State<StoryPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              buildNameTextField(Post.poster.name, Post.poster.photo),
+              buildNameTextField(Post.owner_id.name, Post.owner_id.profile_picture),
               SizedBox(height: 20),
-              buildPicture(Post.pictures),
-              buildLikeField(Post.like_count, post_index),
-              buildTextField(Post.post_info),
+              buildPicture(Post.post_picture),
+              buildLikeField(Post.Likes.length, post_index),
+              buildTextField(Post.content),
               buildDateField('5月20號 16:34'),
-              buildLabelField(Post.label),
-              buildMessageField(Post.comments),
-              buildInputMessageField(Post.poster.photo)
+              buildLabelField([]),
+              buildMessageField(Post.Comments),
+              buildInputMessageField(Post.owner_id.profile_picture)
             ]),
       ),
     );

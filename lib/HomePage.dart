@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
         ? 100
         : attraction.posts.length * 25;
     var markerIcon = await MarkerIcon.downloadResizePictureCircle(
-        attraction.posts[0].Files[0].file_path,
+        attraction.posts[0].post_picture,
         size: _size,
         addBorder: true,
         borderColor: Colors.blue,
