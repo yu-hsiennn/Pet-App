@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pet_app/MainPage.dart';
 import 'PetApp.dart';
 import 'dart:convert';
@@ -49,16 +50,16 @@ class _AccessPageState extends State<AccessPage> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      for (var post in responseData['posts']) {
-        _post.add(
-          Posts(
-            owner_id: post["owner_id"], 
-            content: post["content"], 
-            id: post["id"], 
-            timestamp: post["timestamp"]
-          )
-        );
-      }
+      // for (var post in responseData['posts']) {
+      //   _post.add(
+      //     Posts(
+      //       owner_id: post["owner_id"], 
+      //       content: post["content"], 
+      //       id: post["id"], 
+      //       timestamp: post["timestamp"]
+      //     )
+      //   );
+      // }
       
       PetApp.CurrentUser.email = responseData['email'];
       PetApp.CurrentUser.name = responseData['name'];
@@ -199,7 +200,7 @@ class _AccessPageState extends State<AccessPage> {
                         CustomButton(
                           label: '確認',
                           onPressed: () {
-                            //loginUser();
+                            loginUser();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

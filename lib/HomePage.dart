@@ -74,6 +74,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var init_latlng = PetApp.CurrentUser.locations.split(",");
+    print(PetApp.CurrentUser.locations);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -110,9 +112,12 @@ class _HomePageState extends State<HomePage> {
                 myLocationButtonEnabled: false,
                 myLocationEnabled: true,
                 onMapCreated: _onMapCreated,
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(22.99749, 120.22062),
-                  zoom: 15,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                    double.parse(init_latlng[0]), 
+                    double.parse(init_latlng[1])
+                  ),
+                  zoom: 13.5,  
                 ),
                 markers: _markers.values.toSet(),
               ),

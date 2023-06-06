@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage> {
     // ),
     PostPage(),
     ChatOverviewPage(chats: chatList),
-    ProfilePage(Is_Me: true, user: User(email: "", name: "", intro: "", locations: "", password: "")),
+    ProfilePage(Is_Me: true, user: User(email: "", name: "", intro: "", locations: "0,0", password: "")),
   ];
 
   void _onItemTapped(int index) {
@@ -67,7 +67,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    _pages[3] = ProfilePage(Is_Me: true, user: User(email: "", name: "", intro: "", locations: "", password: "")); //a little dirty but works
+    _pages[3] = ProfilePage(Is_Me: true, user: User(email: "", name: "", intro: "", locations: "0,0", password: "")); //a little dirty but works
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

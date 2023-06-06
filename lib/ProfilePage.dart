@@ -4,6 +4,8 @@ import 'package:pet_app/StoryPage.dart';
 import 'PetApp.dart';
 import 'package:album_image/album_image.dart';
 import 'AddPetProfile.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.Is_Me, required this.user});
@@ -18,7 +20,8 @@ class _ProfilePageState extends State<ProfilePage> {
   CustomWidget cw = new CustomWidget();
   String gender = "";
   int _selectedIndex = 0;
-  // bool isMe = true;
+  bool isEditing = false;
+  TextEditingController myTextController = TextEditingController();
   late User u;
 
   @override
@@ -59,7 +62,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   widget.Is_Me
                 ),
                 Text_info(
-                  u.intro, 
                   widget.Is_Me
                 ),
                 Text_title("寵物資料"),
@@ -213,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget Text_info(String info, bool is_user) {
+  Widget Text_info(bool is_user) {
     return Column(
       children: [
         Row(
@@ -222,6 +224,10 @@ class _ProfilePageState extends State<ProfilePage> {
             if (is_user)
               IconButton(
                 onPressed: () {
+                  setState(() {
+                    isEditing = true;
+                  });
+
                   // 按钮点击事件
                 },
                 icon: Icon(Icons.mode_edit),
@@ -239,15 +245,54 @@ class _ProfilePageState extends State<ProfilePage> {
               borderRadius: BorderRadius.all(
                 Radius.circular(0.0),
               )),
-          child: Text(
-            info,
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
+          child: isEditing
+              ? TextField(
+                  // 在这里配置TextField的相关属性
+                  controller:
+                      myTextController, // 假设你已经有一个TextEditingController的实例
+                  style: TextStyle(fontSize: 18.0),
+                  onSubmitted: (String value) {
+                    setState(() {
+                      isEditing = false;
+                      u.intro = value; // 将文本保存到info变量中
+                      EditIntroduce();
+                    });
+                  },
+                )
+              : Text(
+                  u.intro,
+                  style: TextStyle(fontSize: 18.0),
+                ),
         ),
       ],
     );
+  }
+
+  Future<void> EditIntroduce() async {
+    String editIntroduceUrl = PetApp.Server_Url + '/user/edit';
+    final response = await http.post(
+      Uri.parse(editIntroduceUrl),
+      headers: {
+        'accept': 'application/json',
+        'Authorization': "Bearer " + u.authorization,
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "email": PetApp.CurrentUser.email,
+        "name": PetApp.CurrentUser.name,
+        "intro": u.intro,
+        "birthday": PetApp.CurrentUser.locations,
+        "password": PetApp.CurrentUser.password
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
   }
 
   Widget Pets_photo(List<Pet> petsList, bool isUser) {

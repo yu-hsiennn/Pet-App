@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // --------------------------------------------------------------
 class PetApp {
 
   // global variable
   static User CurrentUser =
-      new User(email: "", name: "", intro: "", locations: "", password: "");
+      new User(email: "", name: "", intro: "", locations: "0,0", password: "");
 
   static List<Attraction> Attractions = [];
 
@@ -17,7 +18,7 @@ class PetApp {
 
 // -----------------------class define-----------------------------
 class User {
-  String name, email, intro, locations, profile_picture, authorization, password;
+  String name, email, intro, profile_picture, authorization, password, locations;
   List<Pet> pets;
   List<User> Following, Follower;
   List<Posts> posts;

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_app/PetApp.dart';
@@ -340,6 +342,14 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
   Widget buildNextStepButton() {
     String signupUrl = PetApp.Server_Url + '/user/signup';
     String loginUrl = PetApp.Server_Url + '/user/login';
+    String _latlon = "0,0";
+
+    Future<void> init_place(Map<String, dynamic> place) async {
+      final double lat = place['geometry']['location']['lat'];
+      final double lng = place['geometry']['location']['lng'];
+      
+      _latlon = lat.toString() + "," + lng.toString();
+    }
 
     Future<void> signupUser() async {
       print(signupUrl);
@@ -353,7 +363,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
           'email': widget.user_email,
           'name': widget.nickname,
           'intro': "",
-          'birthday': widget.location,
+          'birthday': _latlon,
           'password': widget.user_password
         }),
       );
@@ -394,7 +404,10 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
       margin: EdgeInsets.only(bottom: 10),
       child: CustomButton(
         label: '完成',
-        onPressed: () {
+        onPressed: () async {
+          var place = await LocationService().getPlace(
+            widget.location == "" ? "成功大學 榕園" : widget.location);
+          init_place(place);
           signupUser();
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => MyApp()));
