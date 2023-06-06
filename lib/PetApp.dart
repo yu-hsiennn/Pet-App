@@ -82,13 +82,13 @@ class Comment {
 }
 
 class Pet {
-  String owner, name, breed, gender, age, personality_labels, picture;
+  String owner, name, breed, gender, birthday, personality_labels, picture;
   int id;
   Pet({
     required this.owner,
     required this.name,
     required this.breed,
-    required this.age,
+    required this.birthday,
     required this.personality_labels,
     required this.gender,
     required this.id,

@@ -353,7 +353,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         Padding(
                           padding: EdgeInsets.all(10),
-                          child: Text('${pet.age.toString()} / ${pet.gender}',
+                          child: Text('${pet.birthday.toString()} / ${pet.gender}',
                               style: TextStyle(fontSize: 16.0)),
                         ),
                       ],
