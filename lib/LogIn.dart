@@ -14,8 +14,8 @@ class AccessPage extends StatefulWidget {
 class _AccessPageState extends State<AccessPage> {
   bool hidePassword = true;
   String _email = "", _password = "";
-  String loginUrl = 'http://10.0.2.2:8000/user/login';
-  String GetUserUrl = 'http://10.0.2.2:8000/user/';
+  String loginUrl =  PetApp.Server_Url + '/user/login';
+  String GetUserUrl = PetApp.Server_Url + '/user/';
 
   Future<void> loginUser() async {
     final response = await http.post(
@@ -64,6 +64,7 @@ class _AccessPageState extends State<AccessPage> {
       PetApp.CurrentUser.name = responseData['name'];
       PetApp.CurrentUser.intro = responseData['intro'];
       PetApp.CurrentUser.locations = responseData['birthday'];
+      PetApp.CurrentUser.password = _password;
       PetApp.CurrentUser.posts = _post;
       print(responseData);
     } else {

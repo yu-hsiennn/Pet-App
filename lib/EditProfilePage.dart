@@ -338,10 +338,11 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
   }
 
   Widget buildNextStepButton() {
-    String signupUrl = 'http://10.0.2.2:8000/user/signup';
-    String loginUrl = 'http://10.0.2.2:8000/user/login';
+    String signupUrl = PetApp.Server_Url + '/user/signup';
+    String loginUrl = PetApp.Server_Url + '/user/login';
 
     Future<void> signupUser() async {
+      print(signupUrl);
       final response = await http.post(
         Uri.parse(signupUrl),
         headers: {
@@ -352,7 +353,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
           'email': widget.user_email,
           'name': widget.nickname,
           'intro': "",
-          'birthday': "2023/6/1",
+          'birthday': widget.location,
           'password': widget.user_password
         }),
       );
@@ -366,6 +367,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
     }
 
     Future<void> loginUser() async {
+      print(loginUrl);
       final response = await http.post(
         Uri.parse(loginUrl),
         headers: {

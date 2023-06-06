@@ -5,15 +5,19 @@ class PetApp {
 
   // global variable
   static User CurrentUser =
-      new User(email: "", name: "", intro: "", locations: "");
+      new User(email: "", name: "", intro: "", locations: "", password: "");
 
   static List<Attraction> Attractions = [];
+
+  // Server Url for android emulator
+  static String Server_Url = "http://10.0.2.2:8000";
+  // static String Server_Url = "http://127.0.0.1:8000";
 
 }
 
 // -----------------------class define-----------------------------
 class User {
-  String name, email, intro, locations, profile_picture, authorization;
+  String name, email, intro, locations, profile_picture, authorization, password;
   List<Pet> pets;
   List<User> Following, Follower;
   List<Posts> posts;
@@ -22,6 +26,7 @@ class User {
     required this.name,
     required this.intro,
     required this.locations,
+    required this.password,
     this.pets = const [],
     this.Follower = const [],
     this.Following = const [],
