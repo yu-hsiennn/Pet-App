@@ -422,6 +422,14 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
       }
     }
 
+    Future<void> handleSignupLoginUpload() async {
+      await signupUser().then((_) {
+        return loginUser();
+      }).then((_) {
+        return UploadUserProfilePicture();
+      });
+    }
+
     return Container(
       constraints: BoxConstraints(maxWidth: 250),
       margin: EdgeInsets.only(bottom: 10),
@@ -431,9 +439,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
           var place = await LocationService().getPlace(
             widget.location == "" ? "成功大學 榕園" : widget.location);
           init_place(place);
-          signupUser();
-          loginUser();
-          UploadUserProfilePicture();
+          handleSignupLoginUpload();
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => MyApp()));
         },

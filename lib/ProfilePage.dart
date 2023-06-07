@@ -281,7 +281,8 @@ class _ProfilePageState extends State<ProfilePage> {
         "email": PetApp.CurrentUser.email,
         "name": PetApp.CurrentUser.name,
         "intro": u.intro,
-        "birthday": PetApp.CurrentUser.locations,
+        "location": PetApp.CurrentUser.locations,
+        "birthday": "2023/6/7",
         "password": PetApp.CurrentUser.password
       }),
     );
@@ -318,7 +319,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       uploadPetImage(petPhoto, responseData['id']);
-      print('idididid${responseData['id']}');
+      // print('idididid${responseData['id']}');
       print(responseData);
       print('create success');
     } else {

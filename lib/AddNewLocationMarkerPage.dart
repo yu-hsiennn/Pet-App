@@ -1,7 +1,10 @@
+import 'dart:convert';
+import 'PetApp.dart';
 import 'package:flutter/material.dart';
 import 'SetLocationPage.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class AddNewLocationMarkerPage extends StatefulWidget {
   const AddNewLocationMarkerPage({super.key});
@@ -13,19 +16,51 @@ class AddNewLocationMarkerPage extends StatefulWidget {
 class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
   File? _image;
   final picker = ImagePicker();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _ageController = TextEditingController();
+  TextEditingController _longitudeController = TextEditingController();
+  TextEditingController _latitudeController = TextEditingController();
+  TextEditingController _placeNameController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
 
-  Future getImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  @override
+  void dispose() {
+    _placeNameController.dispose(); // 释放控制器资源
+    _addressController.dispose(); // 释放控制器资源
+    _longitudeController.dispose(); // 释放控制器资源
+    _latitudeController.dispose(); // 释放控制器资源
+    super.dispose();
+  }
 
+  void setLonLat(double lon, double lat) {
     setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
+      _longitudeController.text = '$lon'; // 将经度文本字段的值设置为0
+      _latitudeController.text = '$lat'; // 将纬度文本字段的值设置为1
     });
+  }
+
+  Future<void> addAtraction_toserver(
+      String place, String address, double lon, double lat) async {
+    final response = await http.post(
+      Uri.parse(PetApp.Server_Url + '/attraction'),
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'name': place,
+        'location': address,
+        'lat': lat,
+        'lon': lon,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
   }
 
   @override
@@ -62,6 +97,7 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
               ),
             ),
             TextField(
+              controller: _placeNameController,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(), // 设置为底线样式
                 enabledBorder: UnderlineInputBorder(
@@ -83,6 +119,7 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
               ),
             ),
             TextField(
+              controller: _addressController,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(), // 设置为底线样式
                 enabledBorder: UnderlineInputBorder(
@@ -104,6 +141,7 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
               ),
             ),
             TextField(
+              controller: _longitudeController,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(), // 设置为底线样式
                 enabledBorder: UnderlineInputBorder(
@@ -125,6 +163,7 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
               ),
             ),
             TextField(
+              controller: _latitudeController,
               decoration: InputDecoration(
                 border: UnderlineInputBorder(), // 设置为底线样式
                 enabledBorder: UnderlineInputBorder(
@@ -148,6 +187,9 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
                     MaterialPageRoute(builder: (context) => SetLocationPage()),
                   ).then((value) {
                     // Do something with returned data
+                    double lon = value[0];
+                    double lat = value[1];
+                    setLonLat(lon, lat);
                   });
                 },
                 child: Stack(
@@ -191,6 +233,12 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
                 padding: EdgeInsets.all(16.0), // Add padding to the button
                 child: ElevatedButton(
                   onPressed: () {
+                    String placeName = _placeNameController.text;
+                    String address = _addressController.text;
+                    String longitude = _longitudeController.text;
+                    String latitude = _latitudeController.text;
+                    addAtraction_toserver(placeName, address,
+                        double.parse(longitude), double.parse(latitude));
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(

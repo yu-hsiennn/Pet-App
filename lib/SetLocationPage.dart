@@ -15,11 +15,11 @@ class _SetLocationPageState extends State<SetLocationPage> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   GoogleMapController? mycontroller;
-
+  List<double > location=[];
   Future<void> _goToPlace(Map<String, dynamic> place) async {
     final double lat = place['geometry']['location']['lat'];
     final double lng = place['geometry']['location']['lng'];
-
+    
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -35,6 +35,55 @@ class _SetLocationPageState extends State<SetLocationPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color.fromRGBO(96, 175, 245, 1),
+          title: Center(
+              child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                "選擇地點",
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 1
+                      ..color = Colors.black),
+              ),
+              Text(
+                "選擇地點",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          )),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              location=[0,0];
+              Navigator.pop(context, location);
+            },
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context, location);
+              },
+            ),
+          ]
+        ),
+        
         body: Stack(
           children: [
             Expanded(
@@ -58,6 +107,7 @@ class _SetLocationPageState extends State<SetLocationPage> {
                     final lat = (boundsData.northeast.latitude + boundsData.southwest.latitude) / 2;
                     print("lon: $lon");
                     print("lat: $lat");
+                    location=[lon,lat];
                   });
                 },
               ),
