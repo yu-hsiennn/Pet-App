@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'PetApp.dart';
 import 'SearchLocationPage.dart';
 import 'MainPage.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'dart:io';
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -14,21 +17,43 @@ class PostPage extends StatefulWidget {
 class _PostPageState extends State<PostPage> {
   TextEditingController _newItemController = TextEditingController();
   String location = "新增地點";
+  int locationid = -1;
+  String imagePath = 'assets/image/NonePicture.png';
+  File? _imageFile;
+
+  void chooseImage() async {
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedImage != null) {
+        _imageFile = File(pickedImage.path);
+        imagePath = pickedImage.path;
+        print(pickedImage.path);
+      } else {
+        _imageFile = null;
+      }
+    });
+  }
+
   Widget buildPictureField() {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return Padding(
           padding: EdgeInsets.all(5.0),
           child: GestureDetector(
-            onTap: () {
-              // 點擊事件處理程式碼
-              print('點擊了圖片');
-            },
-            child: Image.asset(
-              'assets/image/NonePicture.png',
-              width: constraints.maxWidth, // 螢幕寬度的一半
-              fit: BoxFit.contain,
-            ),
+            onTap: chooseImage,
+            child: _imageFile != null
+              ? Image.file(
+                  _imageFile!,
+                  width: 300,
+                  height: 300,
+                )
+              : Image.asset(
+                  imagePath,
+                  width: 200,
+                  height: 200,
+                ),
           ),
         );
       },
@@ -204,141 +229,6 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  // Widget buildLabelField(List<String> items) {
-  //   int rows = (items.length / 4).ceil();
-  //   List<Widget> rowsList = [];
-
-  //   for (int i = 0; i < rows; i++) {
-  //     List<Widget> buttonsList = [];
-
-  //     for (int j = i * 4; j < (i + 1) * 4 && j < items.length; j++) {
-  //       buttonsList.add(
-  //         Padding(
-  //           padding: EdgeInsets.symmetric(vertical: 4.0),
-  //           child: OutlinedButton(
-  //             onPressed: () {
-  //               if (selectedItems.contains(items[j])) {
-  //                 selectedItems.remove(items[j]);
-  //               } else {
-  //                 if (selectedItems.length < 4) {
-  //                   selectedItems.add(items[j]);
-  //                 }
-  //               }
-  //               setState(() {});
-  //             },
-  //             style: ButtonStyle(
-  //               padding: MaterialStateProperty.all<EdgeInsets>(
-  //                   EdgeInsets.symmetric(horizontal: 8.0)),
-  //               backgroundColor: MaterialStateProperty.all<Color>(
-  //                   Color.fromRGBO(170, 227, 254, 1)),
-  //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-  //                 RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(20.0),
-  //                 ),
-  //               ),
-  //             ),
-  //             child: Text(
-  //               items[j],
-  //               style: TextStyle(fontSize: 16.0, color: Colors.black),
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     }
-
-  //     rowsList.add(
-  //       Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //         children: buttonsList,
-  //       ),
-  //     );
-  //   }
-
-  //   // 加號按鈕
-  //   rowsList.add(
-  //     Row(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: [
-  //         Padding(
-  //           padding: EdgeInsets.symmetric(vertical: 8.0),
-  //           child: OutlinedButton(
-  //             onPressed: () {
-  //               // 彈出對話框輸入新項目
-  //               showDialog(
-  //                 context: context,
-  //                 builder: (context) => AlertDialog(
-  //                   title: Text(
-  //                     "新增label",
-  //                     style: TextStyle(
-  //                       fontWeight: FontWeight.bold,
-  //                     ),
-  //                   ),
-  //                   content: TextField(
-  //                     controller: _newItemController,
-  //                     decoration: InputDecoration(
-  //                       border: InputBorder.none, // 去除边框
-  //                       enabledBorder: UnderlineInputBorder(
-  //                         borderSide: BorderSide(
-  //                             color: Color.fromRGBO(
-  //                                 170, 227, 254, 1)), // 设置底线颜色为蓝色
-  //                       ),
-  //                       hintText: '輸入新label...',
-  //                     ),
-  //                   ),
-  //                   actions: [
-  //                     TextButton(
-  //                       onPressed: () {
-  //                         Navigator.pop(context);
-  //                       },
-  //                       child: Text("取消"),
-  //                     ),
-  //                     TextButton(
-  //                       onPressed: () {
-  //                         String newItem = _newItemController.text.trim();
-  //                         if (newItem.isNotEmpty) {
-  //                           items.add(newItem);
-
-  //                           setState(() {});
-  //                           Navigator.pop(context);
-  //                         }
-  //                       },
-  //                       child: Text("確定"),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               );
-  //             },
-  //             style: ButtonStyle(
-  //               padding: MaterialStateProperty.all<EdgeInsets>(
-  //                   EdgeInsets.symmetric(horizontal: 16.0)),
-  //               backgroundColor: MaterialStateProperty.all<Color>(
-  //                   Color.fromRGBO(170, 227, 254, 1)),
-  //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-  //                 RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(20.0),
-  //                 ),
-  //               ),
-  //             ),
-  //             child: Icon(
-  //               Icons.add,
-  //               color: Colors.black,
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-
-  //   return Container(
-  //     width: double.infinity,
-  //     // height: 50,
-
-  //     child: Column(
-  //       children: rowsList,
-  //     ),
-  //   );
-  // }
-
   List<String> items = [
     '飛盤',
     '接球',
@@ -348,10 +238,16 @@ class _PostPageState extends State<PostPage> {
     '衝刺',
     '笨狗',
   ];
+  String inputText = '';
   Widget buildInputField() {
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: TextField(
+        onChanged: (value) {
+          setState(() {
+            inputText = value;
+          });
+        },
         decoration: InputDecoration(
           hintText: '輸入說明文字...',
           border: InputBorder.none,
@@ -402,8 +298,9 @@ class _PostPageState extends State<PostPage> {
               context,
               MaterialPageRoute(builder: (context) => SearchLocationPage()),
             ).then((value) {
+              locationid = value[1];
               setState(() {
-                location = value ?? '新增地點';
+                location = value[0];
               });
               // Do something with returned data
             });
@@ -428,6 +325,32 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
+  Future<void> createPost(
+      String ownerid, int attractionid, String content) async {
+    final response = await http.post(
+      Uri.parse(PetApp.Server_Url + '/posts'),
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer ${PetApp.CurrentUser.authorization}",
+      },
+      body: jsonEncode({
+        'owner_id': ownerid,
+        'response_to': 0,
+        'attraction': attractionid,
+        'content': content,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -448,8 +371,7 @@ class _PostPageState extends State<PostPage> {
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                new MaterialPageRoute(
-                    builder: (context) => new MainPage()),
+                new MaterialPageRoute(builder: (context) => new MainPage()),
                 (route) => route == null,
               );
             },
@@ -461,10 +383,11 @@ class _PostPageState extends State<PostPage> {
                 color: Color.fromRGBO(96, 175, 245, 1),
               ),
               onPressed: () {
+                createPost(PetApp.CurrentUser.email, locationid, inputText);
+
                 Navigator.pushAndRemoveUntil(
                   context,
-                  new MaterialPageRoute(
-                      builder: (context) => new MainPage()),
+                  new MaterialPageRoute(builder: (context) => new MainPage()),
                   (route) => route == null,
                 );
               },

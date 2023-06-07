@@ -35,6 +35,7 @@ class _SetLocationPageState extends State<SetLocationPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(96, 175, 245, 1),
           title: Center(

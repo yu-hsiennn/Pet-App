@@ -66,6 +66,7 @@ class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
