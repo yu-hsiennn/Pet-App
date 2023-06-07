@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/ReadPostPage.dart';
 import 'PetApp.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class StoryPage extends StatefulWidget {
   const StoryPage(
@@ -46,18 +48,53 @@ class _StoryPageState extends State<StoryPage> {
 
   Widget buildPost(Posts Post, int post_index) {
     bool _isVisible = false;
+    String ownername = '';
+    String ownerphoto = '';
+    Future<void> getOwnername(String ownerId) async {
+      String GetUserUrl = PetApp.Server_Url + '/user/' + ownerId;
+      final response = await http.get(Uri.parse(GetUserUrl), headers: {
+        'accept': 'application/json',
+      });
 
-    Widget buildNameTextField(String name, String icon) {
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        ownername = responseData['name'];
+        print(responseData);
+      } else {
+        print(
+            'Request failed with status: ${json.decode(response.body)['detail']}.');
+      }
+    }
+
+    Future<void> getOwnerPhoto(String ownerId) async {
+      String GetUserUrl = PetApp.Server_Url + '/user/' + ownerId+'/profile_picture';
+      final response = await http.get(Uri.parse(GetUserUrl), headers: {
+        'accept': 'application/json',
+      });
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        // ownerphoto=(這個晚點弄);
+        print(responseData);
+      } else {
+        print(
+            'Request failed with status: ${json.decode(response.body)['detail']}.');
+      }
+    }
+
+    Widget buildNameTextField(String ownerId) {
+      getOwnername(ownerId);
+      getOwnerPhoto(ownerId);
       return Expanded(
         flex: 1, // 20%
         child: ListTile(
           visualDensity: const VisualDensity(vertical: 3),
           dense: true,
           leading: CircleAvatar(
-            backgroundImage: AssetImage(icon),
+            backgroundImage: NetworkImage(ownerphoto),
           ),
           title: Text(
-            name,
+            ownername,
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold, // 设置文本加粗
@@ -66,6 +103,7 @@ class _StoryPageState extends State<StoryPage> {
         ),
       );
     }
+
 
     Widget buildPicture(String picture) {
       return Expanded(
@@ -179,64 +217,6 @@ class _StoryPageState extends State<StoryPage> {
           ),
         ],
       );
-      // return Expanded(
-      //   flex: 4, // 20%
-      //   child: Column(
-      //     children: [
-      //       for (int i = 0;
-      //           i < (messages.length > 2 ? 2 : messages.length);
-      //           i++)
-      //         Row(
-      //           children: [
-      //             Padding(
-      //               padding: EdgeInsets.all(8),
-      //               child: CircleAvatar(
-      //                 backgroundImage: NetworkImage(messages[i].user.photo),
-      //                 radius: 15.0,
-      //               ),
-      //             ),
-      //             Padding(
-      //               padding: EdgeInsets.all(8),
-      //               child: Text(messages[i].comment_info),
-      //             ),
-      //           ],
-      //         ),
-      //       if (messages.length > 2 && !_isVisible)
-      //         Row(
-      //           children: [
-      //             Padding(
-      //               padding: EdgeInsets.all(8),
-      //               child: TextButton(
-      //                 child: Text('查看全部留言'),
-      //                 onPressed: () {
-      //                   setState(() {
-      //                     _isVisible = true;
-      //                   });
-      //                 },
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       if (_isVisible)
-      //         for (int i = 2; i < messages.length; i++)
-      //           Row(
-      //             children: [
-      //               Padding(
-      //                 padding: EdgeInsets.all(8),
-      //                 child: CircleAvatar(
-      //                   backgroundImage: NetworkImage(messages[i].user.photo),
-      //                   radius: 15.0,
-      //                 ),
-      //               ),
-      //               Padding(
-      //                 padding: EdgeInsets.all(8),
-      //                 child: Text(messages[i].comment_info),
-      //               ),
-      //             ],
-      //           ),
-      //     ],
-      //   ),
-      // );
     }
 
     Widget buildInputMessageField() {
@@ -293,7 +273,7 @@ class _StoryPageState extends State<StoryPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              buildNameTextField("Post.owner_id.name", "Post.owner_id.profile_picture"),
+              buildNameTextField(Post.owner_id),
               SizedBox(height: 20),
               buildPicture(Post.post_picture),
               buildLikeField(Post.Likes.length, post_index),

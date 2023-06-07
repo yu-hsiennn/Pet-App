@@ -150,10 +150,10 @@ class CustomWidget {
   Widget Profile_photo(int framesize,
       {String file_name = "assets/image/empty.jpg"}) {
     String _file_name =
-        file_name.isEmpty ? "assets/image/empty.jpg" : file_name;
+        file_name.isEmpty ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" : file_name;
     return CircleAvatar(
       radius: framesize.toDouble(),
-      backgroundImage: AssetImage(
+      backgroundImage: NetworkImage(
         _file_name,
       ),
     );

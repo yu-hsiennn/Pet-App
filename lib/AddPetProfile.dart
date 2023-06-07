@@ -20,23 +20,12 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
   String pet_gender = '';
   String pet_birthday = '';
   String pet_personality_labels = '';
+  String pet_image_path = '';
   TextEditingController _nameController = TextEditingController();
   TextEditingController _breedController = TextEditingController();
   TextEditingController _birthdayController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
   TextEditingController _newItemController = TextEditingController();
-
-  Future getImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
 
   List<String> selectedItems = [];
 
@@ -219,6 +208,19 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
     '笨狗',
   ];
 
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+        pet_image_path = pickedImage.path;
+        print(pickedImage.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -252,7 +254,8 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                     pet_breed,
                     pet_birthday,
                     pet_gender,
-                    pet_personality_labels
+                    pet_personality_labels,
+                    pet_image_path
                   ]);
                 },
               ),
@@ -365,32 +368,31 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                 buildLabelField(items),
                 SizedBox(height: 16),
                 InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddPetProfilePage()),
-                    ).then((value) {
-                      // Do something with returned data
-                      setState() {}
-                      ;
-                    });
-                  },
+                  onTap: _pickImage,
                   child: Stack(
                     children: [
                       LayoutBuilder(
                         builder:
                             (BuildContext context, BoxConstraints constraints) {
-                          return ClipRRect(
-                            child: Image(
-                              image:
-                                  AssetImage('assets/image/NonePetPicture.png'),
-                              width: MediaQuery.of(context).size.width,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius:
-                                BorderRadius.circular(10.0), // 可選，設置圓角
-                          );
+                          if (_image != null) {
+                            return ClipRRect(
+                              child: Image.file(
+                                _image!,
+                                width: MediaQuery.of(context).size.width,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            );
+                          } else {
+                            return ClipRRect(
+                              child: Image.asset(
+                                'assets/image/NonePetPicture.png',
+                                width: MediaQuery.of(context).size.width,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            );
+                          }
                         },
                       ),
                     ],

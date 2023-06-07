@@ -44,11 +44,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   addMarker(Attraction attraction) async {
+    if (attraction.posts.length == 0) return;
     int _size = attraction.posts.length < 5
         ? 100
         : attraction.posts.length * 25;
     var markerIcon = await MarkerIcon.downloadResizePictureCircle(
-        attraction.posts[0].post_picture,
+        attraction.posts[0].post_picture == "" ? "https://s28489.pcdn.co/wp-content/uploads/2021/04/Dog-park-2-May-16.jpg.optimal.jpg"
+        : attraction.posts[0].post_picture,
         size: _size,
         addBorder: true,
         borderColor: Colors.blue,

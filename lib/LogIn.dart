@@ -69,6 +69,7 @@ class _AccessPageState extends State<AccessPage> {
       PetApp.CurrentUser.locations = responseData['location'];
       PetApp.CurrentUser.password = _password;
       PetApp.CurrentUser.posts = _post;
+      PetApp.CurrentUser.profile_picture = "${PetApp.Server_Url}/user/$_email/profile_picture";
       print(responseData);
     } else {
       print(
@@ -86,7 +87,7 @@ class _AccessPageState extends State<AccessPage> {
       final responseData = json.decode(response.body);
       for (var attraction in responseData) {
         List<Posts> _post = [];
-        for (var post in responseData['posts']) {
+        for (var post in attraction['posts']) {
           _post.add(
             Posts(
               owner_id: post["owner_id"], 
@@ -234,33 +235,43 @@ class _AccessPageState extends State<AccessPage> {
                 margin: EdgeInsets.only(bottom: 93),
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        CustomButton(
-                          label: '確認',
-                          onPressed: () {
-                            loginUser();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MainPage(),
+                  child: FutureBuilder<void>(
+                    future: loginUser(),
+                    builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              CustomButton(
+                                label: '確認',
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MainPage(),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                        SizedBox(height: 20),
-                        CustomButton(
-                          label: '返回',
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    ),
+                              SizedBox(height: 20),
+                              CustomButton(
+                                label: '返回',
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ),
               ),

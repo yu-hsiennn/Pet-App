@@ -296,7 +296,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> CreatePet(String petname, String petbreed, String petbirthday,
-      String petgender, String petlabel) async {
+      String petgender, String petlabel, String petPhoto) async {
     String createPetUrl = PetApp.Server_Url + '/pet/createOrEdit';
     final response = await http.post(
       Uri.parse(createPetUrl),
@@ -317,8 +317,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      GetPets(u.email);
+      uploadPetImage(petPhoto, responseData['id']);
+      print('idididid${responseData['id']}');
       print(responseData);
+      print('create success');
     } else {
       print(
           'Request failed with status: ${json.decode(response.body)['detail']}.');
@@ -343,7 +345,10 @@ class _ProfilePageState extends State<ProfilePage> {
           id: pets['id'],
           name: pets['name'],
           personality_labels: pets['personality_labels'],
-          picture: '',
+          picture: pets['files'] == null ? 
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkMubURrGZCL1CaHGsvweWfV9cVVvPOZtJJg&usqp=CAU" :
+          pets['files'][0]['file_path'],
+          
         ));
       }
 
@@ -353,6 +358,31 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       print(
           'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
+  Future<void> uploadPetImage(String PetPhotoPath, int petid) async {
+    print(PetPhotoPath);
+    var upUrl = Uri.parse(
+        "${PetApp.Server_Url}/pet/$petid/file?fileending=jpg");
+    print(upUrl);
+    var request = http.MultipartRequest('POST', upUrl);
+    request.headers.addAll({
+      'accept': 'application/json',
+      'Authorization': "Bearer ${u.authorization}",
+      'Content-Type': 'multipart/form-data'
+    });
+    print(PetPhotoPath);
+    request.files.add(await http.MultipartFile.fromPath('file', PetPhotoPath));
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('Pet picture uploaded successfully');
+      GetPets(u.email);
+    } else {
+      print(
+          'Failed to upload profile picture. Status code: ${response.statusCode}');
     }
   }
 
@@ -386,7 +416,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   MaterialPageRoute(builder: (context) => AddPetProfilePage()),
                 ).then((value) {
                   setState(() {
-                    CreatePet(value[0], value[1], value[2], value[3], value[4]);
+                    CreatePet(value[0], value[1], value[2], value[3], value[4],
+                        value[5]);
                   });
 
                   print(value);

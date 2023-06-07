@@ -387,7 +387,6 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
       request.headers.addAll({
         'accept': 'application/json',
         'Authorization': "Bearer $Authorization",
-        // 'Content-Type': 'multipart/form-data',
       });
       print(profile_picture);
       request.files.add(await http.MultipartFile.fromPath('file', profile_picture));
@@ -418,13 +417,11 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
       if (response.statusCode == 200) {
         Authorization = json.decode(response.body)['access token'];
         print(Authorization);
-        UploadUserProfilePicture();
       } else {
         print('Request failed with status: ${response.statusCode}.');
       }
     }
 
-    // widget.user.photo = "assets/image/peach.jpg";
     return Container(
       constraints: BoxConstraints(maxWidth: 250),
       margin: EdgeInsets.only(bottom: 10),
@@ -436,6 +433,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
           init_place(place);
           signupUser();
           loginUser();
+          UploadUserProfilePicture();
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => MyApp()));
         },
