@@ -20,6 +20,7 @@ class _PostPageState extends State<PostPage> {
   int locationid = -1;
   String imagePath = 'assets/image/NonePicture.png';
   File? _imageFile;
+  int post_id = 0;
 
   void chooseImage() async {
     final pickedImage =
@@ -344,10 +345,29 @@ class _PostPageState extends State<PostPage> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
+      post_id = responseData['id'];
       print(responseData);
     } else {
-      print(
-          'Request failed with status: ${json.decode(response.body)['detail']}.');
+      print('Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
+  Future<void> PostPicture() async {
+    var upUrl = Uri.parse("${PetApp.Server_Url}/posts/$post_id/file?fileending=jpg");
+    print(upUrl);
+    var request = http.MultipartRequest('POST', upUrl);
+    request.headers.addAll({
+      'accept': 'application/json',
+      'Authorization': "Bearer ${PetApp.CurrentUser.authorization}",
+    });
+    request.files.add(await http.MultipartFile.fromPath('file', imagePath));
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('Profile picture uploaded successfully');
+    } else {
+      print('Failed to upload profile picture. Status code: ${response.statusCode}');
     }
   }
 
@@ -383,7 +403,9 @@ class _PostPageState extends State<PostPage> {
                 color: Color.fromRGBO(96, 175, 245, 1),
               ),
               onPressed: () {
-                createPost(PetApp.CurrentUser.email, locationid, inputText);
+                createPost(PetApp.CurrentUser.email, locationid, inputText).then((_) {
+                  return PostPicture();
+                });
 
                 Navigator.pushAndRemoveUntil(
                   context,
