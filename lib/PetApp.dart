@@ -57,7 +57,7 @@ class _File {
 }
 
 class Posts {
-  User owner_id;
+  String owner_id;
   String content, post_picture;
   int response_to, id, timestamp;
   List<Like> Likes;
@@ -106,12 +106,14 @@ class Attraction {
   String name, address;
   double lat, lon;
   List<Posts> posts;
+  int id;
   Attraction({
     required this.name,
     required this.address,
     required this.lat,
     required this.lon,
-    required this.posts
+    required this.posts,
+    required this.id
   });
 }
 

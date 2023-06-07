@@ -188,7 +188,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildNameTextField(
-                widget.post.owner_id.name, widget.post.owner_id.profile_picture),
+                "widget.post.owner_id.name", "widget.post.owner_id.profile_picture"),
             SizedBox(height: 20),
             buildPicture(widget.post.post_picture),
             buildLikeField(widget.post.Likes.length),
@@ -201,7 +201,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
               thickness: 1,
             ),
             buildMessageField(widget.post.Comments),
-            buildInputMessageField(widget.post.owner_id.profile_picture)
+            buildInputMessageField("widget.post.owner_id.profile_picture")
           ]),
     ))));
   }

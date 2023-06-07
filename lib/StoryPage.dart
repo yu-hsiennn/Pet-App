@@ -239,7 +239,7 @@ class _StoryPageState extends State<StoryPage> {
       // );
     }
 
-    Widget buildInputMessageField(String usericon) {
+    Widget buildInputMessageField() {
       return Expanded(
         flex: 1, // 20%
         child: Row(
@@ -293,7 +293,7 @@ class _StoryPageState extends State<StoryPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              buildNameTextField(Post.owner_id.name, Post.owner_id.profile_picture),
+              buildNameTextField("Post.owner_id.name", "Post.owner_id.profile_picture"),
               SizedBox(height: 20),
               buildPicture(Post.post_picture),
               buildLikeField(Post.Likes.length, post_index),
@@ -301,7 +301,7 @@ class _StoryPageState extends State<StoryPage> {
               buildDateField('5月20號 16:34'),
               buildLabelField([]),
               buildMessageField(Post.Comments),
-              buildInputMessageField(Post.owner_id.profile_picture)
+              buildInputMessageField()
             ]),
       ),
     );

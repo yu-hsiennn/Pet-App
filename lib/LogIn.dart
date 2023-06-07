@@ -17,6 +17,7 @@ class _AccessPageState extends State<AccessPage> {
   String _email = "", _password = "";
   String loginUrl =  PetApp.Server_Url + '/user/login';
   String GetUserUrl = PetApp.Server_Url + '/user/';
+  String AttractionUrl = PetApp.Server_Url + '/attraction';
 
   Future<void> loginUser() async {
     final response = await http.post(
@@ -36,6 +37,7 @@ class _AccessPageState extends State<AccessPage> {
       PetApp.CurrentUser.authorization = responseData['access token'];
       print(responseData);
       GetUser();
+      GetAttraction();
     } else {
       print(
           'Request failed with status: ${json.decode(response.body)['detail']}.');
@@ -50,23 +52,64 @@ class _AccessPageState extends State<AccessPage> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      // for (var post in responseData['posts']) {
-      //   _post.add(
-      //     Posts(
-      //       owner_id: post["owner_id"], 
-      //       content: post["content"], 
-      //       id: post["id"], 
-      //       timestamp: post["timestamp"]
-      //     )
-      //   );
-      // }
+      for (var post in responseData['posts']) {
+        _post.add(
+          Posts(
+            owner_id: post["owner_id"], 
+            content: post["content"], 
+            id: post["id"], 
+            timestamp: post["timestamp"]
+          )
+        );
+      }
       
       PetApp.CurrentUser.email = responseData['email'];
       PetApp.CurrentUser.name = responseData['name'];
       PetApp.CurrentUser.intro = responseData['intro'];
-      PetApp.CurrentUser.locations = responseData['birthday'];
+      PetApp.CurrentUser.locations = responseData['location'];
       PetApp.CurrentUser.password = _password;
       PetApp.CurrentUser.posts = _post;
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
+  Future<void> GetAttraction() async {
+    List<Attraction> _attractions = [];
+    final response = await http.get(Uri.parse(AttractionUrl), headers: {
+      'accept': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      for (var attraction in responseData) {
+        List<Posts> _post = [];
+        for (var post in responseData['posts']) {
+          _post.add(
+            Posts(
+              owner_id: post["owner_id"], 
+              content: post["content"], 
+              id: post["id"], 
+              timestamp: post["timestamp"],
+              response_to: post['response_to']
+            )
+          );
+        }
+        _attractions.add(
+          Attraction(
+            name: attraction['name'],
+            address: attraction['location'],
+            lat: attraction['lat'],
+            lon: attraction['lon'],
+            posts: _post,
+            id: attraction['id']
+          )
+        );
+      }
+      
+      PetApp.Attractions = _attractions;
       print(responseData);
     } else {
       print(

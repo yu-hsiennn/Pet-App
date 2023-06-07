@@ -295,6 +295,67 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> CreatePet(String petname, String petbreed, String petbirthday,
+      String petgender, String petlabel) async {
+    String createPetUrl = PetApp.Server_Url + '/pet/createOrEdit';
+    final response = await http.post(
+      Uri.parse(createPetUrl),
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer ' + u.authorization,
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "owner": u.email,
+        "name": petname,
+        "breed": petbreed,
+        "gender": petgender,
+        "birthday": petbirthday,
+        "personality_labels": petlabel
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      GetPets(u.email);
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
+  Future<void> GetPets(String email) async {
+    List<Pet> _pet = [];
+    String getPetUrl = PetApp.Server_Url + '/user/' + email + '/pets/';
+    final response = await http.get(Uri.parse(getPetUrl), headers: {
+      'accept': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      for (var pets in responseData) {
+        _pet.add(Pet(
+          owner: pets['owner'],
+          birthday: pets['birthday'],
+          breed: pets['breed'],
+          gender: pets['gender'],
+          id: pets['id'],
+          name: pets['name'],
+          personality_labels: pets['personality_labels'],
+          picture: '',
+        ));
+      }
+
+      PetApp.CurrentUser.pets = _pet;
+      setState(() {});
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
   Widget Pets_photo(List<Pet> petsList, bool isUser) {
     return Container(
       padding: EdgeInsets.all(25.0),
@@ -322,11 +383,14 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => AddPetProfilePage(),
-                    maintainState: false,
-                  ),
-                );
+                  MaterialPageRoute(builder: (context) => AddPetProfilePage()),
+                ).then((value) {
+                  setState(() {
+                    CreatePet(value[0], value[1], value[2], value[3], value[4]);
+                  });
+
+                  print(value);
+                });
               },
               child: Padding(
                 padding:

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_app/PetApp.dart';
@@ -333,8 +332,11 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
     setState(() {
       if (pickedImage != null) {
         _imageFile = File(pickedImage.path);
+        profile_picture = pickedImage.path;
+        print(pickedImage.path);
       } else {
         _imageFile = null;
+        profile_picture = _empty;
       }
     });
   }
@@ -343,6 +345,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
     String signupUrl = PetApp.Server_Url + '/user/signup';
     String loginUrl = PetApp.Server_Url + '/user/login';
     String _latlon = "0,0";
+    String Authorization = "";
 
     Future<void> init_place(Map<String, dynamic> place) async {
       final double lat = place['geometry']['location']['lat'];
@@ -352,7 +355,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
     }
 
     Future<void> signupUser() async {
-      print(signupUrl);
+      // print(signupUrl);
       final response = await http.post(
         Uri.parse(signupUrl),
         headers: {
@@ -363,7 +366,8 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
           'email': widget.user_email,
           'name': widget.nickname,
           'intro': "",
-          'birthday': _latlon,
+          'location': _latlon,
+          'birthday': "2023/6/7",
           'password': widget.user_password
         }),
       );
@@ -376,8 +380,29 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
       }
     }
 
+    Future<void> UploadUserProfilePicture() async {
+      var upUrl = Uri.parse("${PetApp.Server_Url}/user/${widget.user_email}/profile_picture?fileending=jpg");
+      print(upUrl);
+      var request = http.MultipartRequest('POST', upUrl);
+      request.headers.addAll({
+        'accept': 'application/json',
+        'Authorization': "Bearer $Authorization",
+        // 'Content-Type': 'multipart/form-data',
+      });
+      print(profile_picture);
+      request.files.add(await http.MultipartFile.fromPath('file', profile_picture));
+
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('Profile picture uploaded successfully');
+      } else {
+        print('Failed to upload profile picture. Status code: ${response.statusCode}');
+      }
+    }
+
     Future<void> loginUser() async {
-      print(loginUrl);
+      // print(loginUrl);
       final response = await http.post(
         Uri.parse(loginUrl),
         headers: {
@@ -391,8 +416,9 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
       );
 
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        print(responseData);
+        Authorization = json.decode(response.body)['access token'];
+        print(Authorization);
+        UploadUserProfilePicture();
       } else {
         print('Request failed with status: ${response.statusCode}.');
       }
@@ -409,6 +435,7 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
             widget.location == "" ? "成功大學 榕園" : widget.location);
           init_place(place);
           signupUser();
+          loginUser();
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => MyApp()));
         },
