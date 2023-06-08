@@ -73,9 +73,7 @@ class _StoryPageState extends State<StoryPage> {
       });
 
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        // ownerphoto=(這個晚點弄);
-        print(responseData);
+        ownerphoto = "${PetApp.Server_Url}/user/$ownerId/profile_picture";
       } else {
         print(
             'Request failed with status: ${json.decode(response.body)['detail']}.');
@@ -97,7 +95,7 @@ class _StoryPageState extends State<StoryPage> {
             ownername,
             style: TextStyle(
               fontSize: 15,
-              fontWeight: FontWeight.bold, // 设置文本加粗
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -158,7 +156,7 @@ class _StoryPageState extends State<StoryPage> {
         child: Text(
           date,
           style: TextStyle(
-            color: Colors.grey[400], // 使用淡化的颜色值
+            color: Colors.grey[400],
           ),
         ),
       );
@@ -211,7 +209,7 @@ class _StoryPageState extends State<StoryPage> {
             child: Text(
               '查看全部${messages.length}則留言',
               style: TextStyle(
-                color: Colors.grey[400], // 使用淡化的颜色值
+                color: Colors.grey[400],
               ),
             ),
           ),
@@ -235,7 +233,7 @@ class _StoryPageState extends State<StoryPage> {
                       width: 1,
                     ),
 
-                    borderRadius: BorderRadius.circular(20), // 设置圆角半径
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextField(
                     autofocus: false,

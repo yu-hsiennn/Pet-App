@@ -22,7 +22,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
         name,
         style: TextStyle(
           fontSize: 15,
-          fontWeight: FontWeight.bold, // 设置文本加粗
+          fontWeight: FontWeight.bold,
         ),
       ),
     );

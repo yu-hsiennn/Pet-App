@@ -17,7 +17,7 @@ class _AccessPageState extends State<AccessPage> {
   String _email = "", _password = "";
   String loginUrl =  PetApp.Server_Url + '/user/login';
   String GetUserUrl = PetApp.Server_Url + '/user/';
-  // String AttractionUrl = PetApp.Server_Url + '/attraction';
+  String AttractionUrl = PetApp.Server_Url + '/attraction';
 
   Future<void> loginUser() async {
     final response = await http.post(
@@ -37,7 +37,7 @@ class _AccessPageState extends State<AccessPage> {
       PetApp.CurrentUser.authorization = responseData['access token'];
       print(responseData);
       GetUser();
-      // GetAttraction();
+      GetAttraction();
     } else {
       print(
           'Request failed with status: ${json.decode(response.body)['detail']}.');
@@ -77,46 +77,49 @@ class _AccessPageState extends State<AccessPage> {
     }
   }
 
-  // Future<void> GetAttraction() async {
-  //   List<Attraction> _attractions = [];
-  //   final response = await http.get(Uri.parse(AttractionUrl), headers: {
-  //     'accept': 'application/json',
-  //   });
+  Future<void> GetAttraction() async {
+    List<Attraction> _attractions = [];
+    final response = await http.get(Uri.parse(AttractionUrl), headers: {
+      'accept': 'application/json',
+    });
 
-  //   if (response.statusCode == 200) {
-  //     final responseData = json.decode(response.body);
-  //     for (var attraction in responseData) {
-  //       List<Posts> _post = [];
-  //       for (var post in attraction['posts']) {
-  //         _post.add(
-  //           Posts(
-  //             owner_id: post["owner_id"], 
-  //             content: post["content"], 
-  //             id: post["id"], 
-  //             timestamp: post["timestamp"],
-  //             response_to: post['response_to']
-  //           )
-  //         );
-  //       }
-  //       _attractions.add(
-  //         Attraction(
-  //           name: attraction['name'],
-  //           address: attraction['location'],
-  //           lat: attraction['lat'],
-  //           lon: attraction['lon'],
-  //           posts: _post,
-  //           id: attraction['id']
-  //         )
-  //       );
-  //     }
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      for (var attraction in responseData) {
+        List<Posts> _post = [];
+        for (var post in attraction['posts']) {
+          var temp1 = post['files'][0]['file_path'].split("/");
+          var temp2 = temp1[1].split(".");
+          _post.add(
+            Posts(
+              owner_id: post["owner_id"], 
+              content: post["content"], 
+              id: post["id"], 
+              timestamp: post["timestamp"],
+              response_to: post['response_to'],
+              post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"
+            )
+          );
+        }
+        _attractions.add(
+          Attraction(
+            name: attraction['name'],
+            address: attraction['location'],
+            lat: attraction['lat'],
+            lon: attraction['lon'],
+            posts: _post,
+            id: attraction['id']
+          )
+        );
+      }
       
-  //     PetApp.Attractions = _attractions;
-  //     print(responseData);
-  //   } else {
-  //     print(
-  //         'Request failed with status: ${json.decode(response.body)['detail']}.');
-  //   }
-  // }
+      PetApp.Attractions = _attractions;
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
