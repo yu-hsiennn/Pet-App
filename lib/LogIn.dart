@@ -48,6 +48,7 @@ class _AccessPageState extends State<AccessPage> {
 
   Future<void> GetUser() async {
     List<Posts> _post = [];
+    List<Pet> _pet = [];
     final response = await http.get(Uri.parse(GetUserUrl + _email), headers: {
       'accept': 'application/json',
     });
@@ -65,6 +66,20 @@ class _AccessPageState extends State<AccessPage> {
             response_to: post['response_to'],
             post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
       }
+      for (var pets in responseData['pets']) {
+        var temp1 = pets['files'][0]['file_path'].split("/");
+        var temp2 = temp1[1].split(".");
+        _pet.add(Pet(
+          owner: pets['owner'],
+          birthday: pets['birthday'],
+          breed: pets['breed'],
+          gender: pets['gender'],
+          id: pets['id'],
+          name: pets['name'],
+          personality_labels: pets['personality_labels'],
+          picture: "${PetApp.Server_Url}/file/${temp2[0]}"
+        ));
+      }
 
       PetApp.CurrentUser.email = responseData['email'];
       PetApp.CurrentUser.name = responseData['name'];
@@ -72,6 +87,7 @@ class _AccessPageState extends State<AccessPage> {
       PetApp.CurrentUser.locations = responseData['location'];
       PetApp.CurrentUser.password = _password;
       PetApp.CurrentUser.posts = _post;
+      PetApp.CurrentUser.pets = _pet;
       PetApp.CurrentUser.profile_picture =
           "${PetApp.Server_Url}/user/$_email/profile_picture";
       print(responseData);
@@ -264,6 +280,50 @@ class _AccessPageState extends State<AccessPage> {
                                       ),
                                     );
                                   } else {
+                                    showDialog(
+  context: context,
+  builder: (BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    var dialogWidth = screenSize.width * 1 / 2;
+    var dialogHeight = screenSize.height * 1 / 4;
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Container(
+        height: dialogHeight,
+        width: dialogWidth,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              '帳號密碼錯誤',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.0),
+          ],
+        ),
+      ),
+    );
+  },
+);
                                     // error message
                                   }
                                 },

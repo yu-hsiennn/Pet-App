@@ -338,6 +338,8 @@ class _ProfilePageState extends State<ProfilePage> {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       for (var pets in responseData) {
+        var temp1 = pets['files'][0]['file_path'].split("/");
+        var temp2 = temp1[1].split(".");
         _pet.add(Pet(
           owner: pets['owner'],
           birthday: pets['birthday'],
@@ -346,10 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
           id: pets['id'],
           name: pets['name'],
           personality_labels: pets['personality_labels'],
-          picture: pets['files'] == null ? 
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkMubURrGZCL1CaHGsvweWfV9cVVvPOZtJJg&usqp=CAU" :
-          pets['files'][0]['file_path'],
-          
+          picture: "${PetApp.Server_Url}/file/${temp2[0]}"
         ));
       }
 
@@ -393,8 +392,6 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Row(
         children: [
           ...petsList.map((pet) {
-            String fileName =
-                pet.picture.isEmpty ? "assets/image/empty.jpg" : pet.picture;
             return GestureDetector(
               onTap: () {
                 showPetProfile(pet);
@@ -404,7 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     EdgeInsets.only(right: 20.0), // Add spacing between items
                 child: CircleAvatar(
                   radius: 35,
-                  backgroundImage: AssetImage(fileName),
+                  backgroundImage: NetworkImage(pet.picture),
                 ),
               ),
             );
@@ -416,10 +413,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   context,
                   MaterialPageRoute(builder: (context) => AddPetProfilePage()),
                 ).then((value) {
-                  setState(() {
+                  if (value[0]!=''){
+                    setState(() {
                     CreatePet(value[0], value[1], value[2], value[3], value[4],
                         value[5]);
                   });
+
+                    
+                  }
+                  
 
                   print(value);
                 });
@@ -473,7 +475,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(width: 30.0),
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage(pet.picture),
+                      backgroundImage: NetworkImage(pet.picture),
                     ),
                     SizedBox(width: 10.0),
                     Column(

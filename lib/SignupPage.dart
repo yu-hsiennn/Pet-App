@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/PetApp.dart';
 import 'PetApp.dart';
+import 'dart:convert';
 import 'EditProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -41,18 +43,78 @@ class _SignupPage extends State<SignupPage> {
     }
   }
 
-  void _submit() {
-    if (_formKey.currentState?.validate() == true) {
-      saveLocal(_textControllerUsername.text, _textControllerP1.text);
+  Future<void> checkEmail(String email) async {
+    final response = await http
+        .get(Uri.parse(PetApp.Server_Url + '/user/' + email), headers: {
+      'accept': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print('email已存在');
+      showDialog(
+  context: context,
+  builder: (BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    var dialogWidth = screenSize.width * 1 / 2;
+    var dialogHeight = screenSize.height * 1 / 4;
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Container(
+        height: dialogHeight,
+        width: dialogWidth,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              '此帳號已存在',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.0),
+          ],
+        ),
+      ),
+    );
+  },
+);
+    } else if (response.statusCode == 404) {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => EditProfilePage(
                   user_email: _textControllerUsername.text,
                   user_password: _textControllerP1.text)));
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
     }
   }
 
+  void _submit() {
+    if (_formKey.currentState?.validate() == true) {
+      saveLocal(_textControllerUsername.text, _textControllerP1.text);
+      checkEmail(_textControllerUsername.text);
+    }
+  }
   @override
   void initState() {
     super.initState();

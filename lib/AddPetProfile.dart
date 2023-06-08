@@ -233,7 +233,7 @@ class _AddPetProfilePage extends State<AddPetProfilePage> {
                 color: Color.fromRGBO(96, 175, 245, 1),
               ),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context,['','','','','','']);
               },
             ),
             title: Text(
