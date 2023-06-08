@@ -80,29 +80,44 @@ class _StoryPageState extends State<StoryPage> {
       }
     }
 
+    Future<void> _getOwnerData(String ownerId) async {
+    await getOwnername(ownerId);
+    await getOwnerPhoto(ownerId);
+  }
+
     Widget buildNameTextField(String ownerId) {
-      getOwnername(ownerId).then((_) {
-        return getOwnerPhoto(ownerId);
-      });
-      print("ownerId: $ownerId, ownerphoto :$ownerphoto, ownername: $ownername");
-      return Expanded(
-        flex: 1, // 20%
-        child: ListTile(
-          visualDensity: const VisualDensity(vertical: 3),
-          dense: true,
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(ownerphoto),
-          ),
-          title: Text(
-            ownername,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+    return FutureBuilder(
+      future: _getOwnerData(ownerId),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while fetching data
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Handle error case
+          return Text('Error: ${snapshot.error}');
+        } else {
+          // Data has been fetched, display the owner's name and photo
+          return Expanded(
+            flex: 1,
+            child: ListTile(
+              visualDensity: const VisualDensity(vertical: 3),
+              dense: true,
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(ownerphoto),
+              ),
+              title: Text(
+                ownername,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
-        ),
-      );
-    }
+          );
+        }
+      },
+    );
+  }
 
     Widget buildPicture(String picture) {
       return Expanded(

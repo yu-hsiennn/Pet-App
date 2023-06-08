@@ -135,7 +135,14 @@ class _ReadPostPageState extends State<ReadPostPage> {
     );
   }
 
-  Widget buildInputMessageField(String usericon) {
+  Widget buildInputMessageField() {
+    print(widget.post.owner_id);
+    print(widget.post.post_picture);
+    print(widget.post.Likes);
+    print(widget.post.content);
+    print(widget.post.Comments);
+    print(widget.post.response_to);
+    print(widget.post.id);
     return Row(
       children: [
         SizedBox(width: 10),
@@ -187,21 +194,21 @@ class _ReadPostPageState extends State<ReadPostPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildNameTextField(
-                "widget.post.owner_id.name", "widget.post.owner_id.profile_picture"),
-            SizedBox(height: 20),
-            buildPicture(widget.post.post_picture),
-            buildLikeField(widget.post.Likes.length),
-            buildTextField(widget.post.content),
-            buildDateField('5月20號 16:34'),
-            buildLabelField([]),
-            Divider(
-              // 添加蓝色线
-              color: Color.fromRGBO(170, 227, 254, 1),
-              thickness: 1,
-            ),
-            buildMessageField(widget.post.Comments),
-            buildInputMessageField("widget.post.owner_id.profile_picture")
+            // buildNameTextField(
+            //     "widget.post.owner_id.name", "widget.post.owner_id.profile_picture"),
+            // SizedBox(height: 20),
+            // buildPicture(widget.post.post_picture),
+            // buildLikeField(widget.post.Likes.length),
+            // buildTextField(widget.post.content),
+            // buildDateField('5月20號 16:34'),
+            // buildLabelField([]),
+            // Divider(
+            //   // 添加蓝色线
+            //   color: Color.fromRGBO(170, 227, 254, 1),
+            //   thickness: 1,
+            // ),
+            // buildMessageField(widget.post.Comments),
+            buildInputMessageField()
           ]),
     ))));
   }
