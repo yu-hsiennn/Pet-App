@@ -109,12 +109,12 @@ class _SearchLocationPage extends State<SearchLocationPage> {
                   return Center(child: Text('No attractions found.'));
                 } else {
                   return ListView.builder(
-                    itemCount: PetApp.Attractions!.length,
+                    itemCount: PetApp.Attractions.length,
                     itemBuilder: (BuildContext context, int index) {
                       final String location =
-                          PetApp.Attractions![index].name;
+                          PetApp.Attractions[index].name;
                       final int location_id =
-                          PetApp.Attractions![index].id;
+                          PetApp.Attractions[index].id;
                       if (searchText.isNotEmpty &&
                           !location
                               .toLowerCase()

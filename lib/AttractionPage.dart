@@ -3,9 +3,8 @@ import 'PetApp.dart';
 import 'StoryPage.dart';
 
 class AttractionPage extends StatefulWidget {
-  const AttractionPage({super.key, required this.name, required this.address, required this.Post_list});
-  final List<Posts> Post_list;
-  final String name, address;
+  const AttractionPage({super.key, required this.attraction});
+  final Attraction attraction;
 
   @override
   State<AttractionPage> createState() => _AttractionPageState();
@@ -32,7 +31,7 @@ class _AttractionPageState extends State<AttractionPage> {
                     Container(
                       padding: EdgeInsets.fromLTRB(50, 10, 0, 0),
                       child: Text(
-                        widget.name,
+                        widget.attraction.name,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 24,
@@ -43,7 +42,7 @@ class _AttractionPageState extends State<AttractionPage> {
                     Container(
                       padding: EdgeInsets.fromLTRB(50, 5, 0, 0),
                       child: Text(
-                        widget.address,
+                        widget.attraction.address,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 18,
@@ -82,7 +81,7 @@ class _AttractionPageState extends State<AttractionPage> {
       ),
       primary: false,
       shrinkWrap: true,
-      itemCount: widget.Post_list.length,
+      itemCount: widget.attraction.posts.length,
       itemBuilder: (context, index) {
         return RawMaterialButton(
           onPressed: () {
@@ -90,7 +89,7 @@ class _AttractionPageState extends State<AttractionPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => StoryPage(
-                      Post_list: widget.Post_list,
+                      Post_list: widget.attraction.posts,
                       Post_Index: index,
                     )));
           },
@@ -99,7 +98,7 @@ class _AttractionPageState extends State<AttractionPage> {
             width: double.infinity,
             child: Card(
               child: Image.network(
-                  widget.Post_list[index].post_picture,
+                  widget.attraction.posts[index].post_picture,
                   fit: BoxFit.cover,
               ),
             ),
