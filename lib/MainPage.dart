@@ -7,37 +7,6 @@ import 'StoryPage.dart';
 import "HomePage.dart";
 import "PostPage.dart";
 
-List<Chat> chatList = [
-  Chat(
-      name: 'someFriend',
-      lastActive: DateTime.now(),
-      lastMessage: 'somelastmessage'),
-  Chat(
-      name: 'someFriend',
-      lastActive: DateTime.parse('2023-05-04 12:25'),
-      lastMessage: 'somelastmessage'),
-  Chat(
-      name: 'someFriend',
-      lastActive: DateTime.parse('2023-05-04 12:24'),
-      lastMessage: 'somelastmessage'),
-  Chat(
-      name: 'someFriend',
-      lastActive: DateTime.parse('2023-05-04 10:24'),
-      lastMessage: 'somelastmessage'),
-  Chat(
-      name: 'someFriend',
-      lastActive: DateTime.parse('2023-05-02 10:24'),
-      lastMessage: 'somelastmessage'),
-  Chat(
-      name: 'someFriend',
-      lastActive: DateTime.now(),
-      lastMessage: 'somelastmessage'),
-  Chat(
-      name: 'someFriend',
-      lastActive: DateTime.now(),
-      lastMessage: 'somelastmessage'),
-];
-
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
