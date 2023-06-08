@@ -15,11 +15,12 @@ class AccessPage extends StatefulWidget {
 class _AccessPageState extends State<AccessPage> {
   bool hidePassword = true;
   String _email = "", _password = "";
-  String loginUrl =  PetApp.Server_Url + '/user/login';
+  String loginUrl = PetApp.Server_Url + '/user/login';
   String GetUserUrl = PetApp.Server_Url + '/user/';
   String AttractionUrl = PetApp.Server_Url + '/attraction';
 
   Future<void> loginUser() async {
+    PetApp.CurrentUser.authorization = '';
     final response = await http.post(
       Uri.parse(loginUrl),
       headers: {
@@ -39,6 +40,7 @@ class _AccessPageState extends State<AccessPage> {
       GetUser();
       GetAttraction();
     } else {
+      PetApp.CurrentUser.authorization = '';
       print(
           'Request failed with status: ${json.decode(response.body)['detail']}.');
     }
@@ -53,23 +55,25 @@ class _AccessPageState extends State<AccessPage> {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       for (var post in responseData['posts']) {
-        _post.add(
-          Posts(
-            owner_id: post["owner_id"], 
-            content: post["content"], 
-            id: post["id"], 
-            timestamp: post["timestamp"]
-          )
-        );
+        var temp1 = post['files'][0]['file_path'].split("/");
+        var temp2 = temp1[1].split(".");
+        _post.add(Posts(
+            owner_id: post["owner_id"],
+            content: post["content"],
+            id: post["id"],
+            timestamp: post["timestamp"],
+            response_to: post['response_to'],
+            post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
       }
-      
+
       PetApp.CurrentUser.email = responseData['email'];
       PetApp.CurrentUser.name = responseData['name'];
       PetApp.CurrentUser.intro = responseData['intro'];
       PetApp.CurrentUser.locations = responseData['location'];
       PetApp.CurrentUser.password = _password;
       PetApp.CurrentUser.posts = _post;
-      PetApp.CurrentUser.profile_picture = "${PetApp.Server_Url}/user/$_email/profile_picture";
+      PetApp.CurrentUser.profile_picture =
+          "${PetApp.Server_Url}/user/$_email/profile_picture";
       print(responseData);
     } else {
       print(
@@ -90,29 +94,23 @@ class _AccessPageState extends State<AccessPage> {
         for (var post in attraction['posts']) {
           var temp1 = post['files'][0]['file_path'].split("/");
           var temp2 = temp1[1].split(".");
-          _post.add(
-            Posts(
-              owner_id: post["owner_id"], 
-              content: post["content"], 
-              id: post["id"], 
+          _post.add(Posts(
+              owner_id: post["owner_id"],
+              content: post["content"],
+              id: post["id"],
               timestamp: post["timestamp"],
               response_to: post['response_to'],
-              post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"
-            )
-          );
+              post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
         }
-        _attractions.add(
-          Attraction(
+        _attractions.add(Attraction(
             name: attraction['name'],
             address: attraction['location'],
             lat: attraction['lat'],
             lon: attraction['lon'],
             posts: _post,
-            id: attraction['id']
-          )
-        );
+            id: attraction['id']));
       }
-      
+
       PetApp.Attractions = _attractions;
       print(responseData);
     } else {
@@ -152,7 +150,8 @@ class _AccessPageState extends State<AccessPage> {
                   _email = value;
                 },
                 autofocus: true,
-                cursorColor: Color.fromRGBO(96, 175, 245, 1),
+                cursorColor:
+                    Color.fromRGBO(96, 175, 245, 1),
                 maxLength: 20,
                 validator: (value) {
                   if (value?.isEmpty == true) {
@@ -193,7 +192,8 @@ class _AccessPageState extends State<AccessPage> {
                 onChanged: (value) {
                   _password = value;
                 },
-                cursorColor: Color.fromRGBO(96, 175, 245, 1),
+                cursorColor:
+                    Color.fromRGBO(96, 175, 245, 1),
                 maxLength: 20,
                 obscureText: hidePassword,
                 decoration: InputDecoration(
@@ -240,7 +240,8 @@ class _AccessPageState extends State<AccessPage> {
                   alignment: Alignment.bottomCenter,
                   child: FutureBuilder<void>(
                     future: loginUser(),
-                    builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    builder:
+                        (BuildContext context, AsyncSnapshot<void> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       } else if (snapshot.hasError) {
@@ -255,12 +256,16 @@ class _AccessPageState extends State<AccessPage> {
                               CustomButton(
                                 label: '確認',
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MainPage(),
-                                    ),
-                                  );
+                                  if (PetApp.CurrentUser.authorization != '') {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MainPage(),
+                                      ),
+                                    );
+                                  } else {
+                                    // error message
+                                  }
                                 },
                               ),
                               SizedBox(height: 20),

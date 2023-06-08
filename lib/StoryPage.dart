@@ -81,8 +81,10 @@ class _StoryPageState extends State<StoryPage> {
     }
 
     Widget buildNameTextField(String ownerId) {
-      getOwnername(ownerId);
-      getOwnerPhoto(ownerId);
+      getOwnername(ownerId).then((_) {
+        return getOwnerPhoto(ownerId);
+      });
+      print("ownerId: $ownerId, ownerphoto :$ownerphoto, ownername: $ownername");
       return Expanded(
         flex: 1, // 20%
         child: ListTile(
@@ -101,7 +103,6 @@ class _StoryPageState extends State<StoryPage> {
         ),
       );
     }
-
 
     Widget buildPicture(String picture) {
       return Expanded(

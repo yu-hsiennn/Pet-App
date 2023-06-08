@@ -555,11 +555,11 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget Album(BuildContext context) {
     return Column(
       children: [
-        for (int index = 0; index < _images.length; index += 3)
+        for (int index = 0; index < u.posts.length; index += 3)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              for (int i = index; i < index + 3 && i < _images.length; i++)
+              for (int i = index; i < index + 3 && i < u.posts.length; i++)
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -579,15 +579,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      StoryPage(Post_list: [], Post_Index: 0)),
-                            ).then((value) {
-                              // Do something with returned data
-                            });
+                                      StoryPage(Post_list: u.posts, Post_Index: index)),
+                            );
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              _images[i].imagePath,
+                            child: Image.network(
+                              u.posts[i].post_picture,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -603,69 +601,3 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-// from: https://github.com/kaycobad/gallery_app/tree/master/lib
-class ImageDetails {
-  final String imagePath;
-  final String price;
-  final String photographer;
-  final String title;
-  final String details;
-  ImageDetails({
-    required this.imagePath,
-    required this.price,
-    required this.photographer,
-    required this.title,
-    required this.details,
-  });
-}
-
-List<ImageDetails> _images = [
-  ImageDetails(
-    imagePath: 'assets/image/dog4.jpg',
-    price: '\$20.00',
-    photographer: 'Martin Andres',
-    title: 'New Year',
-    details:
-        'This image was taken during a party in New York on new years eve. Quite a colorful shot.',
-  ),
-  ImageDetails(
-    imagePath: 'assets/image/dog5.jpg',
-    price: '\$10.00',
-    photographer: 'Abraham Costa',
-    title: 'Spring',
-    details:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-  ),
-  ImageDetails(
-    imagePath: 'assets/image/dog6.jpg',
-    price: '\$30.00',
-    photographer: 'Jamie Bryan',
-    title: 'Casual Look',
-    details:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-  ),
-  ImageDetails(
-    imagePath: 'assets/image/dog7.jpg',
-    price: '\$20.00',
-    photographer: 'Jamie Bryan',
-    title: 'New York',
-    details:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-  ),
-  ImageDetails(
-    imagePath: 'assets/image/dog8.jpg',
-    price: '\$20.00',
-    photographer: 'Jamie Bryan',
-    title: 'New York',
-    details:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-  ),
-  ImageDetails(
-    imagePath: 'assets/image/dog9.jpg',
-    price: '\$20.00',
-    photographer: 'Jamie Bryan',
-    title: 'New York',
-    details:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-  ),
-];
