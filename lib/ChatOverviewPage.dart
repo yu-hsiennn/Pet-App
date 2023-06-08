@@ -48,9 +48,9 @@ List<Message> chatContent = [
 ];
 
 class ChatOverviewPage extends StatefulWidget {
-  final List<Chat> chats;
+  late List<Chat> chats;
 
-  ChatOverviewPage({Key? key, required this.chats}) : super(key: key);
+  ChatOverviewPage({Key? key}) : super(key: key);
 
   @override
   _ChatOverviewPageState createState() => _ChatOverviewPageState();
@@ -127,14 +127,14 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
                       DateTime.now().difference(chat.lastActive);
                   final lastActiveString =
                       _getLastActiveString(lastActiveDuration);
-    
+
                   if (searchText.isNotEmpty &&
                       !chat.name
                           .toLowerCase()
                           .contains(searchText.toLowerCase())) {
                     return Container(); // Skip rendering if the name doesn't match the search text
                   }
-    
+
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Container(
@@ -151,7 +151,8 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
                           child: Text(chat.name[0].toUpperCase()),
                         ),
                         title: Text(chat.name),
-                        subtitle: Text('${chat.lastMessage} · $lastActiveString'),
+                        subtitle:
+                            Text('${chat.lastMessage} · $lastActiveString'),
                         onTap: () => _openChatPage(context, chat),
                       ),
                     ),
