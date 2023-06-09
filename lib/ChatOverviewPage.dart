@@ -9,12 +9,13 @@ class Chat {
   String name;
   String lastMessage;
   DateTime lastActive;
-
-  Chat(
-      {required this.id,
-      required this.name,
-      required this.lastMessage,
-      required this.lastActive});
+  List<Message> chatContent = [];
+  Chat({
+    required this.id,
+    required this.name,
+    required this.lastMessage,
+    required this.lastActive,
+  });
 }
 
 List<Message> chatContent = [
@@ -76,7 +77,6 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      print(responseData);
       for (var serverChat in responseData) {
         String chatname;
         if (serverChat['user1'] == PetApp.CurrentUser.email) {
@@ -90,12 +90,49 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
             lastMessage: '_temp_fake_last_msg',
             lastActive: DateTime.now()));
       }
-      return chats;
+      //download all chat contents in one go
+      for (Chat chat in chats) {
+        chat.chatContent = await getChatContent(chat);
+
+        chat.lastMessage = chat.chatContent.isEmpty
+            ? ""
+            : chat.chatContent[chat.chatContent.length - 1].text;
+        chat.lastActive = chat.chatContent.isEmpty
+            ? DateTime.now()
+            : chat.chatContent[chat.chatContent.length - 1].sentTime;
+      }
     } else {
       print(
           'Request failed with status: ${json.decode(response.body)['detail']}.');
     }
     return chats;
+  }
+
+  Future<List<Message>> getChatContent(Chat chat) async {
+    List<Message> messages = [];
+    final response = await http.get(
+      Uri.parse("${PetApp.Server_Url}/chat/${chat.id}/messages"),
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer ${PetApp.CurrentUser.authorization}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      for (var servermsg in responseData) {
+        messages.add(Message(
+            text: servermsg['content'],
+            sender: servermsg['owner'],
+            isPicture: servermsg['files'] == [] ? false : false,
+            sentTime: DateTime.fromMillisecondsSinceEpoch(
+                servermsg['timestamp'] * 1000)));
+      }
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+    return messages;
   }
 
   @override
@@ -253,11 +290,11 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
       context,
       MaterialPageRoute(
         builder: (context) => ChatPage(
-          chatname: 'aChatName',
+          chatname: chat.name,
           photo:
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYWRSDNv7PjuDHov3_3supR5DR_eaLnDgg7A&usqp=CAU',
-          messages: chatContent,
-          currentUser: 'felix',
+          messages: chat.chatContent,
+          currentUser: PetApp.CurrentUser.email,
         ),
       ),
     );
