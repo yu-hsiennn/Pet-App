@@ -54,21 +54,11 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                profile_info(
-                  u.profile_picture, 
-                  u.posts.length,
-                  u.Follower.length,
-                  u.Following.length, 
-                  widget.Is_Me
-                ),
-                Text_info(
-                  widget.Is_Me
-                ),
+                profile_info(u.profile_picture, u.posts.length,
+                    u.Follower.length, u.Following.length, widget.Is_Me),
+                Text_info(widget.Is_Me),
                 Text_title("寵物資料"),
-                Pets_photo(
-                  u.pets, 
-                  widget.Is_Me
-                ),
+                Pets_photo(u.pets, widget.Is_Me),
                 Text_title("寵物相簿"),
                 Album(context),
               ],
@@ -79,8 +69,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget profile_info(
-      String file_name, int posts_count, int followers, int following, bool is_user) {
+  Widget profile_info(String file_name, int posts_count, int followers,
+      int following, bool is_user) {
     if (is_user) {
       return Container(
           width: MediaQuery.of(context).size.width,
@@ -341,15 +331,14 @@ class _ProfilePageState extends State<ProfilePage> {
         var temp1 = pets['files'][0]['file_path'].split("/");
         var temp2 = temp1[1].split(".");
         _pet.add(Pet(
-          owner: pets['owner'],
-          birthday: pets['birthday'],
-          breed: pets['breed'],
-          gender: pets['gender'],
-          id: pets['id'],
-          name: pets['name'],
-          personality_labels: pets['personality_labels'],
-          picture: "${PetApp.Server_Url}/file/${temp2[0]}"
-        ));
+            owner: pets['owner'],
+            birthday: pets['birthday'],
+            breed: pets['breed'],
+            gender: pets['gender'],
+            id: pets['id'],
+            name: pets['name'],
+            personality_labels: pets['personality_labels'],
+            picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
       }
 
       PetApp.CurrentUser.pets = _pet;
@@ -363,8 +352,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> uploadPetImage(String PetPhotoPath, int petid) async {
     print(PetPhotoPath);
-    var upUrl = Uri.parse(
-        "${PetApp.Server_Url}/pet/$petid/file?fileending=jpg");
+    var upUrl =
+        Uri.parse("${PetApp.Server_Url}/pet/$petid/file?fileending=jpg");
     print(upUrl);
     var request = http.MultipartRequest('POST', upUrl);
     request.headers.addAll({
@@ -413,11 +402,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   context,
                   MaterialPageRoute(builder: (context) => AddPetProfilePage()),
                 ).then((value) {
-                  if (value[0]!=''){
+                  if (value[0] != '') {
                     setState(() {
-                    CreatePet(value[0], value[1], value[2], value[3], value[4],
-                        value[5]);
-                  });
+                      CreatePet(value[0], value[1], value[2], value[3],
+                          value[4], value[5]);
+                    });
                   }
                   print(value);
                 });
@@ -492,7 +481,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         Padding(
                           padding: EdgeInsets.all(10),
-                          child: Text('${pet.birthday.toString()} / ${pet.gender}',
+                          child: Text(
+                              '${pet.birthday.toString()} / ${pet.gender}',
                               style: TextStyle(fontSize: 16.0)),
                         ),
                       ],
@@ -576,8 +566,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      StoryPage(Post_list: u.posts, Post_Index: index)),
+                                  builder: (context) => StoryPage(
+                                      Post_list: u.posts, Post_Index: index)),
                             );
                           },
                           child: ClipRRect(
@@ -598,4 +588,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-

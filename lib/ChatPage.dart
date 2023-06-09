@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'PetApp.dart';
+import 'dart:convert';
 
 class Message {
   String text;
@@ -20,12 +23,14 @@ class ChatPage extends StatefulWidget {
   final List<Message> messages;
   final String currentUser;
   final String photo;
+  final int chatID;
   ChatPage(
       {super.key,
       required this.chatname,
       required this.photo,
       required this.messages,
-      required this.currentUser}) {
+      required this.currentUser,
+      required this.chatID}) {
     messages.sort((a, b) => b.sentTime.compareTo(a.sentTime));
   }
 
@@ -49,7 +54,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.photo);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -296,8 +300,33 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  void _handleSubmitted(String text) {
+  Future<DateTime> postMessage(String text) async {
+    final response = await http.post(
+        Uri.parse("${PetApp.Server_Url}/chat/sendmsg"),
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer ${PetApp.CurrentUser.authorization}',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'chat': widget.chatID,
+          'owner': PetApp.CurrentUser.email,
+          'content': text
+        }));
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      return DateTime.fromMillisecondsSinceEpoch(
+          responseData['timestamp'] * 1000);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+    return DateTime.now();
+  }
+
+  void _handleSubmitted(String text) async {
     _textController.clear();
+    DateTime receivedAt = await postMessage(text);
     setState(() {
       _isComposing = false;
       widget.messages.insert(
@@ -306,7 +335,7 @@ class _ChatPageState extends State<ChatPage> {
               text: text,
               sender: widget.currentUser,
               isPicture: false,
-              sentTime: DateTime.now()));
+              sentTime: receivedAt));
     });
     FocusScope.of(context).requestFocus(_focusNode);
   }

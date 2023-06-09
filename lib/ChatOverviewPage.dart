@@ -18,41 +18,6 @@ class Chat {
   });
 }
 
-List<Message> chatContent = [
-  Message(
-      text: 'hi',
-      sender: 'friend1',
-      isPicture: false,
-      sentTime: DateTime.now()),
-  Message(
-      text: 'hello',
-      sender: 'felix',
-      isPicture: false,
-      sentTime: DateTime.now()),
-  Message(
-      text: 'asdlfka;sdlfkaslkdf',
-      sender: 'friend1',
-      isPicture: false,
-      sentTime: DateTime.parse('2023-05-04 14:00')),
-  Message(
-      text: 'hi',
-      sender: 'friend1',
-      isPicture: false,
-      sentTime: DateTime.now()),
-  Message(
-      text: 'hi',
-      sender: 'friend1',
-      isPicture: false,
-      sentTime: DateTime.now()),
-  Message(
-      text: 'hi', sender: 'felix', isPicture: false, sentTime: DateTime.now()),
-  Message(
-      text: 'hi',
-      sender: 'friend1',
-      isPicture: false,
-      sentTime: DateTime.now()),
-];
-
 class ChatOverviewPage extends StatefulWidget {
   late List<Chat> chats;
 
@@ -233,6 +198,9 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
                               child: ListTile(
                                 leading: CircleAvatar(
                                   child: Text(chat.name[0].toUpperCase()),
+                                  backgroundImage: NetworkImage(
+                                      "${PetApp.Server_Url}/user/${chat.name}/profile_picture"),
+                                  backgroundColor: Colors.white,
                                 ),
                                 title: Text(chat.name),
                                 subtitle: Text(
@@ -291,10 +259,10 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
       MaterialPageRoute(
         builder: (context) => ChatPage(
           chatname: chat.name,
-          photo:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYWRSDNv7PjuDHov3_3supR5DR_eaLnDgg7A&usqp=CAU',
+          photo: "${PetApp.Server_Url}/user/${chat.name}/profile_picture",
           messages: chat.chatContent,
           currentUser: PetApp.CurrentUser.email,
+          chatID: chat.id,
         ),
       ),
     );
