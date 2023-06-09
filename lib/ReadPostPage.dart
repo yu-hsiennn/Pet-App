@@ -3,7 +3,10 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:pet_app/PetApp.dart';
 import 'package:http/http.dart' as http;
+import 'MainPage.dart';
 import 'ProfilePage.dart';
+import 'dart:core';
+import 'package:intl/intl.dart';
 
 class ReadPostPage extends StatefulWidget {
   const ReadPostPage({super.key, required this.post, required this.ownername, required this.ownerphoto});
@@ -36,6 +39,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
           var temp2 = temp1[1].split(".");
           _post.add(Posts(
               owner_id: post["owner_id"],
+              label: post['label'],
               content: post["content"],
               id: post["id"],
               timestamp: post["timestamp"],
@@ -72,44 +76,56 @@ class _ReadPostPageState extends State<ReadPostPage> {
   }
 
   Widget buildNameTextField(String ownerId) {
-    return FutureBuilder(
-      future: GetUser(ownerId),
-      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while fetching data
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          // Handle error case
-          return Text('Error: ${snapshot.error}');
-        } else {
-          // Data has been fetched, display the owner's name and photo
-          return ListTile(
-            visualDensity: const VisualDensity(vertical: 3),
-            dense: true,
-            leading: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfilePage(Is_Me: false, user: ownerUser)),
-                        );
+  return FutureBuilder(
+    future: GetUser(ownerId),
+    builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        // Show a loading indicator while fetching data
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        // Handle error case
+        return Text('Error: ${snapshot.error}');
+      } else {
+        // Data has been fetched, display the owner's name and photo
+        return ListTile(
+          visualDensity: const VisualDensity(vertical: 3),
+          dense: true,
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back,color:Color.fromRGBO(96, 175, 245, 1) ,),
+              onPressed: () {
+                Navigator.pop(context);
               },
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(widget.ownerphoto),
-              ),
             ),
-            title: Text(
-              widget.ownername,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
+          title: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(Is_Me: false, user: ownerUser),
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(widget.ownerphoto),
+                ),
+                SizedBox(width: 8), // Add spacing
+                Text(
+                  widget.ownername,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-          );
-        }
-      },
-    );
-  }
+          ),
+        );
+      }
+    },
+  );
+}
 
   Widget buildPicture(String picture) {
     return Image.network(
@@ -233,6 +249,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
           _post.add(Posts(
               owner_id: post["owner_id"],
               content: post["content"],
+              label: post['label'],
               id: post["id"],
               timestamp: post["timestamp"],
               response_to: post['response_to'],
@@ -409,10 +426,73 @@ class _ReadPostPageState extends State<ReadPostPage> {
       ],
     );
   }
+  
 
+
+void _onItemTapped(int index) {
+  
+  // Navigate to the corresponding page based on the index
+  switch (index) {
+    case 0:
+      // Home Page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 0)),
+      );
+      break;
+    case 1:
+      // Search Page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 1)),
+      );
+      break;
+    case 2:
+      // Favorites Page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>MainPage(current_index: 2)),
+      );
+      break;
+    case 3:
+      // Profile Page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 3)),
+      );
+      break;
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Color.fromRGBO(96, 175, 245, 1),
+          title: Center(
+              child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                "PETSHARE",
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 1
+                      ..color = Colors.black),
+              ),
+              Text(
+                "PETSHARE",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          )),
+          automaticallyImplyLeading: false,
+        ),
         body: SingleChildScrollView(
             child: SafeArea(
                 child: Container(
@@ -425,8 +505,8 @@ class _ReadPostPageState extends State<ReadPostPage> {
             buildPicture(widget.post.post_picture),
             buildLikeField(widget.post.Likes.length),
             buildTextField(widget.post.content),
-            buildDateField('5月20號 16:34'),
-            buildLabelField([]),
+            buildDateField(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(widget.post.timestamp * 1000))),
+            buildLabelField(widget.post.label.split(",")),
             Divider(
               // 添加蓝色线
               color: Color.fromRGBO(170, 227, 254, 1),
@@ -435,6 +515,45 @@ class _ReadPostPageState extends State<ReadPostPage> {
             buildMessageField(),
             buildInputMessageField()
           ]),
-    ))));
+    ))),
+    bottomNavigationBar: BottomNavigationBar(
+      selectedItemColor: Colors.yellow,
+      selectedIconTheme: IconThemeData(size: 30),
+      unselectedIconTheme: IconThemeData(size: 20),
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      backgroundColor: Colors.white,
+      onTap: _onItemTapped,
+      type: BottomNavigationBarType.fixed,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.home_outlined,
+            color: Colors.blue,
+          ),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.upload_outlined,
+            color: Colors.blue,
+          ),
+          label: 'Search',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.chat_outlined,
+            color: Colors.blue,
+          ),
+          label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(color: Colors.blue, Icons.person_outlined),
+          label: 'Profile',
+        ),
+      ],
+    ),
+    
+    );
   }
 }

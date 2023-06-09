@@ -23,13 +23,14 @@ class _SearchLocationPage extends State<SearchLocationPage> {
 
     if (response.statusCode == 200) {
       List<Posts> _post = [];
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
       for (var attraction in responseData) {
         for (var post in attraction['posts']) {
           _post.add(Posts(
               owner_id: post["owner_id"],
               content: post["content"],
               id: post["id"],
+              label: post['label'],
               timestamp: post["timestamp"]));
         }
         _attraction.add(Attraction(

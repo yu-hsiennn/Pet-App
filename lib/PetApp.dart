@@ -60,7 +60,7 @@ class _File {
 
 class Posts {
   String owner_id;
-  String content, post_picture;
+  String content, post_picture, label;
   int response_to, id, timestamp;
   List<Like> Likes;
   List<Comment> Comments;
@@ -68,6 +68,7 @@ class Posts {
       {required this.owner_id,
       this.response_to = 0,
       required this.content,
+      this.label = "",
       required this.id,
       this.post_picture = "",
       this.Likes = const [],

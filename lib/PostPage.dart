@@ -341,6 +341,7 @@ class _PostPageState extends State<PostPage> {
         'response_to': 0,
         'attraction': attractionid,
         'content': content,
+        'label': selectedItems.join(',')
       }),
     );
 
@@ -380,7 +381,7 @@ class _PostPageState extends State<PostPage> {
     });
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
       for (var attraction in responseData) {
         List<Posts> _post = [];
         for (var post in attraction['posts']) {
@@ -390,6 +391,7 @@ class _PostPageState extends State<PostPage> {
             _post.add(Posts(
                 owner_id: post["owner_id"],
                 content: post["content"],
+                label: post['label'],
                 id: post["id"],
                 timestamp: post["timestamp"],
                 response_to: post['response_to'],
@@ -399,6 +401,7 @@ class _PostPageState extends State<PostPage> {
                 owner_id: post["owner_id"],
                 content: post["content"],
                 id: post["id"],
+                label: post['label'],
                 timestamp: post["timestamp"],
                 response_to: post['response_to'],
                 post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
@@ -443,7 +446,7 @@ class _PostPageState extends State<PostPage> {
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                new MaterialPageRoute(builder: (context) => new MainPage()),
+                new MaterialPageRoute(builder: (context) => new MainPage(current_index: 0,)),
                 (route) => route == null,
               );
             },
@@ -462,7 +465,7 @@ class _PostPageState extends State<PostPage> {
 
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => MainPage(current_index: 0,)),
                     (route) => false,
                   );
                 } catch (error) {

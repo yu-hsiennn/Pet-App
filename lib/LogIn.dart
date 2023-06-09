@@ -66,6 +66,7 @@ class _AccessPageState extends State<AccessPage> {
               id: post["id"],
               timestamp: post["timestamp"],
               response_to: post['response_to'],
+              label: post['label'],
               post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
         } else {
           _comment.add(Comment(
@@ -128,6 +129,7 @@ class _AccessPageState extends State<AccessPage> {
                 id: post["id"],
                 timestamp: post["timestamp"],
                 response_to: post['response_to'],
+                label: post['label'],
                 post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
           }
         }
@@ -289,7 +291,7 @@ class _AccessPageState extends State<AccessPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => MainPage(),
+                                        builder: (context) => MainPage(current_index: 0,),
                                       ),
                                     );
                                   } else {
