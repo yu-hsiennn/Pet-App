@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(lat, lng), zoom: 12),
+        CameraPosition(target: LatLng(lat, lng), zoom: 14.5),
       ),
     );
   }
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                     double.parse(init_latlng[0]), 
                     double.parse(init_latlng[1])
                   ),
-                  zoom: 13.5,  
+                  zoom: 14.5,  
                 ),
                 markers: _markers.values.toSet(),
               ),

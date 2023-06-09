@@ -5,19 +5,6 @@ import 'package:http/http.dart' as http;
 import 'PetApp.dart';
 import 'dart:convert';
 
-class Message {
-  String text;
-  String sender;
-  bool isPicture;
-  DateTime sentTime;
-
-  Message(
-      {required this.text,
-      required this.sender,
-      required this.isPicture,
-      required this.sentTime});
-}
-
 class ChatPage extends StatefulWidget {
   final String chatname;
   final List<Message> messages;
@@ -55,7 +42,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0, // 去除阴影
@@ -175,7 +162,7 @@ class _ChatPageState extends State<ChatPage> {
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            message.sender,
+            PetApp.CurrentUser.name,
             style: TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
@@ -196,7 +183,10 @@ class _ChatPageState extends State<ChatPage> {
                 if (!message.isPicture)
                   TextSpan(
                     text: message.text,
-                    style: TextStyle(fontSize: 16.0),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black
+                    ),
                   ),
               ],
             ),

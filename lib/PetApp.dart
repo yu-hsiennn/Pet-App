@@ -45,19 +45,6 @@ class Like {
   Like({required this.liker, required this.timestamp});
 }
 
-class _File {
-  String file_ending, user, file_path;
-  int post, pet, message, id;
-  _File(
-      {required this.file_ending,
-      required this.id,
-      required this.file_path,
-      this.message = 0,
-      required this.user,
-      this.post = 0,
-      this.pet = 0});
-}
-
 class Posts {
   String owner_id;
   String content, post_picture, label;
@@ -116,6 +103,34 @@ class Attraction {
     required this.posts,
     required this.id
   });
+}
+
+class Chat {
+  int id;
+  String name, ownerId;
+  String lastMessage;
+  DateTime lastActive;
+  List<Message> chatContent = [];
+  Chat({
+    required this.id,
+    required this.name,
+    required this.lastMessage,
+    required this.lastActive,
+    required this.ownerId
+  });
+}
+
+class Message {
+  String text;
+  String sender;
+  bool isPicture;
+  DateTime sentTime;
+
+  Message(
+      {required this.text,
+      required this.sender,
+      required this.isPicture,
+      required this.sentTime});
 }
 
 // -----------------custom widget-------------------------
