@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:pet_app/MainPage.dart';
 import 'package:pet_app/ProfilePage.dart';
 import 'package:pet_app/ReadPostPage.dart';
+import 'ChatOverviewPage.dart';
+import 'HomePage.dart';
 import 'PetApp.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'PostPage.dart';
 import 'ReadPostPage.dart';
+import 'dart:core';
+import 'package:intl/intl.dart';
+
 class StoryPage extends StatefulWidget {
   const StoryPage(
       {super.key, required this.Post_list, required this.Post_Index});
@@ -19,7 +26,7 @@ class _StoryPageState extends State<StoryPage> {
   late ScrollController _scrollController;
   String GetUserUrl = PetApp.Server_Url + '/user/';
   double _scrollOffset = 0;
-  List<bool> isLiked = [true, false, false,];
+  List<bool> isLiked = [true, false, false, false, false, false, false, false, false, false, false,true, false, false, false, false, false, false, false, false, false, false];
   @override
   void initState() {
     super.initState();
@@ -34,19 +41,118 @@ class _StoryPageState extends State<StoryPage> {
         initialScrollOffset: _scrollOffset * widget.Post_Index * 6 / 7);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
-        controller: _scrollController,
-        itemCount: widget.Post_list.length,
-        itemBuilder: (BuildContext context, int index) {
-          //return Text(widget.Post_list[index].pictures);
-          return buildPost(widget.Post_list[index], index);
-        },
-      ),
-    );
+
+
+void _onItemTapped(int index) {
+
+  switch (index) {
+    case 0:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 0)),
+      );
+      break;
+    case 1:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 1)),
+      );
+      break;
+    case 2:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>MainPage(current_index: 2)),
+      );
+      break;
+    case 3:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 3)),
+      );
+      break;
   }
+}
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Color.fromRGBO(96, 175, 245, 1),
+      title: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Text(
+              "PETSHARE",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 1
+                  ..color = Colors.black,
+              ),
+            ),
+            Text(
+              "PETSHARE",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+      automaticallyImplyLeading: false,
+    ),
+    body: ListView.builder(
+      controller: _scrollController,
+      itemCount: widget.Post_list.length,
+      itemBuilder: (BuildContext context, int index) {
+        //return Text(widget.Post_list[index].pictures);
+        return buildPost(widget.Post_list[index], index);
+      },
+    ),
+    bottomNavigationBar: BottomNavigationBar(
+      selectedItemColor: Colors.yellow,
+      selectedIconTheme: IconThemeData(size: 30),
+      unselectedIconTheme: IconThemeData(size: 20),
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      backgroundColor: Colors.white,
+      onTap: _onItemTapped,
+      type: BottomNavigationBarType.fixed,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.home_outlined,
+            color: Colors.blue,
+          ),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.upload_outlined,
+            color: Colors.blue,
+          ),
+          label: 'Search',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.chat_outlined,
+            color: Colors.blue,
+          ),
+          label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(color: Colors.blue, Icons.person_outlined),
+          label: 'Profile',
+        ),
+      ],
+    ),
+  );
+}
 
   Widget buildPost(Posts Post, int post_index) {
     bool _isVisible = false;
@@ -70,6 +176,7 @@ class _StoryPageState extends State<StoryPage> {
                 owner_id: post["owner_id"],
                 content: post["content"],
                 id: post["id"],
+                label: post['label'],
                 timestamp: post["timestamp"],
                 response_to: post['response_to'],
                 post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
@@ -205,7 +312,9 @@ class _StoryPageState extends State<StoryPage> {
       );
     }
 
-    Widget buildLabelField(List<String> label) {
+    Widget buildLabelField(List<String> label, String txt) {
+      print(label);
+      print(txt);
       return Row(
         children: [
           SizedBox(
@@ -384,8 +493,8 @@ class _StoryPageState extends State<StoryPage> {
               buildPicture(Post.post_picture),
               buildLikeField(Post.Likes.length, post_index),
               buildTextField(Post.content),
-              buildDateField('5月20號 16:34'),
-              buildLabelField([]),
+              buildDateField(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(Post.timestamp * 1000))),
+              buildLabelField(Post.label.split(","), Post.label),
               buildMessageField(),
               buildInputMessageField()
             ]),

@@ -8,14 +8,15 @@ import "HomePage.dart";
 import "PostPage.dart";
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
-
+  final int current_index;
+  const MainPage({super.key,required, required this.current_index });
+  
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  int _currentIndex = 0;
+  late int _currentIndex = widget.current_index;
   final List<Widget> _pages = [
     HomePage(title: "Google Map"),
     // StoryPage(

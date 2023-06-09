@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/AddPetProfile.dart';
 import 'package:pet_app/StoryPage.dart';
+import 'MainPage.dart';
 import 'PetApp.dart';
 import 'package:album_image/album_image.dart';
 import 'AddPetProfile.dart';
@@ -23,7 +24,35 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isEditing = false;
   TextEditingController myTextController = TextEditingController();
   late User u;
+  void _onItemTapped(int index) {
 
+  switch (index) {
+    case 0:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 0)),
+      );
+      break;
+    case 1:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 1)),
+      );
+      break;
+    case 2:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>MainPage(current_index: 2)),
+      );
+      break;
+    case 3:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MainPage(current_index: 3)),
+      );
+      break;
+  }
+}
   @override
   Widget build(BuildContext context) {
     if (widget.Is_Me) {
@@ -66,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
+    
     );
   }
 
@@ -376,9 +406,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget Pets_photo(List<Pet> petsList, bool isUser) {
-    return Container(
+
+    return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Container(
       padding: EdgeInsets.all(25.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ...petsList.map((pet) {
             return GestureDetector(
@@ -421,7 +455,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
         ],
-      ),
+      ),),
     );
   }
 
