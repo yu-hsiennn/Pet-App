@@ -49,6 +49,7 @@ class _AccessPageState extends State<AccessPage> {
   Future<void> GetUser() async {
     List<Posts> _post = [];
     List<Pet> _pet = [];
+    List<Comment> _comment = [];
     final response = await http.get(Uri.parse(GetUserUrl + _email), headers: {
       'accept': 'application/json',
     });
@@ -56,15 +57,24 @@ class _AccessPageState extends State<AccessPage> {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       for (var post in responseData['posts']) {
-        var temp1 = post['files'][0]['file_path'].split("/");
-        var temp2 = temp1[1].split(".");
-        _post.add(Posts(
+        if (post['response_to'] == 0) {
+          var temp1 = post['files'][0]['file_path'].split("/");
+          var temp2 = temp1[1].split(".");
+          _post.add(Posts(
+              owner_id: post["owner_id"],
+              content: post["content"],
+              id: post["id"],
+              timestamp: post["timestamp"],
+              response_to: post['response_to'],
+              post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
+        } else {
+          _comment.add(Comment(
             owner_id: post["owner_id"],
             content: post["content"],
-            id: post["id"],
             timestamp: post["timestamp"],
-            response_to: post['response_to'],
-            post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
+            response_to: post['response_to']));
+        }
+
       }
       for (var pets in responseData['pets']) {
         var temp1 = pets['files'][0]['file_path'].split("/");
@@ -88,6 +98,7 @@ class _AccessPageState extends State<AccessPage> {
       PetApp.CurrentUser.password = _password;
       PetApp.CurrentUser.posts = _post;
       PetApp.CurrentUser.pets = _pet;
+      PetApp.CurrentUser.comments = _comment;
       PetApp.CurrentUser.profile_picture =
           "${PetApp.Server_Url}/user/$_email/profile_picture";
       print(responseData);
@@ -108,15 +119,17 @@ class _AccessPageState extends State<AccessPage> {
       for (var attraction in responseData) {
         List<Posts> _post = [];
         for (var post in attraction['posts']) {
-          var temp1 = post['files'][0]['file_path'].split("/");
-          var temp2 = temp1[1].split(".");
-          _post.add(Posts(
-              owner_id: post["owner_id"],
-              content: post["content"],
-              id: post["id"],
-              timestamp: post["timestamp"],
-              response_to: post['response_to'],
-              post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
+          if (post['response_to'] == 0) {
+            var temp1 = post['files'][0]['file_path'].split("/");
+            var temp2 = temp1[1].split(".");
+            _post.add(Posts(
+                owner_id: post["owner_id"],
+                content: post["content"],
+                id: post["id"],
+                timestamp: post["timestamp"],
+                response_to: post['response_to'],
+                post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
+          }
         }
         _attractions.add(Attraction(
             name: attraction['name'],

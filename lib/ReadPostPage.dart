@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pet_app/PetApp.dart';
-
+import 'package:http/http.dart' as http;
 class ReadPostPage extends StatefulWidget {
-  const ReadPostPage({super.key, required this.post});
+  const ReadPostPage({super.key, required this.post, required this.ownername, required this.ownerphoto});
   final Posts post;
+  final String ownername;
+  final String ownerphoto;
   @override
   State<ReadPostPage> createState() => _ReadPostPageState();
 }
@@ -11,15 +15,15 @@ class ReadPostPage extends StatefulWidget {
 class _ReadPostPageState extends State<ReadPostPage> {
   bool isLiked = false;
 
-  Widget buildNameTextField(String name, String icon) {
+  Widget buildNameTextField() {
     return ListTile(
       visualDensity: const VisualDensity(vertical: 3),
       dense: true,
       leading: CircleAvatar(
-        backgroundImage: AssetImage(icon),
+        backgroundImage: NetworkImage(widget.ownerphoto),
       ),
       title: Text(
-        name,
+        widget.ownername,
         style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.bold,
@@ -121,7 +125,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
               Padding(
                 padding: EdgeInsets.all(8),
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(messages[i].user.profile_picture),
+                  backgroundImage: NetworkImage("${PetApp.Server_Url}/user/${messages[i].owner_id}/profile_picture"),
                   radius: 15.0,
                 ),
               ),
@@ -134,8 +138,35 @@ class _ReadPostPageState extends State<ReadPostPage> {
       ],
     );
   }
+  Future<void> createReply(
+        int postId, int postAttraction, String postContent) async {
+      final response = await http.post(
+        Uri.parse(PetApp.Server_Url + '/posts'),
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer ' + PetApp.CurrentUser.authorization,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "owner_id": PetApp.CurrentUser.email,
+          "response_to":postId,
+          "attraction": postAttraction,
+          "content": postContent,
+          "label": "",
+        }),
+      );
 
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        print(responseData);
+      } else {
+        print(
+            'Request failed with status: ${json.decode(response.body)['detail']}.');
+      }
+    }
   Widget buildInputMessageField() {
+    TextEditingController textController = TextEditingController();
     print(widget.post.owner_id);
     print(widget.post.post_picture);
     print(widget.post.Likes);
@@ -159,6 +190,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
                 borderRadius: BorderRadius.circular(20), // 设置圆角半径
               ),
               child: TextField(
+                 controller: textController,
                 autofocus: false,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -174,7 +206,8 @@ class _ReadPostPageState extends State<ReadPostPage> {
         IconButton(
           iconSize: 40,
           onPressed: () {
-            // 这里可以写提交操作的代码
+             String messagetext = textController.text;
+                createReply(widget.post.id, 1, messagetext);
           },
           icon: Image.asset(
             'assets/image/post_message_submit.png',
@@ -194,19 +227,18 @@ class _ReadPostPageState extends State<ReadPostPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // buildNameTextField(
-            //     "widget.post.owner_id.name", "widget.post.owner_id.profile_picture"),
-            // SizedBox(height: 20),
-            // buildPicture(widget.post.post_picture),
-            // buildLikeField(widget.post.Likes.length),
-            // buildTextField(widget.post.content),
-            // buildDateField('5月20號 16:34'),
-            // buildLabelField([]),
-            // Divider(
-            //   // 添加蓝色线
-            //   color: Color.fromRGBO(170, 227, 254, 1),
-            //   thickness: 1,
-            // ),
+            buildNameTextField(),
+            SizedBox(height: 20),
+            buildPicture(widget.post.post_picture),
+            buildLikeField(widget.post.Likes.length),
+            buildTextField(widget.post.content),
+            buildDateField('5月20號 16:34'),
+            buildLabelField([]),
+            Divider(
+              // 添加蓝色线
+              color: Color.fromRGBO(170, 227, 254, 1),
+              thickness: 1,
+            ),
             // buildMessageField(widget.post.Comments),
             buildInputMessageField()
           ]),

@@ -16,6 +16,7 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   TextEditingController _newItemController = TextEditingController();
+  String AttractionUrl = PetApp.Server_Url + '/attraction';
   String location = "新增地點";
   int locationid = -1;
   String imagePath = 'assets/image/NonePicture.png';
@@ -47,13 +48,13 @@ class _PostPageState extends State<PostPage> {
             child: _imageFile != null
               ? Image.file(
                   _imageFile!,
-                  width: 300,
-                  height: 300,
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.contain,
                 )
               : Image.asset(
                   imagePath,
-                  width: 200,
-                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.contain,
                 ),
           ),
         );
@@ -371,6 +372,46 @@ class _PostPageState extends State<PostPage> {
     }
   }
 
+  Future<void> GetAttraction() async {
+    List<Attraction> _attractions = [];
+    final response = await http.get(Uri.parse(AttractionUrl), headers: {
+      'accept': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      for (var attraction in responseData) {
+        List<Posts> _post = [];
+        for (var post in attraction['posts']) {
+          if (post['response_to'] == 0) {
+            var temp1 = post['files'][0]['file_path'].split("/");
+            var temp2 = temp1[1].split(".");
+            _post.add(Posts(
+                owner_id: post["owner_id"],
+                content: post["content"],
+                id: post["id"],
+                timestamp: post["timestamp"],
+                response_to: post['response_to'],
+                post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
+          }
+        }
+        _attractions.add(Attraction(
+            name: attraction['name'],
+            address: attraction['location'],
+            lat: attraction['lat'],
+            lon: attraction['lon'],
+            posts: _post,
+            id: attraction['id']));
+      }
+
+      PetApp.Attractions = _attractions;
+      print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -402,17 +443,32 @@ class _PostPageState extends State<PostPage> {
                 Icons.check,
                 color: Color.fromRGBO(96, 175, 245, 1),
               ),
-              onPressed: () {
-                createPost(PetApp.CurrentUser.email, locationid, inputText).then((_) {
-                  return PostPicture();
-                });
+              onPressed: () async {
+                try {
+                  await createPost(PetApp.CurrentUser.email, locationid, inputText);
+                  await PostPicture();
+                  await GetAttraction();
 
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  new MaterialPageRoute(builder: (context) => new MainPage()),
-                  (route) => route == null,
-                );
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage()),
+                    (route) => false,
+                  );
+                } catch (error) {
+                  print('Error occurred: $error');
+                }
               },
+              // onPressed: () {
+              //   createPost(PetApp.CurrentUser.email, locationid, inputText).then((_) {
+              //     return PostPicture();
+              //   });
+
+              //   Navigator.pushAndRemoveUntil(
+              //     context,
+              //     new MaterialPageRoute(builder: (context) => new MainPage()),
+              //     (route) => route == null,
+              //   );
+              // },
             ),
           ]),
       body: SingleChildScrollView(

@@ -22,6 +22,7 @@ class User {
   List<Pet> pets;
   List<User> Following, Follower;
   List<Posts> posts;
+  List<Comment> comments;
   User({
     required this.email,
     required this.name,
@@ -34,6 +35,7 @@ class User {
     this.profile_picture = "",
     this.authorization = "",
     this.posts = const [],
+    this.comments = const []
   });
 }
 
@@ -75,15 +77,13 @@ class Posts {
 }
 
 class Comment {
-  User user;
-  List<Like> Likes;
-  int timestamp;
-  String content;
+  int timestamp, response_to;
+  String content, owner_id;
   Comment({
-    required this.user,
-    required this.Likes,
+    required this.owner_id,
     required this.content,
-    required this.timestamp
+    required this.timestamp,
+    required this.response_to
   });
 }
 

@@ -3,7 +3,7 @@ import 'package:pet_app/ReadPostPage.dart';
 import 'PetApp.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'ReadPostPage.dart';
 class StoryPage extends StatefulWidget {
   const StoryPage(
       {super.key, required this.Post_list, required this.Post_Index});
@@ -219,6 +219,8 @@ class _StoryPageState extends State<StoryPage> {
                 MaterialPageRoute(
                     builder: (context) => ReadPostPage(
                           post: Post,
+                          ownername: ownername,
+                          ownerphoto: ownerphoto
                         )),
               );
             },
@@ -233,7 +235,36 @@ class _StoryPageState extends State<StoryPage> {
       );
     }
 
+    Future<void> createReply(
+        int postId, int postAttraction, String postContent) async {
+      final response = await http.post(
+        Uri.parse(PetApp.Server_Url + '/posts'),
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer ' + PetApp.CurrentUser.authorization,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "owner_id": PetApp.CurrentUser.email,
+          "response_to":postId,
+          "attraction": postAttraction,
+          "content": postContent,
+          "label": "",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        print(responseData);
+      } else {
+        print(
+            'Request failed with status: ${json.decode(response.body)['detail']}.');
+      }
+    }
+
     Widget buildInputMessageField() {
+      TextEditingController textController = TextEditingController();
       return Expanded(
         flex: 1, // 20%
         child: Row(
@@ -248,10 +279,10 @@ class _StoryPageState extends State<StoryPage> {
                       color: Color.fromRGBO(96, 175, 245, 1),
                       width: 1,
                     ),
-
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextField(
+                    controller: textController,
                     autofocus: false,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -267,7 +298,8 @@ class _StoryPageState extends State<StoryPage> {
             IconButton(
               iconSize: 40,
               onPressed: () {
-                // 这里可以写提交操作的代码
+                String messagetext = textController.text;
+                createReply(Post.id, 1, messagetext);
               },
               icon: Image.asset(
                 'assets/image/post_message_submit.png',
