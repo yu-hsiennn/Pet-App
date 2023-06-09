@@ -336,7 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
       for (var pets in responseData) {
         var temp1 = pets['files'][0]['file_path'].split("/");
         var temp2 = temp1[1].split(".");
@@ -418,11 +418,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     CreatePet(value[0], value[1], value[2], value[3], value[4],
                         value[5]);
                   });
-
-                    
                   }
-                  
-
                   print(value);
                 });
               },
@@ -527,7 +523,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start, // Align left
                       children: List.generate(
-                        pet.personality_labels.length,
+                        pet.personality_labels.split(',').length,
                         (index) => Container(
                           padding: EdgeInsets.all(8),
                           margin: EdgeInsets.all(4),
@@ -540,7 +536,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             borderRadius: BorderRadius.circular(20.0),
                           ),
-                          child: Text(pet.personality_labels[index]),
+                          child: Text(pet.personality_labels.split(',')[index]),
                         ),
                       ),
                     ),

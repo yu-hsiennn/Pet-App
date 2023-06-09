@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_app/ProfilePage.dart';
 import 'package:pet_app/ReadPostPage.dart';
 import 'PetApp.dart';
 import 'package:http/http.dart' as http;
@@ -16,8 +17,9 @@ class StoryPage extends StatefulWidget {
 
 class _StoryPageState extends State<StoryPage> {
   late ScrollController _scrollController;
+  String GetUserUrl = PetApp.Server_Url + '/user/';
   double _scrollOffset = 0;
-  List<bool> isLiked = [true, false, false];
+  List<bool> isLiked = [true, false, false,];
   @override
   void initState() {
     super.initState();
@@ -48,46 +50,62 @@ class _StoryPageState extends State<StoryPage> {
 
   Widget buildPost(Posts Post, int post_index) {
     bool _isVisible = false;
-    String ownername = '';
-    String ownerphoto = '';
-    Future<void> getOwnername(String ownerId) async {
-      String GetUserUrl = PetApp.Server_Url + '/user/' + ownerId;
-      final response = await http.get(Uri.parse(GetUserUrl), headers: {
+    User user = new User(email: "", name: "", intro: "", locations: "", password: "");
+    List<Comment> comments = [];
+
+    Future<void> GetUser(String ownerId) async {
+      List<Posts> _post = [];
+      List<Pet> _pet = [];
+      final response = await http.get(Uri.parse(GetUserUrl + ownerId), headers: {
         'accept': 'application/json',
       });
 
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        ownername = responseData['name'];
-        print(responseData);
+        final responseData = json.decode(utf8.decode(response.bodyBytes));
+        for (var post in responseData['posts']) {
+          if (post['response_to'] == 0) {
+            var temp1 = post['files'][0]['file_path'].split("/");
+            var temp2 = temp1[1].split(".");
+            _post.add(Posts(
+                owner_id: post["owner_id"],
+                content: post["content"],
+                id: post["id"],
+                timestamp: post["timestamp"],
+                response_to: post['response_to'],
+                post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
+          }
+        }
+        for (var pets in responseData['pets']) {
+          var temp1 = pets['files'][0]['file_path'].split("/");
+          var temp2 = temp1[1].split(".");
+          _pet.add(Pet(
+            owner: pets['owner'],
+            birthday: pets['birthday'],
+            breed: pets['breed'],
+            gender: pets['gender'],
+            id: pets['id'],
+            name: pets['name'],
+            personality_labels: pets['personality_labels'],
+            picture: "${PetApp.Server_Url}/file/${temp2[0]}"
+          ));
+        }
+
+        user.email = responseData['email'];
+        user.name = responseData['name'];
+        user.intro = responseData['intro'];
+        user.posts = _post;
+        user.pets = _pet;
+        user.profile_picture =
+            "${PetApp.Server_Url}/user/${responseData['email']}/profile_picture";
       } else {
         print(
             'Request failed with status: ${json.decode(response.body)['detail']}.');
       }
     }
-
-    Future<void> getOwnerPhoto(String ownerId) async {
-      String GetUserUrl = PetApp.Server_Url + '/user/' + ownerId+'/profile_picture';
-      final response = await http.get(Uri.parse(GetUserUrl), headers: {
-        'accept': 'application/json',
-      });
-
-      if (response.statusCode == 200) {
-        ownerphoto = "${PetApp.Server_Url}/user/$ownerId/profile_picture";
-      } else {
-        print(
-            'Request failed with status: ${json.decode(response.body)['detail']}.');
-      }
-    }
-
-    Future<void> _getOwnerData(String ownerId) async {
-    await getOwnername(ownerId);
-    await getOwnerPhoto(ownerId);
-  }
 
     Widget buildNameTextField(String ownerId) {
     return FutureBuilder(
-      future: _getOwnerData(ownerId),
+      future: GetUser(ownerId),
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Show a loading indicator while fetching data
@@ -98,22 +116,31 @@ class _StoryPageState extends State<StoryPage> {
         } else {
           // Data has been fetched, display the owner's name and photo
           return Expanded(
-            flex: 1,
-            child: ListTile(
-              visualDensity: const VisualDensity(vertical: 3),
-              dense: true,
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(ownerphoto),
-              ),
-              title: Text(
-                ownername,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          );
+  flex: 1,
+  child: GestureDetector(
+    onTap: () {
+      Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfilePage(Is_Me: false, user: user)),
+              );
+    },
+    child: ListTile(
+      visualDensity: const VisualDensity(vertical: 3),
+      dense: true,
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(user.profile_picture),
+      ),
+      title: Text(
+        user.name,
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  ),
+);
         }
       },
     );
@@ -205,9 +232,39 @@ class _StoryPageState extends State<StoryPage> {
         ],
       );
     }
+    Future<void> GetComment() async {
+    List<Comment> _comment = [];
+    final response = await http.get(
+        Uri.parse(PetApp.Server_Url + '/posts/{post_id}/replies?postid=${Post.id}'),
+        headers: {
+          'accept': 'application/json',
+        });
 
-    Widget buildMessageField(List<Comment> messages) {
-      return Row(
+    if (response.statusCode == 200) {
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
+      for (var message in responseData) {
+        _comment.add(Comment(
+            owner_id: message["owner_id"],
+            content: message["content"],
+            timestamp: message["timestamp"],
+            response_to: message['response_to']));
+      }
+      comments = _comment;
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+    Widget buildMessageField() {
+  return FutureBuilder<void>(
+    future: GetComment(),
+    builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator(); // 显示加载指示器
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}'); // 显示错误消息
+      } else {
+        return  Row(
         children: [
           SizedBox(
             width: 12,
@@ -219,13 +276,13 @@ class _StoryPageState extends State<StoryPage> {
                 MaterialPageRoute(
                     builder: (context) => ReadPostPage(
                           post: Post,
-                          ownername: ownername,
-                          ownerphoto: ownerphoto
+                          ownername: user.name,
+                          ownerphoto: user.profile_picture
                         )),
               );
             },
             child: Text(
-              '查看全部${messages.length}則留言',
+              '查看全部${comments.length}則留言',
               style: TextStyle(
                 color: Colors.grey[400],
               ),
@@ -233,7 +290,10 @@ class _StoryPageState extends State<StoryPage> {
           ),
         ],
       );
-    }
+      }
+    },
+  );
+}
 
     Future<void> createReply(
         int postId, int postAttraction, String postContent) async {
@@ -326,7 +386,7 @@ class _StoryPageState extends State<StoryPage> {
               buildTextField(Post.content),
               buildDateField('5月20號 16:34'),
               buildLabelField([]),
-              buildMessageField(Post.Comments),
+              buildMessageField(),
               buildInputMessageField()
             ]),
       ),

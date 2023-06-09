@@ -374,6 +374,7 @@ class _PostPageState extends State<PostPage> {
 
   Future<void> GetAttraction() async {
     List<Attraction> _attractions = [];
+    List<Posts> _updatePost = [];
     final response = await http.get(Uri.parse(AttractionUrl), headers: {
       'accept': 'application/json',
     });
@@ -393,6 +394,15 @@ class _PostPageState extends State<PostPage> {
                 timestamp: post["timestamp"],
                 response_to: post['response_to'],
                 post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
+            if (post['owner_id'] == PetApp.CurrentUser.email) {
+              _updatePost.add(Posts(
+                owner_id: post["owner_id"],
+                content: post["content"],
+                id: post["id"],
+                timestamp: post["timestamp"],
+                response_to: post['response_to'],
+                post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
+            }
           }
         }
         _attractions.add(Attraction(
@@ -405,6 +415,7 @@ class _PostPageState extends State<PostPage> {
       }
 
       PetApp.Attractions = _attractions;
+      PetApp.CurrentUser.posts = _updatePost;
       print(responseData);
     } else {
       print(

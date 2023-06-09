@@ -55,7 +55,7 @@ class _AccessPageState extends State<AccessPage> {
     });
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
       for (var post in responseData['posts']) {
         if (post['response_to'] == 0) {
           var temp1 = post['files'][0]['file_path'].split("/");
@@ -115,7 +115,7 @@ class _AccessPageState extends State<AccessPage> {
     });
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
       for (var attraction in responseData) {
         List<Posts> _post = [];
         for (var post in attraction['posts']) {
@@ -294,50 +294,49 @@ class _AccessPageState extends State<AccessPage> {
                                     );
                                   } else {
                                     showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    var dialogWidth = screenSize.width * 1 / 2;
-    var dialogHeight = screenSize.height * 1 / 4;
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Container(
-        height: dialogHeight,
-        width: dialogWidth,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              '帳號密碼錯誤',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16.0),
-          ],
-        ),
-      ),
-    );
-  },
-);
-                                    // error message
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        var screenSize = MediaQuery.of(context).size;
+                                        var dialogWidth = screenSize.width * 1 / 2;
+                                        var dialogHeight = screenSize.height * 1 / 4;
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          child: Container(
+                                            height: dialogHeight,
+                                            width: dialogWidth,
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: Icon(Icons.close),
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 16.0),
+                                                Text(
+                                                  '帳號密碼錯誤',
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                SizedBox(height: 16.0),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
                                   }
                                 },
                               ),
