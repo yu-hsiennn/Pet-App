@@ -70,26 +70,24 @@ class _AccessPageState extends State<AccessPage> {
               post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
         } else {
           _comment.add(Comment(
-            owner_id: post["owner_id"],
-            content: post["content"],
-            timestamp: post["timestamp"],
-            response_to: post['response_to']));
+              owner_id: post["owner_id"],
+              content: post["content"],
+              timestamp: post["timestamp"],
+              response_to: post['response_to']));
         }
-
       }
       for (var pets in responseData['pets']) {
         var temp1 = pets['files'][0]['file_path'].split("/");
         var temp2 = temp1[1].split(".");
         _pet.add(Pet(
-          owner: pets['owner'],
-          birthday: pets['birthday'],
-          breed: pets['breed'],
-          gender: pets['gender'],
-          id: pets['id'],
-          name: pets['name'],
-          personality_labels: pets['personality_labels'],
-          picture: "${PetApp.Server_Url}/file/${temp2[0]}"
-        ));
+            owner: pets['owner'],
+            birthday: pets['birthday'],
+            breed: pets['breed'],
+            gender: pets['gender'],
+            id: pets['id'],
+            name: pets['name'],
+            personality_labels: pets['personality_labels'],
+            picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
       }
 
       PetApp.CurrentUser.email = responseData['email'];
@@ -100,6 +98,8 @@ class _AccessPageState extends State<AccessPage> {
       PetApp.CurrentUser.posts = _post;
       PetApp.CurrentUser.pets = _pet;
       PetApp.CurrentUser.comments = _comment;
+      PetApp.CurrentUser.Follower = responseData['followed_by'];
+      PetApp.CurrentUser.Following = responseData['follows'];
       PetApp.CurrentUser.profile_picture =
           "${PetApp.Server_Url}/user/$_email/profile_picture";
       print(responseData);
@@ -181,8 +181,7 @@ class _AccessPageState extends State<AccessPage> {
                   _email = value;
                 },
                 autofocus: true,
-                cursorColor:
-                    Color.fromRGBO(96, 175, 245, 1),
+                cursorColor: Color.fromRGBO(96, 175, 245, 1),
                 maxLength: 20,
                 validator: (value) {
                   if (value?.isEmpty == true) {
@@ -223,8 +222,7 @@ class _AccessPageState extends State<AccessPage> {
                 onChanged: (value) {
                   _password = value;
                 },
-                cursorColor:
-                    Color.fromRGBO(96, 175, 245, 1),
+                cursorColor: Color.fromRGBO(96, 175, 245, 1),
                 maxLength: 20,
                 obscureText: hidePassword,
                 decoration: InputDecoration(
@@ -291,19 +289,25 @@ class _AccessPageState extends State<AccessPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => MainPage(current_index: 0,),
+                                        builder: (context) => MainPage(
+                                          current_index: 0,
+                                        ),
                                       ),
                                     );
                                   } else {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        var screenSize = MediaQuery.of(context).size;
-                                        var dialogWidth = screenSize.width * 1 / 2;
-                                        var dialogHeight = screenSize.height * 1 / 4;
+                                        var screenSize =
+                                            MediaQuery.of(context).size;
+                                        var dialogWidth =
+                                            screenSize.width * 1 / 2;
+                                        var dialogHeight =
+                                            screenSize.height * 1 / 4;
                                         return Dialog(
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10.0),
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
                                           ),
                                           child: Container(
                                             height: dialogHeight,
@@ -313,12 +317,14 @@ class _AccessPageState extends State<AccessPage> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
                                                   children: [
                                                     IconButton(
                                                       icon: Icon(Icons.close),
                                                       onPressed: () {
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
                                                     ),
                                                   ],

@@ -3,7 +3,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // --------------------------------------------------------------
 class PetApp {
-
   // global variable
   static User CurrentUser =
       new User(email: "", name: "", intro: "", locations: "0,0", password: "");
@@ -13,30 +12,34 @@ class PetApp {
   // Server Url for android emulator
   static String Server_Url = "http://10.0.2.2:8000";
   // static String Server_Url = "http://127.0.0.1:8000";
-
 }
 
 // -----------------------class define-----------------------------
 class User {
-  String name, email, intro, profile_picture, authorization, password, locations;
+  String name,
+      email,
+      intro,
+      profile_picture,
+      authorization,
+      password,
+      locations;
   List<Pet> pets;
-  List<User> Following, Follower;
+  List<dynamic> Following, Follower;
   List<Posts> posts;
   List<Comment> comments;
-  User({
-    required this.email,
-    required this.name,
-    required this.intro,
-    required this.locations,
-    required this.password,
-    this.pets = const [],
-    this.Follower = const [],
-    this.Following = const [],
-    this.profile_picture = "",
-    this.authorization = "",
-    this.posts = const [],
-    this.comments = const []
-  });
+  User(
+      {required this.email,
+      required this.name,
+      required this.intro,
+      required this.locations,
+      required this.password,
+      this.pets = const [],
+      this.Follower = const [],
+      this.Following = const [],
+      this.profile_picture = "",
+      this.authorization = "",
+      this.posts = const [],
+      this.comments = const []});
 }
 
 class Like {
@@ -60,34 +63,31 @@ class Posts {
       this.post_picture = "",
       this.Likes = const [],
       required this.timestamp,
-      this .Comments = const []
-      });
+      this.Comments = const []});
 }
 
 class Comment {
   int timestamp, response_to;
   String content, owner_id;
-  Comment({
-    required this.owner_id,
-    required this.content,
-    required this.timestamp,
-    required this.response_to
-  });
+  Comment(
+      {required this.owner_id,
+      required this.content,
+      required this.timestamp,
+      required this.response_to});
 }
 
 class Pet {
   String owner, name, breed, gender, birthday, personality_labels, picture;
   int id;
-  Pet({
-    required this.owner,
-    required this.name,
-    required this.breed,
-    required this.birthday,
-    required this.personality_labels,
-    required this.gender,
-    required this.id,
-    required this.picture
-  });
+  Pet(
+      {required this.owner,
+      required this.name,
+      required this.breed,
+      required this.birthday,
+      required this.personality_labels,
+      required this.gender,
+      required this.id,
+      required this.picture});
 }
 
 class Attraction {
@@ -95,14 +95,13 @@ class Attraction {
   double lat, lon;
   List<Posts> posts;
   int id;
-  Attraction({
-    required this.name,
-    required this.address,
-    required this.lat,
-    required this.lon,
-    required this.posts,
-    required this.id
-  });
+  Attraction(
+      {required this.name,
+      required this.address,
+      required this.lat,
+      required this.lon,
+      required this.posts,
+      required this.id});
 }
 
 class Chat {
@@ -111,13 +110,12 @@ class Chat {
   String lastMessage;
   DateTime lastActive;
   List<Message> chatContent = [];
-  Chat({
-    required this.id,
-    required this.name,
-    required this.lastMessage,
-    required this.lastActive,
-    required this.ownerId
-  });
+  Chat(
+      {required this.id,
+      required this.name,
+      required this.lastMessage,
+      required this.lastActive,
+      required this.ownerId});
 }
 
 class Message {
@@ -165,8 +163,9 @@ class CustomWidget {
   // profile photo
   Widget Profile_photo(int framesize,
       {String file_name = "assets/image/empty.jpg"}) {
-    String _file_name =
-        file_name.isEmpty ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" : file_name;
+    String _file_name = file_name.isEmpty
+        ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+        : file_name;
     return CircleAvatar(
       radius: framesize.toDouble(),
       backgroundImage: NetworkImage(
