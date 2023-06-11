@@ -3,9 +3,7 @@ import 'package:pet_app/PostPage.dart';
 import 'PetApp.dart';
 import 'ProfilePage.dart';
 import 'ChatOverviewPage.dart';
-import 'StoryPage.dart';
 import "HomePage.dart";
-import "PostPage.dart";
 
 class MainPage extends StatefulWidget {
   final int current_index;
@@ -27,6 +25,7 @@ class _MainPageState extends State<MainPage> {
     ChatOverviewPage(),
     ProfilePage(
         Is_Me: true,
+        followed: false,
         user: User(
             email: "", name: "", intro: "", locations: "0,0", password: "")),
   ];
@@ -41,6 +40,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     _pages[3] = ProfilePage(
         Is_Me: true,
+        followed: false,
         user: User(
             email: "",
             name: "",

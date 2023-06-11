@@ -71,6 +71,7 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
 
   Future<List<Message>> getChatContent(Chat chat) async {
     List<Message> messages = [];
+    // String _fileId = "";
     final response = await http.get(
       Uri.parse("${PetApp.Server_Url}/chat/${chat.id}/messages"),
       headers: {
@@ -82,7 +83,11 @@ class _ChatOverviewPageState extends State<ChatOverviewPage> {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       for (var servermsg in responseData) {
+        // if (servermsg['files'] != []) {
+        //   _fileId = servermsg['files'][0]['file_path'].split("/")[1].split(".")[0];
+        // }
         messages.add(Message(
+            // text: servermsg['files'] == [] ? servermsg['content'] : "${PetApp.Server_Url}/file/$_fileId",
             text: servermsg['content'],
             sender: servermsg['owner'],
             isPicture: servermsg['files'] == [] ? false : false,

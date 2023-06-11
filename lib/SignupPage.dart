@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/PetApp.dart';
-import 'PetApp.dart';
 import 'dart:convert';
 import 'EditProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,52 +49,50 @@ class _SignupPage extends State<SignupPage> {
     });
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      print('email已存在');
       showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    var dialogWidth = screenSize.width * 1 / 2;
-    var dialogHeight = screenSize.height * 1 / 4;
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Container(
-        height: dialogHeight,
-        width: dialogWidth,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+        context: context,
+        builder: (BuildContext context) {
+          var screenSize = MediaQuery.of(context).size;
+          var dialogWidth = screenSize.width * 1 / 2;
+          var dialogHeight = screenSize.height * 1 / 4;
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
             ),
-            SizedBox(height: 16.0),
-            Text(
-              '此帳號已存在',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
+            child: Container(
+              height: dialogHeight,
+              width: dialogWidth,
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.0),
+                  Text(
+                    '此帳號已存在',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 16.0),
+                ],
               ),
-              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 16.0),
-          ],
-        ),
-      ),
-    );
-  },
-);
+          );
+        },
+      );
     } else if (response.statusCode == 404) {
       Navigator.push(
           context,

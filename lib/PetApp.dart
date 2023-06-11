@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // --------------------------------------------------------------
 class PetApp {
@@ -11,7 +10,7 @@ class PetApp {
 
   // Server Url for android emulator
   static String Server_Url = "http://10.0.2.2:8000";
-  // static String Server_Url = "http://127.0.0.1:8000";
+  // static String Server_Url = "http://192.168.8.122:8000";
 }
 
 // -----------------------class define-----------------------------
@@ -24,7 +23,7 @@ class User {
       password,
       locations;
   List<Pet> pets;
-  List<dynamic> Following, Follower;
+  List<String> Following, Follower;
   List<Posts> posts;
   List<Comment> comments;
   User(

@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_app/PetApp.dart';
-import 'MainPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'main.dart';
 import 'package:http/http.dart' as http;

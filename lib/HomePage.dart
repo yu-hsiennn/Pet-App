@@ -1,14 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'location_service.dart';
 import 'AttractionPage.dart';
 import 'PetApp.dart';
-import 'dart:convert';
-import 'package:image/image.dart' as IMG;
-import 'package:http/http.dart' as http;
 import 'package:custom_marker/marker_icon.dart';
 
 class HomePage extends StatefulWidget {

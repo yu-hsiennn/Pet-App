@@ -18,15 +18,17 @@ class ReadPostPage extends StatefulWidget {
 }
 
 class _ReadPostPageState extends State<ReadPostPage> {
-  bool isLiked = false;
+  bool isLiked = false, is_me = false;
   User ownerUser = new User(email: "", name: "", intro: "", locations: "", password: "");
   List<Comment> comments = [];
   HashMap<String, User> userMap = HashMap<String, User>();
   String GetUserUrl = PetApp.Server_Url + '/user/';
+  bool follow_flag = false;
 
   Future<void> GetUser(String ownerId) async {
     List<Posts> _post = [];
     List<Pet> _pet = [];
+    List<String> _follower = [], _following = [];
     final response = await http.get(Uri.parse(GetUserUrl + ownerId), headers: {
       'accept': 'application/json',
     });
@@ -37,6 +39,12 @@ class _ReadPostPageState extends State<ReadPostPage> {
         if (post['response_to'] == 0) {
           var temp1 = post['files'][0]['file_path'].split("/");
           var temp2 = temp1[1].split(".");
+          List<Like> _like = [];
+          for (var like in post['likes']) {
+            _like.add(
+              Like(liker: like['liker'], timestamp: like['timestamp'])
+            );
+          }
           _post.add(Posts(
               owner_id: post["owner_id"],
               label: post['label'],
@@ -44,6 +52,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
               id: post["id"],
               timestamp: post["timestamp"],
               response_to: post['response_to'],
+              Likes: _like,
               post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
         }
       }
@@ -62,11 +71,21 @@ class _ReadPostPageState extends State<ReadPostPage> {
         ));
       }
 
+      for (var fs in responseData['follows']) {
+        _following.add(fs['follows']);
+      }
+
+      for (var fs in responseData['followed_by']) {
+        _follower.add(fs['follower']);
+      }
+
       ownerUser.email = responseData['email'];
       ownerUser.name = responseData['name'];
       ownerUser.intro = responseData['intro'];
       ownerUser.posts = _post;
       ownerUser.pets = _pet;
+      ownerUser.Follower = _follower;
+      ownerUser.Following = _following;
       ownerUser.profile_picture =
           "${PetApp.Server_Url}/user/${responseData['email']}/profile_picture";
     } else {
@@ -86,6 +105,12 @@ class _ReadPostPageState extends State<ReadPostPage> {
         // Handle error case
         return Text('Error: ${snapshot.error}');
       } else {
+        if (ownerUser.Follower.contains(PetApp.CurrentUser.email)) {
+          follow_flag = true;
+        }
+        if (ownerUser.email == PetApp.CurrentUser.email) {
+          is_me = true;
+        }
         // Data has been fetched, display the owner's name and photo
         return ListTile(
           visualDensity: const VisualDensity(vertical: 3),
@@ -101,7 +126,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(Is_Me: false, user: ownerUser),
+                  builder: (context) => ProfilePage(Is_Me: is_me, user: ownerUser, followed: follow_flag,),
                 ),
               );
             },
@@ -236,6 +261,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
     User user = new User(email: "", name: "", intro: "", locations: "", password: "");
     List<Posts> _post = [];
     List<Pet> _pet = [];
+    List<String> _follower = [], _following = [];
     final response = await http.get(Uri.parse(GetUserUrl + ownerId), headers: {
       'accept': 'application/json',
     });
@@ -246,6 +272,12 @@ class _ReadPostPageState extends State<ReadPostPage> {
         if (post['response_to'] == 0) {
           var temp1 = post['files'][0]['file_path'].split("/");
           var temp2 = temp1[1].split(".");
+          List<Like> _like = [];
+          for (var like in post['likes']) {
+            _like.add(
+              Like(liker: like['liker'], timestamp: like['timestamp'])
+            );
+          }
           _post.add(Posts(
               owner_id: post["owner_id"],
               content: post["content"],
@@ -253,6 +285,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
               id: post["id"],
               timestamp: post["timestamp"],
               response_to: post['response_to'],
+              Likes: _like,
               post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
         }
       }
@@ -270,12 +303,21 @@ class _ReadPostPageState extends State<ReadPostPage> {
           picture: "${PetApp.Server_Url}/file/${temp2[0]}"
         ));
       }
+      for (var fs in responseData['follows']) {
+        _following.add(fs['follows']);
+      }
+
+      for (var fs in responseData['followed_by']) {
+        _follower.add(fs['follower']);
+      }
 
       user.email = responseData['email'];
       user.name = responseData['name'];
       user.intro = responseData['intro'];
       user.posts = _post;
       user.pets = _pet;
+      user.Follower = _follower;
+      user.Following = _following;
       user.profile_picture =
           "${PetApp.Server_Url}/user/${responseData['email']}/profile_picture";
     } else {
@@ -306,51 +348,56 @@ class _ReadPostPageState extends State<ReadPostPage> {
         return Text('Error: ${snapshot.error}'); // 显示错误消息
       } else {
         return Column(
-  children: [
-    for (int i = 0; i < comments.length; i++)
-      Row(
-        children: [
-          SizedBox(
-            width: 12,
-          ),
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProfilePage(Is_Me: false, user: userMap[comments[i].owner_id]!)),
-                );
-              },
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  "${PetApp.Server_Url}/user/${comments[i].owner_id}/profile_picture",
-                ),
-                radius: 15.0,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userMap[comments[i].owner_id]!.name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+          children: [
+            for (int i = 0; i < comments.length; i++) 
+              Row(
+                children: [
+                  SizedBox(
+                    width: 12,
                   ),
-                ),
-                Text(comments[i].content),
-              ],
-            ),
-          ),
-        ],
-      ),
-  ],
-);
-
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (userMap[comments[i].owner_id]!.Follower.contains(PetApp.CurrentUser.email)) {
+                          follow_flag = true;
+                        }
+                        if (userMap[comments[i].owner_id]!.email == PetApp.CurrentUser.email) {
+                          is_me = true;
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProfilePage(Is_Me: is_me, user: userMap[comments[i].owner_id]!, followed: follow_flag,)),
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          "${PetApp.Server_Url}/user/${comments[i].owner_id}/profile_picture",
+                        ),
+                        radius: 15.0,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          userMap[comments[i].owner_id]!.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(comments[i].content),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        );
       }
     },
   );

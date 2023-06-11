@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pet_app/MainPage.dart';
 import 'package:pet_app/ProfilePage.dart';
 import 'package:pet_app/ReadPostPage.dart';
-import 'ChatOverviewPage.dart';
-import 'HomePage.dart';
 import 'PetApp.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'PostPage.dart';
-import 'ReadPostPage.dart';
 import 'dart:core';
 import 'package:intl/intl.dart';
 
@@ -26,7 +22,7 @@ class _StoryPageState extends State<StoryPage> {
   late ScrollController _scrollController;
   String GetUserUrl = PetApp.Server_Url + '/user/';
   double _scrollOffset = 0;
-  List<bool> isLiked = [true, false, false, false, false, false, false, false, false, false, false,true, false, false, false, false, false, false, false, false, false, false];
+  bool is_me = false, follow_flag = false;
   @override
   void initState() {
     super.initState();
@@ -73,6 +69,38 @@ void _onItemTapped(int index) {
   }
 }
 
+Future<Posts> GetPost(int post_id) async {
+  Posts post = new Posts(owner_id: "", content: "", id: 0, timestamp: 0);
+  final response = await http.get(Uri.parse("${PetApp.Server_Url}/posts/{post_id}?id=$post_id"), headers: {
+    'accept': 'application/json',
+  });
+
+  if (response.statusCode == 200) {
+    final responseData = json.decode(utf8.decode(response.bodyBytes));
+    List<Like> _like = [];
+    var temp1 = responseData['files'][0]['file_path'].split("/");
+    var temp2 = temp1[1].split(".");
+    for (var like in responseData['likes']) {
+      _like.add(
+        Like(liker: like['liker'], timestamp: like['timestamp'])
+      );
+    }
+    post.owner_id = responseData["owner_id"];
+    post.content = responseData["content"];
+    post.id = responseData["id"];
+    post.timestamp = responseData["timestamp"];
+    post.response_to = responseData['response_to'];
+    post.label = responseData['label'];
+    post.Likes = _like;
+    post.post_picture = "${PetApp.Server_Url}/file/${temp2[0]}";
+
+  } else {
+    print(
+        'Request failed with status: ${json.decode(response.body)['detail']}.');
+  }
+  return post;
+}
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -110,8 +138,19 @@ Widget build(BuildContext context) {
       controller: _scrollController,
       itemCount: widget.Post_list.length,
       itemBuilder: (BuildContext context, int index) {
-        //return Text(widget.Post_list[index].pictures);
-        return buildPost(widget.Post_list[index], index);
+        return FutureBuilder<Posts>(
+          future: GetPost(widget.Post_list[index].id),
+          builder: (BuildContext context, AsyncSnapshot<Posts> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text("Error: ${snapshot.error}");
+            } else {
+              final _post = snapshot.data;
+              return buildPost(_post!, index);
+            }
+          },
+        );
       },
     ),
     bottomNavigationBar: BottomNavigationBar(
@@ -155,13 +194,18 @@ Widget build(BuildContext context) {
 }
 
   Widget buildPost(Posts Post, int post_index) {
-    bool _isVisible = false;
     User user = new User(email: "", name: "", intro: "", locations: "", password: "");
     List<Comment> comments = [];
+    bool Liked = false;
+
+    if (Post.Likes != [] && (Post.Likes.contains(PetApp.CurrentUser.email))) {
+      Liked = true;
+    }
 
     Future<void> GetUser(String ownerId) async {
       List<Posts> _post = [];
       List<Pet> _pet = [];
+      List<String> _follower = [], _following = [];
       final response = await http.get(Uri.parse(GetUserUrl + ownerId), headers: {
         'accept': 'application/json',
       });
@@ -172,6 +216,12 @@ Widget build(BuildContext context) {
           if (post['response_to'] == 0) {
             var temp1 = post['files'][0]['file_path'].split("/");
             var temp2 = temp1[1].split(".");
+            List<Like> _like = [];
+            for (var like in post['likes']) {
+              _like.add(
+                Like(liker: like['liker'], timestamp: like['timestamp'])
+              );
+            }
             _post.add(Posts(
                 owner_id: post["owner_id"],
                 content: post["content"],
@@ -179,6 +229,7 @@ Widget build(BuildContext context) {
                 label: post['label'],
                 timestamp: post["timestamp"],
                 response_to: post['response_to'],
+                Likes: _like,
                 post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
           }
         }
@@ -197,13 +248,45 @@ Widget build(BuildContext context) {
           ));
         }
 
+        for (var fs in responseData['follows']) {
+        _following.add(fs['follows']);
+      }
+
+      for (var fs in responseData['followed_by']) {
+        _follower.add(fs['follower']);
+      }
+
         user.email = responseData['email'];
         user.name = responseData['name'];
         user.intro = responseData['intro'];
         user.posts = _post;
         user.pets = _pet;
+        user.Follower = _follower;
+        user.Following = _following;
         user.profile_picture =
             "${PetApp.Server_Url}/user/${responseData['email']}/profile_picture";
+      } else {
+        print(
+            'Request failed with status: ${json.decode(response.body)['detail']}.');
+      }
+    }
+
+    Future<void> ToggleLike() async {
+      final response = await http.post(
+        Uri.parse("${PetApp.Server_Url}/posts/like"),
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${PetApp.CurrentUser.authorization}',
+        },
+        body: jsonEncode({
+          'liker': PetApp.CurrentUser.email,
+          'liked_post': Post.id,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(responseData);
       } else {
         print(
             'Request failed with status: ${json.decode(response.body)['detail']}.');
@@ -223,31 +306,37 @@ Widget build(BuildContext context) {
         } else {
           // Data has been fetched, display the owner's name and photo
           return Expanded(
-  flex: 1,
-  child: GestureDetector(
-    onTap: () {
-      Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProfilePage(Is_Me: false, user: user)),
-              );
-    },
-    child: ListTile(
-      visualDensity: const VisualDensity(vertical: 3),
-      dense: true,
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(user.profile_picture),
-      ),
-      title: Text(
-        user.name,
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  ),
-);
+            flex: 1,
+            child: GestureDetector(
+              onTap: () {
+                if (user.Follower.contains(PetApp.CurrentUser.email)) {
+                    follow_flag = true;
+                  }
+                  if (user.email == PetApp.CurrentUser.email) {
+                    is_me = true;
+                  }
+                Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProfilePage(Is_Me: is_me, user: user, followed: follow_flag,)),
+                        );
+              },
+              child: ListTile(
+                visualDensity: const VisualDensity(vertical: 3),
+                dense: true,
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(user.profile_picture),
+                ),
+                title: Text(
+                  user.name,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          );
         }
       },
     );
@@ -264,23 +353,24 @@ Widget build(BuildContext context) {
       );
     }
 
-    Widget buildLikeField(int likeNum, int index) {
+    Widget buildLikeField() {
       return Row(
         children: [
           SizedBox(width: 12),
           IconButton(
             icon: Icon(
-              isLiked[index] ? Icons.favorite : Icons.favorite_border,
-              color: isLiked[index] ? Colors.red : null,
+              Liked ? Icons.favorite : Icons.favorite_border,
+              color: Liked ? Colors.red : null,
             ),
-            onPressed: () {
+            onPressed: () async {
+              await ToggleLike();
+              Liked = !Liked;
               setState(() {
-                isLiked[index] = !isLiked[index];
               });
             },
           ),
           Text(
-            "$likeNum個喜歡",
+            "${Post.Likes.length} 個喜歡",
             style: TextStyle(fontSize: 16),
           ),
         ],
@@ -313,8 +403,6 @@ Widget build(BuildContext context) {
     }
 
     Widget buildLabelField(List<String> label, String txt) {
-      print(label);
-      print(txt);
       return Row(
         children: [
           SizedBox(
@@ -491,7 +579,7 @@ Widget build(BuildContext context) {
               buildNameTextField(Post.owner_id),
               SizedBox(height: 20),
               buildPicture(Post.post_picture),
-              buildLikeField(Post.Likes.length, post_index),
+              buildLikeField(),
               buildTextField(Post.content),
               buildDateField(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(Post.timestamp * 1000))),
               buildLabelField(Post.label.split(","), Post.label),

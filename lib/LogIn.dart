@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pet_app/MainPage.dart';
 import 'PetApp.dart';
 import 'dart:convert';
@@ -50,6 +49,7 @@ class _AccessPageState extends State<AccessPage> {
     List<Posts> _post = [];
     List<Pet> _pet = [];
     List<Comment> _comment = [];
+    List<String> _follower = [], _following = [];
     final response = await http.get(Uri.parse(GetUserUrl + _email), headers: {
       'accept': 'application/json',
     });
@@ -60,6 +60,12 @@ class _AccessPageState extends State<AccessPage> {
         if (post['response_to'] == 0) {
           var temp1 = post['files'][0]['file_path'].split("/");
           var temp2 = temp1[1].split(".");
+          List<Like> _like = [];
+          for (var like in post['likes']) {
+            _like.add(
+              Like(liker: like['liker'], timestamp: like['timestamp'])
+            );
+          }
           _post.add(Posts(
               owner_id: post["owner_id"],
               content: post["content"],
@@ -67,6 +73,7 @@ class _AccessPageState extends State<AccessPage> {
               timestamp: post["timestamp"],
               response_to: post['response_to'],
               label: post['label'],
+              Likes: _like,
               post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
         } else {
           _comment.add(Comment(
@@ -90,6 +97,14 @@ class _AccessPageState extends State<AccessPage> {
             picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
       }
 
+      for (var fs in responseData['follows']) {
+        _following.add(fs['follows']);
+      }
+
+      for (var fs in responseData['followed_by']) {
+        _follower.add(fs['follower']);
+      }
+
       PetApp.CurrentUser.email = responseData['email'];
       PetApp.CurrentUser.name = responseData['name'];
       PetApp.CurrentUser.intro = responseData['intro'];
@@ -98,8 +113,8 @@ class _AccessPageState extends State<AccessPage> {
       PetApp.CurrentUser.posts = _post;
       PetApp.CurrentUser.pets = _pet;
       PetApp.CurrentUser.comments = _comment;
-      PetApp.CurrentUser.Follower = responseData['followed_by'];
-      PetApp.CurrentUser.Following = responseData['follows'];
+      PetApp.CurrentUser.Follower = _follower;
+      PetApp.CurrentUser.Following = _following;
       PetApp.CurrentUser.profile_picture =
           "${PetApp.Server_Url}/user/$_email/profile_picture";
       print(responseData);
@@ -123,6 +138,12 @@ class _AccessPageState extends State<AccessPage> {
           if (post['response_to'] == 0) {
             var temp1 = post['files'][0]['file_path'].split("/");
             var temp2 = temp1[1].split(".");
+            List<Like> _like = [];
+            for (var like in post['likes']) {
+              _like.add(
+                Like(liker: like['liker'], timestamp: like['timestamp'])
+              );
+            }
             _post.add(Posts(
                 owner_id: post["owner_id"],
                 content: post["content"],
@@ -130,6 +151,7 @@ class _AccessPageState extends State<AccessPage> {
                 timestamp: post["timestamp"],
                 response_to: post['response_to'],
                 label: post['label'],
+                Likes: _like,
                 post_picture: "${PetApp.Server_Url}/file/${temp2[0]}"));
           }
         }

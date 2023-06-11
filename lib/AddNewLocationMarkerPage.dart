@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'PetApp.dart';
 import 'package:flutter/material.dart';
 import 'SetLocationPage.dart';
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,7 +13,6 @@ class AddNewLocationMarkerPage extends StatefulWidget {
 }
 
 class _AddNewLocationMarkerPage extends State<AddNewLocationMarkerPage> {
-  File? _image;
   final picker = ImagePicker();
   TextEditingController _longitudeController = TextEditingController();
   TextEditingController _latitudeController = TextEditingController();

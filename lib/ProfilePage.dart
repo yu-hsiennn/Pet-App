@@ -3,14 +3,13 @@ import 'package:pet_app/AddPetProfile.dart';
 import 'package:pet_app/StoryPage.dart';
 import 'MainPage.dart';
 import 'PetApp.dart';
-import 'package:album_image/album_image.dart';
-import 'AddPetProfile.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'ChatPage.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key, required this.Is_Me, required this.user});
-  final bool Is_Me;
+  const ProfilePage({super.key, required this.Is_Me, required this.user, required this.followed});
+  final bool Is_Me, followed;
   final User user;
 
   @override
@@ -20,10 +19,23 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   CustomWidget cw = new CustomWidget();
   String gender = "";
-  int _selectedIndex = 0;
   bool isEditing = false;
   TextEditingController myTextController = TextEditingController();
   late User u;
+  late bool followed;
+  int ChatId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.Is_Me) {
+      u = widget.user;
+      followed = widget.followed;
+    } else {
+      u = PetApp.CurrentUser;
+    }
+  }
+
   void _onItemTapped(int index) {
 
   switch (index) {
@@ -55,11 +67,6 @@ class _ProfilePageState extends State<ProfilePage> {
 }
   @override
   Widget build(BuildContext context) {
-    if (widget.Is_Me) {
-      u = PetApp.CurrentUser;
-    } else {
-      u = widget.user;
-    }
     return Scaffold(
       appBar: AppBar(
         iconTheme:
@@ -160,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Spacer(),
                       Flexible(
-                        child: cw.Text_count("追蹤中", 50),
+                        child: cw.Text_count("追蹤中", following),
                         flex: 1,
                       ),
                       Spacer(),
@@ -178,18 +185,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       Expanded(
                         flex: 3,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // 按钮点击事件
+                          onPressed: () async {
+                            await ToggleFollow();
+                            followed = !followed;
+                            setState(() {
+                            });
                           },
                           style: ElevatedButton.styleFrom(
-                            primary:
-                                Color.fromRGBO(170, 227, 254, 1), // 设置背景颜色为蓝色
+                            backgroundColor: Color.fromRGBO(170, 227, 254, 1),
                           ),
                           child: Text(
-                            '追蹤',
+                            !followed ? '追蹤' : '已追蹤',
                             style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.bold, // 设置字体颜色为黑色
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -198,8 +207,19 @@ class _ProfilePageState extends State<ProfilePage> {
                       Expanded(
                         flex: 3,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // 按钮点击事件
+                          onPressed: () async {
+                            await CreateChat();
+                            Navigator.push(context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                  chatname: u.name,
+                                  photo: "${PetApp.Server_Url}/user/${u.email}/profile_picture",
+                                  messages: [],
+                                  currentUser: PetApp.CurrentUser.email,
+                                  chatID: ChatId,
+                                ),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             primary:
@@ -247,8 +267,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   setState(() {
                     isEditing = true;
                   });
-
-                  // 按钮点击事件
                 },
                 icon: Icon(Icons.mode_edit),
               ),
@@ -267,9 +285,8 @@ class _ProfilePageState extends State<ProfilePage> {
               )),
           child: isEditing
               ? TextField(
-                  // 在这里配置TextField的相关属性
                   controller:
-                      myTextController, // 假设你已经有一个TextEditingController的实例
+                      myTextController,
                   style: TextStyle(fontSize: 18.0),
                   onSubmitted: (String value) {
                     setState(() {
@@ -339,7 +356,6 @@ class _ProfilePageState extends State<ProfilePage> {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       uploadPetImage(petPhoto, responseData['id']);
-      // print('idididid${responseData['id']}');
       print(responseData);
       print('create success');
     } else {
@@ -374,6 +390,52 @@ class _ProfilePageState extends State<ProfilePage> {
       PetApp.CurrentUser.pets = _pet;
       setState(() {});
       print(responseData);
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
+  Future<void> ToggleFollow() async {
+    final response = await http.post(
+      Uri.parse("${PetApp.Server_Url}/user/follow"),
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${PetApp.CurrentUser.authorization}',
+      },
+      body: jsonEncode({
+        'follower': PetApp.CurrentUser.email,
+        'follows': u.email,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // final responseData = json.decode(response.body);
+      // followed = responseData['like_status'] == 0 ? false : true;
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+  }
+
+  Future<void> CreateChat() async {
+    final response = await http.post(
+      Uri.parse("${PetApp.Server_Url}/chat/create"),
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${PetApp.CurrentUser.authorization}',
+      },
+      body: jsonEncode({
+        'user1': PetApp.CurrentUser.email,
+        'user2': u.email,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      ChatId = responseData['id'];
     } else {
       print(
           'Request failed with status: ${json.decode(response.body)['detail']}.');

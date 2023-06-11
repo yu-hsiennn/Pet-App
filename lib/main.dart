@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app/LogIn.dart';
-import 'package:pet_app/PostPage.dart';
-import 'LogIn.dart';
 import 'SignupPage.dart';
-import 'MainPage.dart';
 import 'PetApp.dart';
 
 void main() {
