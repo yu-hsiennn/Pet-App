@@ -81,7 +81,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomButton(
-                          label: '登入(DEMO)',
+                          label: '登入',
                           onPressed: () {
                             Navigator.push(
                               context,

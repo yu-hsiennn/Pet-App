@@ -73,7 +73,7 @@ class _ChatPageState extends State<ChatPage> {
               itemCount: widget.messages.length,
               itemBuilder: (context, index) {
                 final message = widget.messages[index];
-                final isMe = message.sender == widget.currentUser;
+                final isMe = message.sender == PetApp.CurrentUser.email;
 
                 return _buildMessage(message, isMe);
               },
@@ -162,7 +162,8 @@ class _ChatPageState extends State<ChatPage> {
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            PetApp.CurrentUser.name,
+            isMe ? PetApp.CurrentUser.name :
+            widget.chatname,
             style: TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.bold,

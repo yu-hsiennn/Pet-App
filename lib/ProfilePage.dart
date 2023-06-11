@@ -208,15 +208,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         flex: 3,
                         child: ElevatedButton(
                           onPressed: () async {
-                            await CreateChat();
+                            Chat c = await getUserChats();
+                            print(c.chatContent.length);
                             Navigator.push(context,
                               MaterialPageRoute(
                                 builder: (context) => ChatPage(
                                   chatname: u.name,
                                   photo: "${PetApp.Server_Url}/user/${u.email}/profile_picture",
-                                  messages: [],
+                                  messages: c.id == 0 ? [] : c.chatContent,
                                   currentUser: PetApp.CurrentUser.email,
-                                  chatID: ChatId,
+                                  chatID: c.id == 0 ? ChatId : c.id,
                                 ),
                               ),
                             );
@@ -442,6 +443,96 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<Chat> getUserChats() async {
+    Chat chats = new Chat(id: 0, name: "", lastMessage: "", lastActive: DateTime.now(), ownerId: "");
+    final response = await http.get(
+      Uri.parse("${PetApp.Server_Url}/user/${PetApp.CurrentUser.email}/chats"),
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer ${PetApp.CurrentUser.authorization}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      for (var serverChat in responseData) {
+        if (serverChat['user2'] == u.email || serverChat['user1'] == u.email) {
+          chats.id = serverChat['id'];
+          chats.ownerId = u.email;
+          chats.name = u.name;
+        }
+      }
+      if (chats.id == 0) {
+        await CreateChat();
+      } else {
+        chats.chatContent = await getChatContent(chats);
+        chats.lastMessage = chats.chatContent.isEmpty
+            ? ""
+            : chats.chatContent[chats.chatContent.length - 1].text;
+        chats.lastActive = chats.chatContent.isEmpty
+            ? DateTime.now()
+            : chats.chatContent[chats.chatContent.length - 1].sentTime;
+      }
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+    return chats;
+  }
+
+  Future<List<Message>> getChatContent(Chat chat) async {
+    List<Message> messages = [];
+    // String _fileId = "";
+    final response = await http.get(
+      Uri.parse("${PetApp.Server_Url}/chat/${chat.id}/messages"),
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer ${PetApp.CurrentUser.authorization}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      for (var servermsg in responseData) {
+        // if (servermsg['files'] != []) {
+        //   _fileId = servermsg['files'][0]['file_path'].split("/")[1].split(".")[0];
+        // }
+        messages.add(Message(
+            // text: servermsg['files'] == [] ? servermsg['content'] : "${PetApp.Server_Url}/file/$_fileId",
+            text: servermsg['content'],
+            sender: servermsg['owner'],
+            isPicture: servermsg['files'] == [] ? false : false,
+            sentTime: DateTime.fromMillisecondsSinceEpoch(
+                servermsg['timestamp'] * 1000)));
+      }
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+    return messages;
+  }
+
+  Map<String, List<Chat>> _groupChatsBySender(List<Chat>? chats) {
+    final groupedChats = <String, List<Chat>>{};
+    for (final chat in chats!) {
+      final sender = chat.ownerId;
+      if (!groupedChats.containsKey(sender)) {
+        groupedChats[sender] = [];
+      }
+      groupedChats[sender]!.add(chat);
+    }
+    return groupedChats;
+  }
+
+  List<Chat> _getLatestChats(Map<String, List<Chat>> groupedChats) {
+    final latestChats = <Chat>[];
+    for (final senderChats in groupedChats.values) {
+      senderChats.sort((a, b) => b.lastActive.compareTo(a.lastActive));
+      latestChats.add(senderChats.first);
+    }
+    return latestChats;
+  }
+
   Future<void> uploadPetImage(String PetPhotoPath, int petid) async {
     print(PetPhotoPath);
     var upUrl =
@@ -471,53 +562,56 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
-    child: Container(
-      padding: EdgeInsets.all(25.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...petsList.map((pet) {
-            return GestureDetector(
-              onTap: () {
-                showPetProfile(pet);
-              },
-              child: Padding(
-                padding:
-                    EdgeInsets.only(right: 20.0), // Add spacing between items
-                child: CircleAvatar(
-                  radius: 35,
-                  backgroundImage: NetworkImage(pet.picture),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.all(25.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ...petsList.map((pet) {
+              return GestureDetector(
+                onTap: () {
+                  showPetProfile(pet);
+                },
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(right: 20.0), // Add spacing between items
+                  child: CircleAvatar(
+                    radius: 35,
+                    backgroundImage: NetworkImage(pet.picture),
+                  ),
+                ),
+              );
+            }).toList(),
+            if (isUser)
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddPetProfilePage()),
+                  ).then((value) {
+                    if (value[0] != '') {
+                      setState(() {
+                        CreatePet(value[0], value[1], value[2], value[3],
+                            value[4], value[5]);
+                      });
+                    }
+                    print(value);
+                  });
+                },
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(right: 10.0), // Add spacing between items
+                  child: CircleAvatar(
+                    radius: 35,
+                    foregroundImage: AssetImage('assets/image/AddPetProfile.png'),
+                  ),
                 ),
               ),
-            );
-          }).toList(),
-          if (isUser)
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddPetProfilePage()),
-                ).then((value) {
-                  if (value[0] != '') {
-                    setState(() {
-                      CreatePet(value[0], value[1], value[2], value[3],
-                          value[4], value[5]);
-                    });
-                  }
-                  print(value);
-                });
-              },
-              child: Padding(
-                padding:
-                    EdgeInsets.only(right: 10.0), // Add spacing between items
-                child: CircleAvatar(
-                  radius: 35,
-                  foregroundImage: AssetImage('assets/image/AddPetProfile.png'),
-                ),
-              ),
-            ),
-        ],
-      ),),
+          ],
+        ),),
+    ),
     );
   }
 
@@ -602,7 +696,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   height: 20,
                 ),
-                Padding(
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
                   padding: EdgeInsets.only(left: 30.0), // Add left padding
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -628,6 +724,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
+                )
+                
+                
               ],
             ),
           ),

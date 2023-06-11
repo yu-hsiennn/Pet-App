@@ -115,13 +115,18 @@ class _ReadPostPageState extends State<ReadPostPage> {
         return ListTile(
           visualDensity: const VisualDensity(vertical: 3),
           dense: true,
-          leading: IconButton(
+          leading: null,
+          contentPadding: EdgeInsets.zero,
+          title:Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+            IconButton(
               icon: Icon(Icons.arrow_back,color:Color.fromRGBO(96, 175, 245, 1) ,),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
-          title: GestureDetector(
+            GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
@@ -146,6 +151,9 @@ class _ReadPostPageState extends State<ReadPostPage> {
               ],
             ),
           ),
+
+
+          ],) 
         );
       }
     },
@@ -169,14 +177,15 @@ class _ReadPostPageState extends State<ReadPostPage> {
             isLiked ? Icons.favorite : Icons.favorite_border,
             color: isLiked ? Colors.red : null,
           ),
-          onPressed: () {
+          onPressed: () async {
+            await ToggleLike();
             setState(() {
               isLiked = !isLiked;
             });
           },
         ),
         Text(
-          "$likeNum個喜歡",
+          "$likeNum 個喜歡",
           style: TextStyle(fontSize: 16),
         ),
       ],
@@ -429,6 +438,60 @@ class _ReadPostPageState extends State<ReadPostPage> {
     }
   }
 
+  Future<Posts> GetPost(int post_id) async {
+    Posts post = new Posts(owner_id: "", content: "", id: 0, timestamp: 0);
+    final response = await http.get(Uri.parse("${PetApp.Server_Url}/posts/{post_id}?id=$post_id"), headers: {
+      'accept': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
+      List<Like> _like = [];
+      var temp1 = responseData['files'][0]['file_path'].split("/");
+      var temp2 = temp1[1].split(".");
+      for (var like in responseData['likes']) {
+        _like.add(
+          Like(liker: like['liker'], timestamp: like['timestamp'])
+        );
+      }
+      post.owner_id = responseData["owner_id"];
+      post.content = responseData["content"];
+      post.id = responseData["id"];
+      post.timestamp = responseData["timestamp"];
+      post.response_to = responseData['response_to'];
+      post.label = responseData['label'];
+      post.Likes = _like;
+      post.post_picture = "${PetApp.Server_Url}/file/${temp2[0]}";
+
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+    return post;
+  }
+
+  Future<void> ToggleLike() async {
+      final response = await http.post(
+        Uri.parse("${PetApp.Server_Url}/posts/like"),
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${PetApp.CurrentUser.authorization}',
+        },
+        body: jsonEncode({
+          'liker': PetApp.CurrentUser.email,
+          'liked_post': widget.post.id,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        print(responseData);
+      } else {
+        print(
+            'Request failed with status: ${json.decode(response.body)['detail']}.');
+      }
+    }
+
   Widget buildInputMessageField() {
     TextEditingController textController = TextEditingController();
     return Row(
@@ -543,25 +606,57 @@ void _onItemTapped(int index) {
         body: SingleChildScrollView(
             child: SafeArea(
                 child: Container(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            buildNameTextField(widget.post.owner_id),
-            SizedBox(height: 20),
-            buildPicture(widget.post.post_picture),
-            buildLikeField(widget.post.Likes.length),
-            buildTextField(widget.post.content),
-            buildDateField(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(widget.post.timestamp * 1000))),
-            buildLabelField(widget.post.label.split(",")),
-            Divider(
-              // 添加蓝色线
-              color: Color.fromRGBO(170, 227, 254, 1),
-              thickness: 1,
-            ),
-            buildMessageField(),
-            buildInputMessageField()
-          ]),
+      child: FutureBuilder<Posts>(
+        future: GetPost(widget.post.id),
+        builder: (BuildContext context, AsyncSnapshot<Posts> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          } else {
+            final post = snapshot.data;
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                buildNameTextField(post!.owner_id),
+                SizedBox(height: 20),
+                buildPicture(post.post_picture),
+                buildLikeField(post.Likes.length),
+                buildTextField(post.content),
+                buildDateField(DateFormat('yyyy-MM-dd HH:mm:ss')
+                    .format(DateTime.fromMillisecondsSinceEpoch(post.timestamp * 1000))),
+                buildLabelField(post.label.split(",")),
+                Divider(
+                  color: Color.fromRGBO(170, 227, 254, 1),
+                  thickness: 1,
+                ),
+                buildMessageField(),
+                buildInputMessageField(),
+              ],
+            );
+          }
+        },
+      )
+      // Column(
+      //     mainAxisAlignment: MainAxisAlignment.start,
+      //     crossAxisAlignment: CrossAxisAlignment.start,
+      //     children: <Widget>[
+      //       buildNameTextField(widget.post.owner_id),
+      //       SizedBox(height: 20),
+      //       buildPicture(widget.post.post_picture),
+      //       buildLikeField(widget.post.Likes.length),
+      //       buildTextField(widget.post.content),
+      //       buildDateField(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(widget.post.timestamp * 1000))),
+      //       buildLabelField(widget.post.label.split(",")),
+      //       Divider(
+      //         // 添加蓝色线
+      //         color: Color.fromRGBO(170, 227, 254, 1),
+      //         thickness: 1,
+      //       ),
+      //       buildMessageField(),
+      //       buildInputMessageField()
+      //     ]),
     ))),
     bottomNavigationBar: BottomNavigationBar(
       selectedItemColor: Colors.yellow,

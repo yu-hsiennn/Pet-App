@@ -50,6 +50,7 @@ dependencies:
   image: ^3.2.2
   custom_marker: ^1.0.0
   intl: ^0.18.1
+  auto_size_text: ^3.0.0
   
 
 dev_dependencies:

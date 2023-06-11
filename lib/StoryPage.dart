@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:pet_app/MainPage.dart';
 import 'package:pet_app/ProfilePage.dart';
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:core';
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class StoryPage extends StatefulWidget {
   const StoryPage(
@@ -39,159 +41,159 @@ class _StoryPageState extends State<StoryPage> {
 
 
 
-void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
 
-  switch (index) {
-    case 0:
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainPage(current_index: 0)),
-      );
-      break;
-    case 1:
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainPage(current_index: 1)),
-      );
-      break;
-    case 2:
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) =>MainPage(current_index: 2)),
-      );
-      break;
-    case 3:
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainPage(current_index: 3)),
-      );
-      break;
-  }
-}
-
-Future<Posts> GetPost(int post_id) async {
-  Posts post = new Posts(owner_id: "", content: "", id: 0, timestamp: 0);
-  final response = await http.get(Uri.parse("${PetApp.Server_Url}/posts/{post_id}?id=$post_id"), headers: {
-    'accept': 'application/json',
-  });
-
-  if (response.statusCode == 200) {
-    final responseData = json.decode(utf8.decode(response.bodyBytes));
-    List<Like> _like = [];
-    var temp1 = responseData['files'][0]['file_path'].split("/");
-    var temp2 = temp1[1].split(".");
-    for (var like in responseData['likes']) {
-      _like.add(
-        Like(liker: like['liker'], timestamp: like['timestamp'])
-      );
-    }
-    post.owner_id = responseData["owner_id"];
-    post.content = responseData["content"];
-    post.id = responseData["id"];
-    post.timestamp = responseData["timestamp"];
-    post.response_to = responseData['response_to'];
-    post.label = responseData['label'];
-    post.Likes = _like;
-    post.post_picture = "${PetApp.Server_Url}/file/${temp2[0]}";
-
-  } else {
-    print(
-        'Request failed with status: ${json.decode(response.body)['detail']}.');
-  }
-  return post;
-}
-
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      backgroundColor: Color.fromRGBO(96, 175, 245, 1),
-      title: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Text(
-              "PETSHARE",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                foreground: Paint()
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth = 1
-                  ..color = Colors.black,
-              ),
-            ),
-            Text(
-              "PETSHARE",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-      automaticallyImplyLeading: false,
-    ),
-    body: ListView.builder(
-      controller: _scrollController,
-      itemCount: widget.Post_list.length,
-      itemBuilder: (BuildContext context, int index) {
-        return FutureBuilder<Posts>(
-          future: GetPost(widget.Post_list[index].id),
-          builder: (BuildContext context, AsyncSnapshot<Posts> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text("Error: ${snapshot.error}");
-            } else {
-              final _post = snapshot.data;
-              return buildPost(_post!, index);
-            }
-          },
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage(current_index: 0)),
         );
-      },
-    ),
-    bottomNavigationBar: BottomNavigationBar(
-      selectedItemColor: Colors.yellow,
-      selectedIconTheme: IconThemeData(size: 30),
-      unselectedIconTheme: IconThemeData(size: 20),
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      backgroundColor: Colors.white,
-      onTap: _onItemTapped,
-      type: BottomNavigationBarType.fixed,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.home_outlined,
-            color: Colors.blue,
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage(current_index: 1)),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>MainPage(current_index: 2)),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage(current_index: 3)),
+        );
+        break;
+    }
+  }
+
+  Future<Posts> GetPost(int post_id) async {
+    Posts post = new Posts(owner_id: "", content: "", id: 0, timestamp: 0);
+    final response = await http.get(Uri.parse("${PetApp.Server_Url}/posts/{post_id}?id=$post_id"), headers: {
+      'accept': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
+      List<Like> _like = [];
+      var temp1 = responseData['files'][0]['file_path'].split("/");
+      var temp2 = temp1[1].split(".");
+      for (var like in responseData['likes']) {
+        _like.add(
+          Like(liker: like['liker'], timestamp: like['timestamp'])
+        );
+      }
+      post.owner_id = responseData["owner_id"];
+      post.content = responseData["content"];
+      post.id = responseData["id"];
+      post.timestamp = responseData["timestamp"];
+      post.response_to = responseData['response_to'];
+      post.label = responseData['label'];
+      post.Likes = _like;
+      post.post_picture = "${PetApp.Server_Url}/file/${temp2[0]}";
+
+    } else {
+      print(
+          'Request failed with status: ${json.decode(response.body)['detail']}.');
+    }
+    return post;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(96, 175, 245, 1),
+        title: Center(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                "PETSHARE",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 1
+                    ..color = Colors.black,
+                ),
+              ),
+              Text(
+                "PETSHARE",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-          label: 'Home',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.upload_outlined,
-            color: Colors.blue,
+        automaticallyImplyLeading: false,
+      ),
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: widget.Post_list.length,
+        itemBuilder: (BuildContext context, int index) {
+          return FutureBuilder<Posts>(
+            future: GetPost(widget.Post_list[index].id),
+            builder: (BuildContext context, AsyncSnapshot<Posts> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text("Error: ${snapshot.error}");
+              } else {
+                final _post = snapshot.data;
+                return buildPost(_post!, index);
+              }
+            },
+          );
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.yellow,
+        selectedIconTheme: IconThemeData(size: 30),
+        unselectedIconTheme: IconThemeData(size: 20),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        backgroundColor: Colors.white,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home_outlined,
+              color: Colors.blue,
+            ),
+            label: 'Home',
           ),
-          label: 'Search',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.chat_outlined,
-            color: Colors.blue,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.upload_outlined,
+              color: Colors.blue,
+            ),
+            label: 'Search',
           ),
-          label: 'Favorites',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(color: Colors.blue, Icons.person_outlined),
-          label: 'Profile',
-        ),
-      ],
-    ),
-  );
-}
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.chat_outlined,
+              color: Colors.blue,
+            ),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(color: Colors.blue, Icons.person_outlined),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget buildPost(Posts Post, int post_index) {
     User user = new User(email: "", name: "", intro: "", locations: "", password: "");
@@ -377,14 +379,38 @@ Widget build(BuildContext context) {
       );
     }
 
+
     Widget buildTextField(String text) {
       return Expanded(
         flex: 2, // 20%
         child: Padding(
           padding: EdgeInsets.all(20.0),
-          child: Text(
+          child: AutoSizeText(
             text,
-            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            overflowReplacement: GestureDetector(
+              onTap: (){
+                print('未完');
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReadPostPage(
+                          post: Post,
+                          ownername: user.name,
+                          ownerphoto: user.profile_picture
+                        )),
+              );
+
+            },
+            child:  Column(children:[
+              Text(text,maxLines: 1,),
+              SizedBox(height: 20,),
+              Text('...顯示更多')
+
+            ]),
+            
+            ),
+            
           ),
         ),
       );

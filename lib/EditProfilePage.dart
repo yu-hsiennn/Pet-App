@@ -204,16 +204,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ),
         DropdownMenuItem(
-          value: "Dolphin",
+          value: "Rabbit",
           child: Text(
-            "海豚",
+            "兔子",
             style: TextStyle(color: Colors.black),
           ),
         ),
         DropdownMenuItem(
-          value: "Dinosaur",
+          value: "Bird",
           child: Text(
-            "恐龍",
+            "鳥",
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -227,7 +227,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ],
       hint: const Text("動物種類"), // 當沒有初始值時顯示
       onChanged: (selectValue) {
-        //選中後的回撥
         setState(() {
           type = selectValue;
         });
@@ -285,12 +284,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: EdgeInsets.all(20),
                   children: [
                     buildTitle('您的暱稱'),
-                    buildIntroTextField("黃曉明", _nameController),
+                    buildIntroTextField("限輸入半形英數字", _nameController),
                     buildSexRadioButton(),
                     buildTitle('飼養的動物種類'),
                     buildPetType(),
                     buildTitle('經常散步區域'),
-                    buildIntroTextField("台南市 東區", _locationController),
+                    buildIntroTextField("例如: 台南市 東區", _locationController),
                   ],
                 ),
               ),
