@@ -7,6 +7,7 @@ import "HomePage.dart";
 
 class MainPage extends StatefulWidget {
   final int current_index;
+  
   const MainPage({super.key,required, required this.current_index });
   
   @override
@@ -27,7 +28,7 @@ class _MainPageState extends State<MainPage> {
         Is_Me: true,
         followed: false,
         user: User(
-            email: "", name: "", intro: "", locations: "0,0", password: "")),
+            email: "", name: "", intro: "", locations: "0,0", password: "",), extra_Appbar: false,),
   ];
 
   void _onItemTapped(int index) {
@@ -46,7 +47,7 @@ class _MainPageState extends State<MainPage> {
             name: "",
             intro: "",
             locations: "0,0",
-            password: "")); //a little dirty but works
+            password: ""),extra_Appbar: false,); //a little dirty but works
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

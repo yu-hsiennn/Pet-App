@@ -8,8 +8,8 @@ import 'package:http/http.dart' as http;
 import 'ChatPage.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key, required this.Is_Me, required this.user, required this.followed});
-  final bool Is_Me, followed;
+  const ProfilePage({super.key, required this.Is_Me, required this.user, required this.followed,required this.extra_Appbar});
+  final bool Is_Me, followed,extra_Appbar;
   final User user;
 
   @override
@@ -102,7 +102,46 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-    
+      bottomNavigationBar: Visibility(
+        visible:widget.extra_Appbar, 
+        child:BottomNavigationBar(
+        selectedItemColor: Colors.yellow,
+        selectedIconTheme: IconThemeData(size: 30),
+        unselectedIconTheme: IconThemeData(size: 20),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        onTap: _onItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home_outlined,
+              color: Colors.blue,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.upload_outlined,
+              color: Colors.blue,
+            ),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.chat_outlined,
+              color: Colors.blue,
+            ),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(color: Colors.blue, Icons.person_outlined),
+            label: 'Profile',
+          ),
+        ],
+      ),),
+      
     );
   }
 

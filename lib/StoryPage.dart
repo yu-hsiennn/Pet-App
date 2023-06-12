@@ -320,7 +320,7 @@ class _StoryPageState extends State<StoryPage> {
                 Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfilePage(Is_Me: is_me, user: user, followed: follow_flag,)),
+                              builder: (context) => ProfilePage(Is_Me: is_me, user: user, followed: follow_flag,extra_Appbar: true,)),
                         );
               },
               child: ListTile(

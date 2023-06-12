@@ -131,7 +131,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(Is_Me: is_me, user: ownerUser, followed: follow_flag,),
+                  builder: (context) => ProfilePage(Is_Me: is_me, user: ownerUser, followed: follow_flag,extra_Appbar: true),
                 ),
               );
             },
@@ -377,7 +377,7 @@ class _ReadPostPageState extends State<ReadPostPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfilePage(Is_Me: is_me, user: userMap[comments[i].owner_id]!, followed: follow_flag,)),
+                              builder: (context) => ProfilePage(Is_Me: is_me, user: userMap[comments[i].owner_id]!, followed: follow_flag,extra_Appbar: true)),
                         );
                       },
                       child: CircleAvatar(

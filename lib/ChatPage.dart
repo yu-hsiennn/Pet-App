@@ -97,7 +97,7 @@ class _ChatPageState extends State<ChatPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              mic_on ? '開始辨識...' : '常按即可錄音辨識寵物情緒',
+              mic_on ? '開始辨識...' : '長按即可錄音辨識寵物情緒',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),

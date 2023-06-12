@@ -74,6 +74,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               label: '下一步',
               onPressed: () {
                 nickname = _nameController.text;
+                
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -435,10 +436,13 @@ class _EditUploadPhotoState extends State<EditUploadPhoto> {
         onPressed: () async {
           var place = await LocationService().getPlace(
             widget.location == "" ? "成功大學 榕園" : widget.location);
-          init_place(place);
-          handleSignupLoginUpload();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => MyApp()));
+          await init_place(place);
+          await handleSignupLoginUpload();
+          Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => MyApp()),
+                (Route<dynamic> route) => false,
+          );
         },
       ),
     );

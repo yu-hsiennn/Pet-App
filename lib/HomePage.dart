@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pet_app/MainPage.dart';
 import 'location_service.dart';
 import 'AttractionPage.dart';
 import 'PetApp.dart';
@@ -78,6 +79,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: null,
           backgroundColor: Color.fromRGBO(96, 175, 245, 1),
           title: Center(
               child: Stack(
