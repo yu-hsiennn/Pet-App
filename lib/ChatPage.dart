@@ -243,7 +243,9 @@ class _ChatPageState extends State<ChatPage> {
                 Icons.photo,
                 color: Color.fromRGBO(96, 175, 245, 1),
               ),
-              onPressed: () {},
+              onPressed: () {
+                _focusNode.unfocus();
+              },
             ),
             IconButton(
               icon: Icon(
@@ -251,6 +253,7 @@ class _ChatPageState extends State<ChatPage> {
                 color: Color.fromRGBO(96, 175, 245, 1),
               ),
               onPressed: () {
+                _focusNode.unfocus();
                 setState(() {
                   _ismicSheetVisible = !_ismicSheetVisible;
                 });
@@ -265,6 +268,9 @@ class _ChatPageState extends State<ChatPage> {
                 autofocus: true,
                 cursorColor: Colors.black,
                 controller: _textController,
+                onTap: () {
+                  _ismicSheetVisible = false;
+                },
                 onChanged: (text) {
                   setState(() {
                     _isComposing = text.isNotEmpty;
