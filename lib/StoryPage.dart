@@ -25,6 +25,8 @@ class _StoryPageState extends State<StoryPage> {
   String GetUserUrl = PetApp.Server_Url + '/user/';
   double _scrollOffset = 0;
   bool is_me = false, follow_flag = false;
+  late List<bool> likeList;
+
   @override
   void initState() {
     super.initState();

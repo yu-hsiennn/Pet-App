@@ -531,7 +531,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
       for (var servermsg in responseData) {
         // if (servermsg['files'] != []) {
         //   _fileId = servermsg['files'][0]['file_path'].split("/")[1].split(".")[0];
