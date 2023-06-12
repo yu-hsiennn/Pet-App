@@ -9,8 +9,8 @@ class PetApp {
   static List<Attraction> Attractions = [];
 
   // Server Url for android emulator
-  static String Server_Url = "http://10.0.2.2:8000";
-  // static String Server_Url = "http://172.20.10.4:8000";
+  // static String Server_Url = "http://10.0.2.2:8000";
+  static String Server_Url = "http://172.20.10.4:8000";
 }
 
 // -----------------------class define-----------------------------

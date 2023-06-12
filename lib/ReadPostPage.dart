@@ -606,37 +606,43 @@ void _onItemTapped(int index) {
         body: SingleChildScrollView(
             child: SafeArea(
                 child: Container(
-      child: FutureBuilder<Posts>(
-        future: GetPost(widget.post.id),
-        builder: (BuildContext context, AsyncSnapshot<Posts> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text("Error: ${snapshot.error}");
-          } else {
-            final post = snapshot.data;
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                buildNameTextField(post!.owner_id),
-                SizedBox(height: 20),
-                buildPicture(post.post_picture),
-                buildLikeField(post.Likes.length),
-                buildTextField(post.content),
-                buildDateField(DateFormat('yyyy-MM-dd HH:mm:ss')
-                    .format(DateTime.fromMillisecondsSinceEpoch(post.timestamp * 1000))),
-                buildLabelField(post.label.split(",")),
-                Divider(
-                  color: Color.fromRGBO(170, 227, 254, 1),
-                  thickness: 1,
-                ),
-                buildMessageField(),
-                buildInputMessageField(),
-              ],
-            );
-          }
-        },
+      child: 
+      Column(
+        children: [
+          FutureBuilder<Posts>(
+            future: GetPost(widget.post.id),
+            builder: (BuildContext context, AsyncSnapshot<Posts> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text("Error: ${snapshot.error}");
+              } else {
+                final post = snapshot.data;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    buildNameTextField(post!.owner_id),
+                    SizedBox(height: 20),
+                    buildPicture(post.post_picture),
+                    buildLikeField(post.Likes.length),
+                    buildTextField(post.content),
+                    buildDateField(DateFormat('yyyy-MM-dd HH:mm:ss')
+                        .format(DateTime.fromMillisecondsSinceEpoch(post.timestamp * 1000))),
+                    buildLabelField(post.label.split(",")),
+                    Divider(
+                      color: Color.fromRGBO(170, 227, 254, 1),
+                      thickness: 1,
+                    ),
+                    buildMessageField(),
+                    // buildInputMessageField(),
+                  ],
+                );
+              }
+            },
+          ),
+          buildInputMessageField(),
+        ],
       )
       // Column(
       //     mainAxisAlignment: MainAxisAlignment.start,

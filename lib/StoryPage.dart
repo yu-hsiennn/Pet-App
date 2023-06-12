@@ -15,7 +15,7 @@ class StoryPage extends StatefulWidget {
       {super.key, required this.Post_list, required this.Post_Index});
   final List<Posts> Post_list;
   final int Post_Index;
-
+  
   @override
   State<StoryPage> createState() => _StoryPageState();
 }
@@ -26,6 +26,7 @@ class _StoryPageState extends State<StoryPage> {
   double _scrollOffset = 0;
   bool is_me = false, follow_flag = false;
   late List<bool> likeList;
+  TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
@@ -104,7 +105,7 @@ class _StoryPageState extends State<StoryPage> {
     }
     return post;
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -549,7 +550,7 @@ class _StoryPageState extends State<StoryPage> {
     }
 
     Widget buildInputMessageField() {
-      TextEditingController textController = TextEditingController();
+      
       return Expanded(
         flex: 1, // 20%
         child: Row(
