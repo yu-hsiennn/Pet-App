@@ -1,5 +1,10 @@
-# PET SHARE README
-![](https://hackmd.io/_uploads/rJdV4WWs2.png)
+<html>
+<body>
+<div class="image-container">
+  <img src="https://hackmd.io/_uploads/rJdV4WWs2.png" width="400" height="400">
+</div>
+</body>
+</html>
 
 ## About
 A flutter application to let pet owners find each other more easily. The app's layout is based on fundamental design principles and developed in connection with NCKU's course on collaboration of software engineers and interface designers.
@@ -14,17 +19,6 @@ This app lets you:
 
 ## Screenshots
 <html>
-<head>
-<style>
-  .image-container {
-    display: flex; /* Use flexbox to align images */
-  }
-
-  .image-container img {
-    margin: 10px; /* Add spacing between images */
-  }
-</style>
-</head>
 <body>
 
 <div class="image-container">
