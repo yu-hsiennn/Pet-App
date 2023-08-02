@@ -108,7 +108,7 @@ Replace **YOUR KEY HERE** according to the *previously obtained [Google Maps API
 
 **Step 2.** Start your [server](https://github.com/felixweiss1999/pet-app-server)
 ```shell=
-# default Server IP: 172.0.0.2:8000
+# default Server IP: 127.0.0.1:8000
 $ uvicorn main:app --reload
 
 # if you want to use your physical iphone/ipad, 
